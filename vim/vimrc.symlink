@@ -224,7 +224,7 @@ Plug 'scrooloose/nerdcommenter'
 " Plug 'zxqfl/tabnine-vim'
 
 " VSCode based alternative 
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+#Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 " Installation issue with YCM:
 " cd to plugged/YouCompleteMe/third_party/ycmd
