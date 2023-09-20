@@ -71,6 +71,8 @@ bindkey "^[0B" down-line-or-local-history
 bindkey "^[[1;5A" up-line-or-beginning-search # [CTRL] + Cursor up
 bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
 
+export ZSH=$HOME/.oh-my-zsh
+source $ZSH/oh-my-zsh.sh
 
 # Themes
 #[[ -f "$HOME/.dotfiles/zsh/themes" ]] && . "$HOME/.dotfiles/zsh/themes"
@@ -89,9 +91,6 @@ HIST_STAMPS="dd/mm/yyyy"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git fasd history-substring-search shrink-path)
-
-export ZSH=$HOME/.ohmyzsh
-source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.aliases ] && source ~/.aliases
 
