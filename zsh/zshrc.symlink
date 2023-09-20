@@ -1,8 +1,8 @@
 # Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
+#[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 
-# shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.dotfiles/oh-my-zsh"
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/Code
@@ -44,13 +44,58 @@ done
 unset config_files
 
 # Better history
+
+# access global and local history for each shell
+# https://superuser.com/questions/446594/separate-up-arrow-lookback-for-local-and-global-zsh-history
+up-line-or-local-history() {
+    zle set-local-history 1
+    zle up-line-or-history
+    zle set-local-history 0
+}
+zle -N up-line-or-local-history
+down-line-or-local-history() {
+    zle set-local-history 1
+    zle down-line-or-history
+    zle set-local-history 0
+}
+zle -N down-line-or-local-history
+
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search # Up
-bindkey "^[[B" down-line-or-beginning-search # Down
 
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"
+bindkey "^[0A" up-line-or-local-history
+bindkey "^[0B" down-line-or-local-history
+bindkey "^[[1;5A" up-line-or-beginning-search # [CTRL] + Cursor up
+bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
+
+
+# Themes
+#[[ -f "$HOME/.dotfiles/zsh/themes" ]] && . "$HOME/.dotfiles/zsh/themes"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+HIST_STAMPS="dd/mm/yyyy"
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git fasd history-substring-search shrink-path)
+
+source $ZSH/oh-my-zsh.sh
+
+[ -f ~/.aliases ] && source ~/.aliases
+
+[ -f ~/.gitalias ] && source ~/.gitalias
+
+[[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+
+eval "$(starship init zsh)"
