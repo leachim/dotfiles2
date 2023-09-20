@@ -8,11 +8,18 @@ if test ! $(which omz); then
 fi
 
 # Check for Homebrew and install if we don't have it
-if test ! $(which brew); then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if [ "$(uname)" == "Darwin" ]; then
+  if test ! $(which brew); then
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+      echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+else
+    mkdir /home/$USER/.linuxbrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /home/$USER/.linuxbrew
+    eval "$(~/l/bin/brew shellenv)"
+    brew update --force --quiet
+    chmod -R go-w "$(brew --prefix)/share/zsh"
 fi
 
 # Removes .zshrc from $HOME (if it exists) and symlinks the .zshrc file from the .dotfiles
