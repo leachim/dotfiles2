@@ -17,7 +17,7 @@ if [ "$(uname)" == "Darwin" ]; then
   fi
 else
     mkdir /home/$USER/.linuxbrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C /home/$USER/.linuxbrew
-    eval "$(~/l/bin/brew shellenv)"
+    eval "$(/home/${USER}/.linuxbrew/bin/brew shellenv)"
     brew update --force --quiet
     chmod -R go-w "$(brew --prefix)/share/zsh"
 fi
