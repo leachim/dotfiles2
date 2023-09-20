@@ -96,6 +96,6 @@ plugins=(git fasd history-substring-search shrink-path)
 
 [ -f ~/.gitalias ] && source ~/.gitalias
 
-[[ -f ~/.profile ]] && emulate sh -c 'source ~/.profile'
+[ -f ~/.profile ] && source ~/.profile
 
 eval "$(starship init zsh)"
