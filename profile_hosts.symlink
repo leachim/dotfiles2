@@ -4,7 +4,7 @@
 HOSTNAME=`hostname`
 USER=`whoami`
 
-if [ "$HOSTNAME" == "glaux-clio" ]; then
+if [ "$HOSTNAME" = "glaux-clio" ]; then
 
     # soft notification sound
     export BEEP=$HOME/.dotfiles/files/soft_beep.way
@@ -20,7 +20,7 @@ if [ "$HOSTNAME" == "glaux-clio" ]; then
        # exec sway
     fi
 
-elif [ "$HOSTNAME" == "nm14cs004273" ]; then
+elif [ "$HOSTNAME" = "nm14cs004273" ]; then
 
     # fix CURL certificates path
     export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
