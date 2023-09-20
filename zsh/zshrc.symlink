@@ -1,8 +1,8 @@
 # Fig pre block. Keep at the top of this file.
 #[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.dotfiles/ohmyzsh"
+# shortcut to this dotfiles path is $ZSH
+export ZSH=$HOME/.dotfiles
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/Code
@@ -90,12 +90,12 @@ HIST_STAMPS="dd/mm/yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git fasd history-substring-search shrink-path)
 
-source $ZSH/oh-my-zsh.sh
+source ~/.ohmyzsh/oh-my-zsh.sh
 
 [ -f ~/.aliases ] && source ~/.aliases
 
 [ -f ~/.gitalias ] && source ~/.gitalias
 
-[[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+[[ -f ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
 eval "$(starship init zsh)"
