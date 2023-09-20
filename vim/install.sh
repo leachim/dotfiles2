@@ -2,9 +2,9 @@
 
 ## vim
 echo "Installing Vim Plugins .."
-command -v nvim >/dev/null
 
-if [[ $? -ne 0 ]]; then
+if ! command -v nvim &> /dev/null
+then
     echo "Nvim is not installed"
   # install plug.vim for vim
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
