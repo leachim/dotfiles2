@@ -1,0 +1,412 @@
+#
+# Defines Git aliases.
+#
+# Aliases
+#
+
+# Git
+alias g='git'
+alias tagcommit='git rev-list -n 1'
+
+alias ga='git add '
+alias gb='git branch '
+alias gpf='git push --follow-tags'
+
+# Commit (m)
+alias gmo='git commit'
+alias gm='git commit -m'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gc='git checkout '
+alias gcm='git checkout master'
+alias gcd="git checkout devel"
+
+alias gst="git stash"
+alias gs='git status '
+alias gss='git status -s'
+alias gsu='git status -uno'
+alias gs.='git status .'
+alias gh='git status .'
+
+alias gr="git remote"
+alias grv="git remote -v"
+alias gls='git ls-tree -r HEAD'
+
+alias gp="git push"
+alias gpa="git push --all && git push --tags"
+alias gt="git tag -l --sort=v:refname"
+alias gu="git pull"
+
+alias gla="git log --oneline --decorate --graph --all"
+alias glg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias glb="git log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias lg1="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+alias lg2="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+alias lg3="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n'' %C(white)%s%C(reset)%n'' %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'"
+
+# working with forks
+alias gfu="git fetch upstream"
+alias gru="git rebase upstream/master"
+
+# Branch (b)
+#alias gb='git branch'
+#alias gbc='git checkout -b'
+#alias gbl='git branch -v'
+#alias gbL='git branch -av'
+#alias gbx='git branch -d'
+#alias gbX='git branch -D'
+#alias gbm='git branch -m'
+#alias gbM='git branch -M'
+#alias gbs='git show-branch'
+#alias gbS='git show-branch -a'
+
+# Commit (c)
+#alias gc='git commit --verbose'
+#alias gca='git commit --verbose --all'
+#alias gcm='git commit --message'
+#alias gco='git checkout'
+#alias gcO='git checkout --patch'
+#alias gcf='git commit --amend --reuse-message HEAD'
+#alias gcF='git commit --verbose --amend'
+#alias gcp='git cherry-pick --ff'
+#alias gcP='git cherry-pick --no-commit'
+#alias gcr='git revert'
+#alias gcR='git reset "HEAD^"'
+#alias gcs='git show'
+#alias gcl='git-commit-lost'
+
+# Conflict (C)
+#alias gCl='git status | sed -n "s/^.*both [a-z]*ed: *//p"'
+#alias gCa='git add $(gCl)'
+#alias gCe='git mergetool $(gCl)'
+#alias gCo='git checkout --ours --'
+#alias gCO='gCo $(gCl)'
+#alias gCt='git checkout --theirs --'
+#alias gCT='gCt $(gCl)'
+
+# Data (d)
+#alias gd='git ls-files'
+#alias gdc='git ls-files --cached'
+#alias gdx='git ls-files --deleted'
+#alias gdm='git ls-files --modified'
+#alias gdu='git ls-files --other --exclude-standard'
+#alias gdk='git ls-files --killed'
+#alias gdi='git status --porcelain --short --ignored | sed -n "s/^!! //p"'
+
+# Fetch (f)
+#alias gf='git fetch'
+#alias gfc='git clone'
+#alias gfm='git pull'
+#alias gfr='git pull --rebase'
+
+# Grep (g)
+#alias gg='git grep'
+#alias ggi='git grep --ignore-case'
+#alias ggl='git grep --files-with-matches'
+#alias ggL='git grep --files-without-matches'
+#alias ggv='git grep --invert-match'
+#alias ggw='git grep --word-regexp'
+
+# Index (i)
+#alias gia='git add'
+#alias giA='git add --patch'
+#alias giu='git add --update'
+#alias gid='git diff --no-ext-diff --cached'
+#alias giD='git diff --no-ext-diff --cached --word-diff'
+#alias gir='git reset'
+#alias giR='git reset --patch'
+#alias gix='git rm -r --cached'
+#alias giX='git rm -rf --cached'
+
+# Log (l)
+#alias gl='git log --topo-order --pretty=format:"${_git_log_medium_format}"'
+#alias gls='git log --topo-order --stat --pretty=format:"${_git_log_medium_format}"'
+#alias gld='git log --topo-order --stat --patch --full-diff --pretty=format:"${_git_log_medium_format}"'
+#alias glo='git log --topo-order --pretty=format:"${_git_log_oneline_format}"'
+#alias glg='git log --topo-order --all --graph --pretty=format:"${_git_log_oneline_format}"'
+#alias glb='git log --topo-order --pretty=format:"${_git_log_brief_format}"'
+#alias glc='git shortlog --summary --numbered'
+
+# Merge (m)
+#alias gm='git merge'
+#alias gmC='git merge --no-commit'
+#alias gmF='git merge --no-ff'
+#alias gma='git merge --abort'
+#alias gmt='git mergetool'
+
+# Push (p)
+#alias gp='git push'
+#alias gpf='git push --force'
+#alias gpa='git push --all'
+#alias gpA='git push --all && git push --tags'
+#alias gpt='git push --tags'
+#alias gpc='git push --set-upstream origin "$(git-branch-current 2> /dev/null)"'
+#alias gpp='git pull origin "$(git-branch-current 2> /dev/null)" && git push origin "$(git-branch-current 2> /dev/null)"'
+
+# Rebase (r)
+#alias gr='git rebase'
+#alias gra='git rebase --abort'
+#alias grc='git rebase --continue'
+#alias gri='git rebase --interactive'
+#alias grs='git rebase --skip'
+
+# Remote (R)
+#alias gR='git remote'
+#alias gRl='git remote --verbose'
+#alias gRa='git remote add'
+#alias gRx='git remote rm'
+#alias gRm='git remote rename'
+#alias gRu='git remote update'
+#alias gRp='git remote prune'
+#alias gRs='git remote show'
+#alias gRb='git-hub-browse'
+
+# Stash (s)
+#alias gs='git stash'
+#alias gsa='git stash apply'
+#alias gsx='git stash drop'
+#alias gsX='git-stash-clear-interactive'
+#alias gsl='git stash list'
+#alias gsL='git-stash-dropped'
+#alias gsd='git stash show --patch --stat'
+#alias gsp='git stash pop'
+#alias gsr='git-stash-recover'
+#alias gss='git stash save --include-untracked'
+#alias gsS='git stash save --patch --no-keep-index'
+#alias gsw='git stash save --include-untracked --keep-index'
+
+# Submodule (S)
+#alias gS='git submodule'
+#alias gSa='git submodule add'
+#alias gSf='git submodule foreach'
+#alias gSi='git submodule init'
+#alias gSI='git submodule update --init --recursive'
+#alias gSl='git submodule status'
+#alias gSm='git-submodule-move'
+#alias gSs='git submodule sync'
+#alias gSu='git submodule foreach git pull origin master'
+#alias gSx='git-submodule-remove'
+
+# Working Copy (w)
+#alias gws='git status --ignore-submodules=${_git_status_ignore_submodules} --short'
+#alias gwS='git status --ignore-submodules=${_git_status_ignore_submodules}'
+#alias gwd='git diff --no-ext-diff'
+#alias gwD='git diff --no-ext-diff --word-diff'
+#alias gwr='git reset --soft'
+#alias gwR='git reset --hard'
+#alias gwc='git clean -n'
+#alias gwC='git clean -f'
+#alias gwx='git rm -r'
+#alias gwX='git rm -rf'
+
+
+# 
+# [alias]
+#     # Show all configured aliases
+#     aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ \t => \\2/' | sort
+# 	#amend to commit
+#    	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+# 
+# 	s = !git status --short
+# 	# View the log and diff for a commit (previous if no SHA1 provided)
+# 	d = log -n1 -p --format=fuller
+# 	#View a pretty git log with branch tree
+# 	l = !git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+# 
+# 	# Return the repository's root directory (usefull for shell prompts)
+#     root = rev-parse --show-toplevel
+#     # Thin out older metadata within the repository, reduceses filesystem footprint
+#     utrim = !git reflog expire --expire=now --all && git gc --prune=now
+# 	#Show all branches
+#    	br-all = branch -av
+#     #Show the current branch name
+#    	br-name = !git branch | grep "^*" | awk '{ print $2 }'
+#     #Which files are receiving the most "love"
+#    	churn = !git log --all -M -C --name-only --format='format:' "$@" | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print "count,file"} {print $1 "," $2}'
+# 	# Save a repo as a tarball
+# 	export = archive -o $1.tar.gz -9 --prefix=latest/
+# 
+# 	## log stuff
+# 	ls = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit
+# 	la = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit
+# 	ll = log --graph --decorate --pretty=oneline --abbrev-commit
+# 	lla = log --stat --graph --decorate --pretty=oneline --abbrev-commit --numstat
+# 	#List oneline commits showing dates:
+# 	lld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+# 	#List oneline commits showing relative dates:
+# 	llr = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+# 
+# 	## diff stuff
+# 	dh = diff --color-words head
+# 	#Show a diff last commit:
+# 	dlc = diff --cached HEAD^
+# 	# all commits related to a file
+# 	fl = log -u
+# 
+# 	# Being the Branch/Integration manager at my current client, I use these constantly to merge stuff:
+# 	rev-ours = "!f() { git co --ours $@ && git add $@; }; f"
+# 	rev-theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+# 
+# 
+#     ############################
+# 	## Using arguments
+# 	############################
+# 	# Grep from root folder:
+# 	grep = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
+# 	# list commits by date or author
+# 	review = "!sh -c 'git log --all --oneline --reverse --date=local --since=\"$0\"'"
+# 	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
+# 
+# 	############################
+# 	## Common aliases
+# 	############################
+# 	#############
+# 	a = add .
+# 	a = add --all
+# 	ai = add -i
+# 	#############
+# 	ap = apply
+# 	as = apply --stat
+# 	ac = apply --check
+# 	#############
+# 	ama = am --abort
+# 	amr = am --resolved
+# 	ams = am --skip
+# 	#############
+# 	b = branch
+# 	ba = branch -a
+# 	bd = branch -d
+# 	br = branch -r
+# 	#############
+# 	#############
+# 	c = commit
+# 	ca = commit -a
+# 	cm = commit -m
+# 	cem = commit --allow-empty -m
+# 	cam = commit -am
+# 	cd = commit --amend
+# 	cad = commit -a --amend
+# 	ced = commit --allow-empty --amend
+# 	#############
+# 	#d = diff
+# 	dc = diff --cached
+# 	dl = difftool
+# 	dlc = difftool --cached
+# 	dk = diff --check
+# 	dp = diff --patience
+# 	dck = diff --cached --check
+# 	#############
+# 	f = fetch
+# 	fo = fetch origin
+# 	fu = fetch upstream
+# 	#############
+# 	fp = format-patch
+# 	#############
+# 	fk = fsck
+# 	#############
+# 	g = grep -p
+# 	#############
+# 	lg = log --oneline --graph --decorate
+# 	#############
+# 	ls = ls-files
+# 	lsf = "!git ls-files | grep -i"
+# 	#############
+# 	m = merge
+# 	ma = merge --abort
+# 	mc = merge --continue
+# 	ms = merge --skip
+# 	#############
+# 	o = checkout
+# 	ob = checkout -b
+# 	#############
+# 	pr = prune -v
+# 	#############
+# 	ps = push
+# 	psf = push -f
+# 	psu = push -u
+# 	pso = push origin
+# 	psao = push --all origin
+# 	psfo = push -f origin
+# 	psuo = push -u origin
+# 	psom = push origin master
+# 	psfom = push -f origin master
+# 	psuom = push -u origin master
+# 	#############
+# 	pl = pull
+# 	plu = pull -u
+# 	plo = pull origin
+# 	plp = pull upstream
+# 	plom = pull origin master
+# 	plpm = pull upstream master
+# 	#############
+# 	pb = pull --rebase
+# 	pbo = pull --rebase origin
+# 	pbp = pull --rebase upstream
+# 	pbom = pull --rebase origin master
+# 	pbpm = pull --rebase upstream master
+# 	#############
+# 	#############
+# 	rb = rebase
+# 	rba = rebase --abort
+# 	rbc = rebase --continue
+# 	rbi = rebase --interactive
+# 	rbs = rebase --skip
+# 	#############
+# 	re = reset
+# 	rh = reset HEAD
+# 	reh = reset --hard
+# 	rem = reset --mixed
+# 	res = reset --soft
+# 	rehh = reset --hard HEAD
+# 	remh = reset --mixed HEAD
+# 	resh = reset --soft HEAD
+# 	#############
+# 	r = remote
+# 	ra = remote add
+# 	rr = remote rm
+# 	rv = remote -v
+# 	rm = remote rename
+# 	rp = remote prune
+# 	rs = remote show
+# 	rao = remote add origin
+# 	rau = remote add upstream
+# 	rso = remote show origin
+# 	rsu = remote show upstream
+# 	rpo = remote prune origin
+# 	rpu = remote prune upstream
+# 	#############
+# 	sb = status -s -b
+# 	sa = stash apply
+# 	sc = stash clear
+# 	sd = stash drop
+# 	sl = stash list
+# 	sp = stash pop
+# 	ss = stash save
+# 	sw = stash show
+# 	#############
+# 	svnr = svn rebase
+# 	svnd = svn dcommit
+# 	svnl = svn log --oneline --show-commit
+#     #############
+#     tr = ls-tree -r master --name-only
+#     #############
+# 	w = show
+# 	wp = show -p
+# 	wr = show -p --no-color
+# 	#############
+# 	assume = update-index --assume-unchanged
+# 	unassume = update-index --no-assume-unchanged
+# 	assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+# 	unassumeall = !git assumed | xargs git update-index --no-assume-unchanged
+# 	assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+# 	#############
+# 	whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -"
+# 	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+# 	#############
+# 	barebranch = !sh -c 'git symbolic-ref HEAD refs/heads/$1 && git rm --cached -r . && git clean -xfd' -
+# 	flat = clone --depth 1
+# 	subpull = !git submodule foreach git pull --tags origin master
+# 	subrepo = !sh -c 'filter-branch --prune-empty --subdirectory-filter $1 master' -
+# 	human = name-rev --name-only --refs=refs/heads/*
+# 	serve = !git daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
+# 	snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
