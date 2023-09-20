@@ -90,7 +90,8 @@ HIST_STAMPS="dd/mm/yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git fasd history-substring-search shrink-path)
 
-source ~/.ohmyzsh/oh-my-zsh.sh
+export ZSH=$HOME/.ohmyzsh
+source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.aliases ] && source ~/.aliases
 
