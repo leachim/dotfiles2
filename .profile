@@ -1,7 +1,7 @@
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login exists.
 
-export PATH="/opt/bin:$HOME/.local/bin:$HOME/.dotfiles/bin:$PATH"
+export PATH="/opt/bin:$HOME/.local/bin:$HOME/.linuxbrew/bin:$HOME/.dotfiles/bin:$PATH"
 export PATH="/home/$USER/.cargo/bin:$PATH"
 #export WLR_NO_HARDWARE_CURSORS=1
 export EDITOR='vim'
