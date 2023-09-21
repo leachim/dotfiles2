@@ -20,6 +20,7 @@ then
   fi
 
   if test $(which brew)
+  then
   # Update Homebrew recipes
   brew update
 

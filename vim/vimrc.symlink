@@ -256,7 +256,7 @@ Plug 'JuliaEditorSupport/julia-vim'
 "Plug 'honza/vim-snippets'
 Plug 'ekalinin/Dockerfile.vim'
 
-" flexible search 
+" flexible search
 "Plugin 'kien/ctrlp.vim' -> replaced by fzf
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'mileszs/ack.vim'
@@ -571,7 +571,7 @@ let g:airline_theme='oceanicnext'
 
 let g:airline_highlighting_cache = 1
 "let g:bufferline_echo = 0
-        
+
 let g:airline#extensions#whitespace#enabled = 1
 let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#hunks#non_zero_only = 1
