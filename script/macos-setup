@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ "$(uname)" == "Darwin" ]; then
+  # Update Homebrew recipes
+  brew update
+
+  # Install all our dependencies with bundle (See Brewfile)
+  brew tap homebrew/bundle
+  brew bundle --file ./Brewfile
+
+  # Symlink the Mackup config file to the home directory
+  ln -s ./.mackup.cfg $HOME/.dotfiles/.mackup.cfg
+
+  # Set macOS preferences - we will run this last because this will reload the shell
+  source ./.macos
+
+  # The Brewfile handles Homebrew-based app and library installs, but there may
+  # still be updates and installables in the Mac App Store. There's a nifty
+  # command line interface to it that we can use to just install everything, so
+  # yeah, let's do that.
+  echo "› sudo softwareupdate -i -a"
+  sudo softwareupdate -i -a
+fi
+
