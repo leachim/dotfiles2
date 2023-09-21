@@ -50,8 +50,6 @@ fi
 
 [ -f ~/.aliases ] && source ~/.aliases
 
-[ -f ~/.dotfiles/private/ringaliases ] && source ~/.dotfiles/private/ringaliases
-
 [ -f ~/.gitalias ] && source ~/.gitalias
 
 # per host configuration
