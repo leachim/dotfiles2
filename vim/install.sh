@@ -18,7 +18,7 @@ echo "Nvim is installed"
   # and for nvim
   #curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
   #  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  sh -c 'curl -fLo "~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+  sh -c 'curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   nvim -u "~/.dotfiles/vim/vimrc.symlink" +PlugInstall
 fi
