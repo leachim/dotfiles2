@@ -39,11 +39,11 @@ set autoread
 " https://stackoverflow.com/questions/14737429/how-to-disable-the-timeout-on-the-vim-leader-key
 set notimeout
 set ttimeout
-augroup FastEscape
-    autocmd!
-    au InsertEnter * set timeoutlen=0
-    au InsertLeave * set timeoutlen=1000
-augroup END
+"augroup FastEscape
+"    autocmd!
+"    au InsertEnter * set timeoutlen=0
+"    au InsertLeave * set timeoutlen=1000
+"augroup END
 " try to fix esc issue
 " set timeoutlen=1000 ttimeoutlen=0
 "set ttimeoutlen=1000
