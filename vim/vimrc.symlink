@@ -223,8 +223,8 @@ Plug 'scrooloose/nerdcommenter'
 " Plug 'Valloric/YouCompleteMe'
 " Plug 'zxqfl/tabnine-vim'
 
-" VSCode based alternative 
-#Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+" VSCode based alternative
+"Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 " Installation issue with YCM:
 " cd to plugged/YouCompleteMe/third_party/ycmd
@@ -305,7 +305,7 @@ call plug#end()
 let g:latex_to_unicode_keymap = 1
 let g:latex_to_unicode_file_types = ".jl"
 let g:latex_to_unicode_tab = 0
-" unicode latex completion for julia with Control-Q
+" unicode latex completion for julia with Control-"Q
 inoremap <C-Q> <C-X><C-O>
 set omnifunc=LaTeXtoUnicode#omnifunc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -484,10 +484,10 @@ nnoremap <buffer> <leader>o :exec '!julia' shellescape(@%, 1)<cr>
 " endtry
 
 " Return to last edit position when opening files (You want this!)
-" autocmd BufReadPost *
-"      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-"      \   exe "normal! g`\"" |
-"      \ endif
+autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal! g`\"" |
+      \ endif
 " Remember info about open buffers on close
 set viminfo^=%
 
