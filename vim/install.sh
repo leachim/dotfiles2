@@ -13,6 +13,7 @@ then
 fi
 
 if command -v nvim &> /dev/null
+then
 echo "Nvim is installed"
   # and for nvim
   #curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
