@@ -373,12 +373,11 @@ noremap ,r :!tmux send-keys -t right Up C-m <CR><CR>
 noremap ,c :!tmux send-keys -t right C-c "a" "clear" C-m Up C-u <CR><CR>
 noremap <silent> <leader>e :terminal<CR>
 
-" Windows 
-"Better window navigation
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
+" Windows
+nnoremap <C-j> <C-u>
+nnoremap <C-k> <C-d>
+noremap <C-up> <C-u>
+noremap <C-down> <C-d>
 
 " Open new split panes to right and bottom
 set splitbelow
@@ -912,10 +911,10 @@ let g:tmux_navigator_save_on_switch = 1
 " Disable tmux navigator when zooming the Vim pane
 let g:tmux_navigator_disable_when_zoomed = 1
 
-nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+"nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+"nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+"nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+"nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <C-/> :TmuxNavigatePrevious<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
