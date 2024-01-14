@@ -144,8 +144,8 @@ print-process-info () {
         # date '+%Y-%m-%d %H:%M:%S %Z'
         echo "$(date '+%H:%M:%S %Z') - $(hostname) @$(print-tmux-session-info):\nProcess finished [exit status $(echo $?)]" ; }
 
-alias ding='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info)\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
-alias dong="sleep 1; notify-send -u \"normal\" \"$(print-process-info)\""
+#alias ding='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info)\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
+#alias dong="sleep 1; notify-send -u \"normal\" \"$(print-process-info)\""
 alias ring='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info) RingRing! \", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
 alias tam="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 
