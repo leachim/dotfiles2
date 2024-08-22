@@ -1,0 +1,4 @@
+#!/bin/bash
+# notification aliases not synced
+
+wget --quiet -O - "https://www.pushsafer.com/api?k=&d=73809&pr=1&l=3000&s=0&v=1&t=RingRing&m=$(hostname)%3A%20$(echo $?)%0A($(date "+%a %b %e %T %Z"))%0A$( tmux display-message 2>&1 /dev/null && tmux display-message -p '#S-#P')"  > /dev/null
