@@ -277,8 +277,6 @@ Plug 'tpope/vim-surround' " # -> conflict with coc.nvim
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 
-" combine vim with tmux
-Plug 'christoomey/vim-tmux-navigator'
 
 " distraction free writing
 Plug 'junegunn/goyo.vim'
@@ -296,6 +294,9 @@ Plug 'altercation/vim-colors-solarized'
 " Latex support
 Plug 'lervag/vimtex'
 " Latex symbol for unicode
+
+" combine vim with tmux
+Plug 'christoomey/vim-tmux-navigator'
 
 
 call plug#end()
@@ -905,7 +906,6 @@ let g:autopep8_ignore="C0103"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " tmux  
-let g:tmux_navigator_no_mappings = 1
 " Update all buffers before navigating from Vim to tmux pane
 let g:tmux_navigator_save_on_switch = 1
 " Disable tmux navigator when zooming the Vim pane
@@ -1006,6 +1006,7 @@ endfunction
   " endif
   " colors solarized
 " endfunction
+"
 
 command! ProseMode call ProseMode()
 nmap ,p :ProseMode<CR>

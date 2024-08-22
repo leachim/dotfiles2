@@ -20,6 +20,10 @@ if [ "$HOSTNAME" = "glaux-clio" ]; then
        # exec sway
     fi
 
+elif [ "$HOSTNAME" = "eu*" ]; then
+    echo "HELLO WORLD"
+    fi
+
 elif [ "$HOSTNAME" = "nm14cs004273" ]; then
 
     # fix CURL certificates path
