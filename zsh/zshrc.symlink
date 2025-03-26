@@ -142,30 +142,3 @@ bindkey '^R' skim-history-widget
 
 eval "$(starship init zsh)"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/cluster/home/michaes/.miniforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/cluster/home/michaes/.miniforge/etc/profile.d/conda.sh" ]; then
-        . "/cluster/home/michaes/.miniforge/etc/profile.d/conda.sh"
-    else
-        export PATH="/cluster/home/michaes/.miniforge/bin:$PATH"
-=======
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/michaes/.miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/michaes/.miniconda/etc/profile.d/conda.sh" ]; then
-        . "/Users/michaes/.miniconda/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/michaes/.miniconda/bin:$PATH"
->>>>>>> fe9bd59 (support skim and minor fixes)
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
