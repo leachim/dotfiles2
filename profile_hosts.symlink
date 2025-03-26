@@ -19,40 +19,4 @@ if [ "$HOSTNAME" = "glaux-clio" ]; then
        exec env MESA_LOADER_DRIVER_OVERRIDE=i965 QT_WAYLAND_FORCE_DPI=physical QT_QPA_PLATFORM=wayland-egl QT_WAYLAND_DISABLE_WINDOWDECORATION=1 QT_QPA_PLATFORMTHEME=qt5ct ECORE_EVAS_ENGINE=wayland_egl ELM_ENGINE=wayland_egl CLUTTER_BACKEND=wayland SDL_VIDEODRIVER=wayland BEMENU_BACKEND=wayland MOZ_ENABLE_WAYLAND=1 dbus-run-session sway
        # exec sway
     fi
-
-elif [ "$HOSTNAME" = "eu*" ]; then
-    echo "HELLO WORLD"
-    fi
-
-elif [ "$HOSTNAME" = "nm14cs004273" ]; then
-
-    # fix CURL certificates path
-    export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-
-    # export cuda
-    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib"
-    export CUDA_HOME=/usr/
-
-    # ZSH shell
-    export SHELL=`which zsh`
-    [ -z "$ZSH_VERSION" ] && exec "$SHELL" -l
-    set -o ignoreeof
-	export IGNOREEOF=100
-
-    export HOME="/home/$(whoami)"
-
-    # use different backup script
-    # unalias jour
-    # unalias doremi
-    # alias doremi="apt-mark showhold && daily-cal && daily-quote"
-    # alias jour="bash $HOME/.backup/borg-backup-desktop.sh && sleep 5 && doremi"
-    ulimit -s 16384
-
-    # if [[ -z "$DISPLAY" ]] && [[ "$(tty)" = "/dev/tty1" ]]; then
-    if [ "$(tty)" = "/dev/tty1" ]; then
-       export XKB_DEFAULT_LAYOUT="us,de"
-       export XKB_DEFAULT_OPTIONS="grp:alt_shift_toggle"
-       exec startx
-    fi
-
 fi
