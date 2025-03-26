@@ -232,6 +232,10 @@ if [ -f ~/.autocompletion/docker-machine.bash ]; then
     source ~/.autocompletion/docker-machine.bash
 fi
 
+if [ -f ~/.autocompletion/skim-key-bindings.bash ]; then 
+    source ~/.autocompletion/skim-key-bindings.bash
+fi
+
 if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
@@ -244,6 +248,7 @@ if [ -f ~/.starship.toml ]; then
     eval "$(starship init bash)"
 fi
 
+<<<<<<< HEAD
 # .bashrc
 
 # Source global definitions
@@ -275,5 +280,4 @@ unset __conda_setup
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-module load stack/2024-06 gcc/12.2.0 zsh/5.8
 . "$HOME/.cargo/env"

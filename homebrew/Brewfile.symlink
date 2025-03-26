@@ -36,20 +36,20 @@ brew 'yarn'
 # Apps
 cask 'discord' if OS.mac?
 cask 'docker' if OS.mac?
-cask 'firefox' if OS.mac?
+#cask 'firefox' if OS.mac?
 #cask 'github' if OS.mac?
-cask 'google-chrome' if OS.mac?
+#cask 'google-chrome' if OS.mac?
 cask 'imageoptim' if OS.mac?
 cask 'pastebot' if OS.mac?
-cask 'ray' if OS.mac?
-cask 'raycast' if OS.mac?
-cask 'screenflow' if OS.mac?
-cask 'slack' if OS.mac?
+#cask 'ray' if OS.mac?
+#cask 'raycast' if OS.mac?
+#cask 'screenflow' if OS.mac?
+#cask 'slack' if OS.mac?
 cask 'the-unarchiver' if OS.mac?
 #cask 'tunnelbear' if OS.mac?
 #cask 'tuple' if OS.mac?
-cask 'visual-studio-code' if OS.mac?
-cask 'zoom' if OS.mac?
+#cask 'visual-studio-code' if OS.mac?
+#cask 'zoom' if OS.mac?
 
 # Quicklook
 cask 'qlmarkdown' if OS.mac?
@@ -65,10 +65,10 @@ cask 'font-source-sans-pro' if OS.mac?
 cask 'font-source-serif-pro' if OS.mac?
 
 # Mac App Store
-#mas 'Byword', id: 420212497 if OS.mac?
-#mas 'Giphy Capture', id: 668208984
-#mas 'Keynote', id: 409183694
-#mas 'Numbers', id: 409203825
-#mas 'Speedtest', id: 1153157709
-#mas 'Spring', id: 1508706541
-#mas 'Things', id: 904280696
+##mas 'Byword', id: 420212497 if OS.mac?
+##mas 'Giphy Capture', id: 668208984
+##mas 'Keynote', id: 409183694
+##mas 'Numbers', id: 409203825
+##mas 'Speedtest', id: 1153157709
+##mas 'Spring', id: 1508706541
+##mas 'Things', id: 904280696

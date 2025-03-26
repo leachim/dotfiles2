@@ -12,8 +12,6 @@ set -g display-time 5000
 # focus events enabled for terminals that support them
 set -g focus-events on
 
-# super useful when using "grouped sessions" and multi-monitor setup
-setw -g aggressive-resize on
 
 # Use vim bindings
 setw -g mode-keys vi
@@ -55,10 +53,10 @@ set -g mouse on
 # unbind [
 bind -n M-Space copy-mode
 bind-key -T copy-mode-vi v send-keys -X begin-selection
-bind-key -T copy-mode-vi y send-keys -X copy-selection-no-clear
+#bind-key -T copy-mode-vi y send-keys -X copy-selection-no-clear
 bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
 # Also copy to system clipboard
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-no-clear ' xclip -sel clip -i'
+#bind-key -T copy-mode-vi y send-keys -X copy-pipe-no-clear ' xclip -sel clip -i'
 # map copy mode to ctrl+alt+c
 bind-key -n 'C-M-c' copy-mode
 # map paste buffer to ctrl+alt+v
@@ -121,11 +119,10 @@ set -g bell-action any
 # set-option -g visual-silence on
 
 # rotate through panes and maximize panes
+bind-key -n M-w select-pane -l 
+bind-key -n M-s select-pane -t :.+
+bind-key -n M-a select-pane -t :.-
 bind-key -n C-q resize-pane -Z
-#bind-key -n M-w select-pane -t :.-
-bind-key -n C-w select-pane -l 
-bind-key -n C-s select-pane -t :.+
-bind-key -n C-a select-pane -t :.-
 
 # Create temporary window for Maximizing and minimizing panes
 bind i new-window -d -n tmp \; swap-pane -s tmp.1 \; select-window -t tmp
@@ -166,10 +163,10 @@ bind h select-pane -L
 bind l select-pane -R
 
 # Use Alt-vim keys without prefix key to switch panes
-bind -n M-h select-pane -L
-bind -n M-j select-pane -D
-bind -n M-k select-pane -U
-bind -n M-l select-pane -R
+bind -n C-h select-pane -L
+bind -n C-j select-pane -D
+bind -n C-k select-pane -U
+bind -n C-l select-pane -R
 
 # Shift vim to switch windows
 #bind -n S-Left  previous-window
@@ -294,3 +291,8 @@ bind -T copy-mode DoubleClick1Pane select-pane \; send -X select-word-no-clear \
 # # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 # set-environment -g PATH "~/.local/bin:/usr/bin"
 # run '~/.tmux/plugins/tpm/tpm'
+
+set-option -g allow-passthrough on
+
+# super useful when using "grouped sessions" and multi-monitor setup -> not compatible with iterm2
+setw -g aggressive-resize off

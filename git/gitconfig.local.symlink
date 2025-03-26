@@ -1,5 +1,3 @@
 [user]
         name = leachim
-        email = 
-[credential]
-        helper = cache
+        helper = osxkeychain

@@ -20,6 +20,9 @@ if [ -x "$(command -v br)" ]; then
     alias l="br"
 fi
 
+## Mac shortcuts
+alias ma-tmux="tmux -CC new -A -s mac"
+
 ## Shortcuts
 alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
 alias n-rsync-bam="rsync -aP --include=\"*/\" --include=\"*.bam\" --exclude=\"*\""
@@ -95,7 +98,7 @@ alias backup-conda-all="bash ~/.dotfiles/scripts/conda_backup.sh"
 ###              SYSTEM               ###
 #########################################
 
-datediff () { d1=$(date -d $1 +%s);d2=$(date -d 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
+#datediff () { d1=$(date $1 +%s);d2=$(date 'now' +%s);echo "$(( (d2 - d1) / 86400 )) days";}
 function wttr () {
     # change Paris to your default location
     curl -s -S -H "Accept-Language: en" wttr.in/"${1:-London}" | head -q -n -3 ; }
@@ -109,9 +112,9 @@ alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
 alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
 
-if ! type "doremi" > /dev/null 2>&1; then
-    alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 05/01/2024)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
-fi
+#if ! type "doremi" > /dev/null 2>&1; then
+    #alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 05/01/2024)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
+#fi
 
 alias daily-info="weather && daily-cal && daily-quote"
 alias ugit="git pull origin master && git submodule update --recursive"
@@ -409,7 +412,7 @@ function mpdf-decrypt () {
 }
 
 # decrease size of pdf - Quality level in dPDFSETTINGS= are "/screen," "/ebook," "/printer" and "/prepress,"
-mpdf-shrink () { mv $1 $1_original && /usr/bin/gs -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sOutputFile=${1/_original} $1_original && if [ $(ls -l  $1 | cut -f 5 -d " ") -lt $(ls -l  $1_original | cut -f 5 -d " ") ]; then rm -f $1_original; else mv -f $1_original $1; fi ;}
+mpdf-shrink () { mv $1 $1_original && /opt/homebrew/bin/gs -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -sOutputFile=${1/_original} $1_original ; }
 
 # print content of file to pdf
 mpdf-printFileToPdf () { cat "$1" | a2ps -=book -B -q --medium=A4dj --borders=no -o out12345678.ps && ps2pdf out12345678.ps printTerm.pdf && rm -f out12345678.ps ; }

@@ -27,21 +27,21 @@ fi
 # export DISABLE_FZF_AUTO_COMPLETION="true"
 # Uncomment the following line to disable key bindings (CTRL-T, CTRL-R, ALT-C)
 # export DISABLE_FZF_KEY_BINDINGS="true"
-if [ -e ~/.fzf ]; then
-	export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
-	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_DEFAULT_OPTS='
-                    --color=dark
-                    --color fg:124,bg:16,hl:202,fg+:214,bg+:52,hl+:231
-                    --color info:52,prompt:196,spinner:208,pointer:196,marker:208'
-fi
+#if [ -e ~/.fzf ]; then
+#	export FZF_DEFAULT_COMMAND='ag --nocolor -g ""'
+#	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+#	export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND"
+#    export FZF_DEFAULT_OPTS='
+#                    --color=dark
+#                    --color fg:124,bg:16,hl:202,fg+:214,bg+:52,hl+:231
+#                    --color info:52,prompt:196,spinner:208,pointer:196,marker:208'
+#fi
 
 # fasd
 # if [ command -v COMMAND &> /dev/null ]; then
-if [ -e ~/.fasd ]; then
-    eval "$(fasd --init auto)"
-fi
+#if [ -e ~/.fasd ]; then
+#    eval "$(fasd --init auto)"
+#fi
 
 # broot
 #if [ -f "$HOME/.config/broot/launcher/bash/br" ]; then
@@ -52,9 +52,9 @@ fi
 
 [ -f ~/.gitaliases ] && source ~/.gitaliases
 
+[ -f ~/.ringaliases ] && source ~/.ringaliases
+
 # per host configuration
 if [ -f ~/.profile_hosts ]; then
     source ~/.profile_hosts
 fi
-
-. "$HOME/.cargo/env"
