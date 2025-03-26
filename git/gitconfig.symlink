@@ -38,3 +38,6 @@
 
 [init]
 	defaultBranch = main
+[user]
+	name = leachim
+	email = leachim@users.noreply.github.com
