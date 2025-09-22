@@ -14,7 +14,6 @@ $git_state\
 $docker_context\
 $julia\
 $python\
-$conda\
 $memory_usage\
 $aws\
 $gcloud\
@@ -57,10 +56,6 @@ show_always = true
 format = ''
 disabled = true
 
-[conda]
-format = " [$symbol$environment](dimmed green) "
-ignore_base = false
-
 [docker_context]
 format = "via [🐋 $context](blue bold)"
 
@@ -77,3 +72,11 @@ symbol = "∴ "
 
 [singularity]
 format = '[📦 \[$env\]]($style) '
+
+[custom.uv_python]
+command = 'uv python find --show-version'
+format = 'via [${symbol}(${output} )]($style)'
+symbol = "uv "
+detect_extensions = ['py', 'ipynb']
+detect_files = ['.python-version', 'Pipfile', '__init__.py', 'pyproject.toml', 'requirements.txt', 'setup.py', 'tox.ini', 'uv.lock', 'pylock.toml']
+style = "bold purple"

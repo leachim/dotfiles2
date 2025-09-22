@@ -27,7 +27,8 @@ set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 setw -g xterm-keys on
 
 # Default shell according to system in use
-set-option -g default-shell $SHELL
+#set-option -g default-shell $SHELL
+set-option -g default-command zsh
 
 # Avoid issue with xterm unknown
 # set -g default-terminal "tmux-256color"
@@ -113,7 +114,7 @@ setw -g pane-base-index 1
 setw -g monitor-activity on
 bind m setw monitor-activity
 bind ! setw monitor-silence 300
-set -g bell-action any
+#set -g bell-action any
 # set -g visual-activity both
 # set -g visual-bell both
 # set-option -g visual-silence on
@@ -292,7 +293,7 @@ bind -T copy-mode DoubleClick1Pane select-pane \; send -X select-word-no-clear \
 # set-environment -g PATH "~/.local/bin:/usr/bin"
 # run '~/.tmux/plugins/tpm/tpm'
 
-set-option -g allow-passthrough on
+#set-option -g allow-passthrough on
 
 # super useful when using "grouped sessions" and multi-monitor setup -> not compatible with iterm2
 setw -g aggressive-resize off

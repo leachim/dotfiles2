@@ -2,26 +2,19 @@
 ###              ALIASES              ###
 #########################################
 
-if [ -x "$(command -v fasd)" ]; then
-    # fasd shortcuts
-    alias a='fasd -a'        # any
-    alias s='fasd -si'       # show / search / select
-    alias d='fasd -d'        # directory
-    alias f='fasd -f'        # file
-    alias sd='fasd -sid'     # interactive directory selection
-    alias sf='fasd -sif'     # interactive file selection
-    alias zz='fasd_cd -d'     # cd, same functionality as j in autojump
-    alias z='fasd_cd -d -i' # cd with interactive selection
-    alias v='f -e vim' # quick opening files with vim
-    alias vv='f -e zathura' # quick opening files with zathura
-fi
-
 if [ -x "$(command -v br)" ]; then
     alias l="br"
 fi
 
 ## Mac shortcuts
 alias ma-tmux="tmux -CC new -A -s mac"
+alias quota_euler="cat /cluster/work/bewi/.bewi_user_data_usage.txt"
+alias ns="nvidia-smi"
+alias squ="squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.6D %.4C %R\""
+alias sqw="watch -n 10 'squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.6D %.4C %R\"'"
+alias sqg="squeue -u $(whoami) -h -o \"%i %j\" | while read jobid name; do gpu=\$(scontrol show job \$jobid 2>/dev/null | sed -n 's/.*gres\/gpu:\([0-9]\+\).*/\1/p' | head -1); echo \"Job \$jobid (\$name): \${gpu:-0} GPUs\"; done"
+sqcc() { [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]] && { echo "Error: Pattern required" >&2; return 1; }; squeue -u michaes -h -o "%i %j" | grep "$1" | awk '{print $1}' | xargs scancel ; }
+
 
 ## Shortcuts
 alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
@@ -31,6 +24,7 @@ alias lst="ls -lt"
 alias ls="ls --color=auto"
 alias gs="git status"
 alias sac="conda activate"
+alias vac=". .venv/bin/activate"
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
 alias vi="nvim"

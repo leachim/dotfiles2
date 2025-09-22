@@ -26,7 +26,6 @@ alias gs='git status '
 alias gss='git status -s'
 alias gsu='git status -uno'
 alias gs.='git status .'
-alias gh='git status .'
 
 alias gr="git remote"
 alias grv="git remote -v"
