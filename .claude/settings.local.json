@@ -31,7 +31,12 @@
       "Bash(git rm:*)",
       "Bash(git -C /Users/michaes/.dotfiles status --short)",
       "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"hooks.slack.com/services\")",
-      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"ANTHROPIC_API_KEY=\" --pickaxe-regex)"
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"ANTHROPIC_API_KEY=\" --pickaxe-regex)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all --oneline)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"export.*KEY=\" --pickaxe-regex)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"BEGIN\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"Bearer \")"
     ]
   }
 }
