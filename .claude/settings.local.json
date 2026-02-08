@@ -4,7 +4,11 @@
       "Bash(ls:*)",
       "Bash(wc:*)",
       "Bash(find:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(grep:*)",
+      "Bash(bash:*)",
+      "Bash(/bin/zsh:*)",
+      "Bash(echo:*)"
     ]
   }
 }

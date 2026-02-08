@@ -6,8 +6,8 @@ if [ ! -z "$TMOUT" ]; then
   env -u TMOUT zsh 
 fi
 
-# shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
+# shortcut to this dotfiles path is $DOTFILES
+export DOTFILES=$HOME/.dotfiles
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/Code
@@ -22,7 +22,7 @@ fi
 
 # all of our zsh files
 typeset -U config_files
-config_files=($ZSH/**/*.zsh)
+config_files=($DOTFILES/**/*.zsh)
 
 # load the path files
 for file in ${(M)config_files:#*/path.zsh}
@@ -105,45 +105,9 @@ plugins=(git fasd history-substring-search shrink-path)
 
 [ -f ~/.profile ] && source ~/.profile
 
-# Better search with skim - credits to https://tratt.net/laurie/blog/2025/better_shell_history_search.html
-# NOTE if you get a systime error on mac: brew install gawk (mac awk doesnt support this)
+# Better history
 setopt EXTENDED_HISTORY
 setopt inc_append_history_time
-skim-history-widget() {
-  local selected num
-  setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2> /dev/null
-  local awk_filter='{ cmd=$0; sub(/^\s*[0-9]+\**\s+/, "", cmd); if (!seen[cmd]++) print $0 }'  # filter out duplicates
-  local n=1 fc_opts=''
-  if [[ -o extended_history ]]; then
-    awk_filter='
-{
-  ts = int($2)
-  delta = systime() - ts
-  delta_days = int(delta / 86400)
-  if (delta < 0) { $2="+" (-delta_days) "d" }
-  else if (delta_days < 1 && delta < 72000) { $2=strftime("%H:%M", ts) }
-  else if (delta_days == 0) { $2="1d" }
-  else { $2=delta_days "d" }
-  line=$0; $1=""; $2=""
-  if (!seen[$0]++) print line
-}'
-    fc_opts='-i'
-    n=2
-  fi
-  selected=( $(fc -rl $fc_opts -t '%s' 1 | sed -E "s/^ *//" | awk "$awk_filter" | sort -k1,1nr |
-    SKIM_DEFAULT_OPTIONS="--height ${SKIM_TMUX_HEIGHT:-40%} $SKIM_DEFAULT_OPTIONS --with-nth $n.. --bind=ctrl-r:toggle-sort --no-sort $SKIM_CTRL_R_OPTS --query=${(qqq)LBUFFER} --no-multi" $(__skimcmd)) )
-  local ret=$?
-  if [ -n "$selected" ]; then
-    num=$selected[1]
-    if [ -n "$num" ]; then
-      zle vi-fetch-history -n $num
-    fi
-  fi
-  zle reset-prompt
-  return $ret
-}
-zle     -N   skim-history-widget
-bindkey '^R' skim-history-widget
 
 command -v starship &> /dev/null && eval "$(starship init zsh)"
 

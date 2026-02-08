@@ -58,7 +58,7 @@ alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
 alias mkdir="mkdir -pv"
 alias psn="ps auxf"
 alias free="free -mt"
-alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
+psg () { ps aux | grep -v grep | grep -i -e VSZ -e "$1" ; }
 alias fhere="find . -name "
 alias cd..="cd .."
 alias ..="cd .."
@@ -323,7 +323,7 @@ function extract-helper {
 fi
 }
 
-untar () { tar –zxvf $1 ; }
+untar () { tar -zxvf $1 ; }
 
 function mlat () { for var in "$@"; do /bin/bash ~/.dotfiles/scripts/latexeqs.sh "$var"; done ; }
 
@@ -396,13 +396,13 @@ function mfigure (){
 
 # decrypt pdf
 function mpdf-decrypt () {
-    if [ ! -d $1 ]; then
+    if [ ! -f $1 ]; then
         printf "File does not exist\n"
-        exit -1
+        return 1
     fi
-    mv $1 backup_$file
-    qpdf --password=$2 --decrypt $1 decrypted_$1
-    mv decrypted_$1 $file
+    mv $1 backup_$1
+    qpdf --password=$2 --decrypt backup_$1 decrypted_$1
+    mv decrypted_$1 $1
 }
 
 # decrease size of pdf - Quality level in dPDFSETTINGS= are "/screen," "/ebook," "/printer" and "/prepress,"

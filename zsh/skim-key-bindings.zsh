@@ -37,6 +37,7 @@ fi
 {
 
 [[ -o interactive ]] || return 0
+command -v sk &>/dev/null || return 0
 
 # CTRL-T - Paste the selected file path(s) into the command line
 __fsel() {

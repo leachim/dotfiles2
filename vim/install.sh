@@ -9,7 +9,7 @@ then
   # install plug.vim for vim
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  vim -u "~/.dotfiles/vim/vimrc.symlink" +PlugInstall
+  vim -u "$HOME/.dotfiles/vim/vimrc.symlink" +PlugInstall
 fi
 
 if command -v nvim &> /dev/null
@@ -20,7 +20,7 @@ echo "Nvim is installed"
   #  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   sh -c 'curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  nvim -u "~/.dotfiles/vim/vimrc.symlink" +PlugInstall
+  nvim -u "$HOME/.dotfiles/vim/vimrc.symlink" +PlugInstall
 fi
 
 if test ! "$(uname)" = "Darwin"
