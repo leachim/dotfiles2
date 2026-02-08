@@ -61,7 +61,7 @@ success "symlinks"
 # Homebrew
 if command -v brew >/dev/null 2>&1; then
   info "brew update && upgrade"
-  brew update
+  brew update --quiet
   brew upgrade
   brew cleanup
   success "homebrew"

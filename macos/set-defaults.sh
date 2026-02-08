@@ -55,11 +55,7 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 # (e.g. enable Tab in modal dialogs)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-# Set language and text formats
-defaults write NSGlobalDomain AppleLanguages -array "en" "de"
-defaults write NSGlobalDomain AppleLocale -string "en_US@currency=EUR"
-defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
-defaults write NSGlobalDomain AppleMetricUnits -bool true
+# Language, locale, and measurement units are managed in System Settings.
 
 ###############################################################################
 # Screen                                                                      #
@@ -129,10 +125,10 @@ defaults write com.apple.dock minimize-to-application -bool true
 # Wipe all (default) app icons from the Dock
 # This is only really useful when setting up a new Mac, or if you don't use
 # the Dock to launch apps.
-defaults write com.apple.dock persistent-apps -array
+#defaults write com.apple.dock persistent-apps -array
 
 # Show only open applications in the Dock
-defaults write com.apple.dock static-only -bool true
+#defaults write com.apple.dock static-only -bool true
 
 # Don't animate opening applications from the Dock
 defaults write com.apple.dock launchanim -bool false
@@ -149,8 +145,8 @@ defaults write com.apple.dock launchanim -bool false
 # 11: Launchpad
 # 12: Notification Center
 # 13: Lock Screen
-# Top right screen corner → Lock Screen
-defaults write com.apple.dock wvous-tr-corner -int 13
+# Top right screen corner → Notifications
+defaults write com.apple.dock wvous-tr-corner -int 12
 defaults write com.apple.dock wvous-tr-modifier -int 0
 
 ###############################################################################
@@ -166,11 +162,6 @@ defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
 # Set Safari's home page to `about:blank` for faster loading
 defaults write com.apple.Safari HomePage -string "about:blank"
-
-# Enable the Develop menu and the Web Inspector in Safari
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
 
 # Warn about fraudulent websites
 defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
@@ -188,20 +179,6 @@ defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 
 ###############################################################################
-# Mail                                                                        #
-###############################################################################
-
-# Disable send and reply animations in Mail.app
-defaults write com.apple.mail DisableReplyAnimations -bool true
-defaults write com.apple.mail DisableSendAnimations -bool true
-
-# Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
-defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-
-# Disable inline attachments (just show the icons)
-defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
-
-###############################################################################
 # Terminal & iTerm 2                                                          #
 ###############################################################################
 
@@ -210,13 +187,6 @@ defaults write com.apple.terminal StringEncodings -array 4
 
 # Don't display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-###############################################################################
-# Time Machine                                                                #
-###############################################################################
-
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 ###############################################################################
 # Activity Monitor                                                            #
@@ -271,8 +241,6 @@ for app in "Activity Monitor" \
     "Dock" \
     "Finder" \
     "Google Chrome" \
-    "Mail" \
-    "Safari" \
     "SystemUIServer"; do
     killall "${app}" &> /dev/null
 done

@@ -40,11 +40,6 @@ run_optional () {
   fi
 }
 
-# Always run macOS-specific installs (they self-guard on platform)
-if [ "$(uname -s)" = "Darwin" ] && [ -f ./macos/install.sh ]; then
-  sh -c ./macos/install.sh
-fi
-
 # Optional components
 run_optional "Oh My Zsh"      ./zsh/install.sh
 run_optional "Vim plugins"    ./vim/install.sh

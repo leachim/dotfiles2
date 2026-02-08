@@ -36,7 +36,14 @@
       "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"export.*KEY=\" --pickaxe-regex)",
       "Bash(git -C /Users/michaes/.dotfiles log --all -p)",
       "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"BEGIN\")",
-      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"Bearer \")"
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"Bearer \")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all --diff-filter=D --name-only --pretty=format:\"%h %s\")",
+      "Bash(git -C /Users/michaes/.dotfiles show f9371db:.zshrc)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p --diff-filter=D -- \".gitconfig\" \"git/gitconfig.local.symlink\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -- \"private/*\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -- \"*.localrc*\" \"localrc*\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -- \".gitignore\")",
+      "Bash(git -C /Users/michaes/.dotfiles remote -v)"
     ]
   }
 }

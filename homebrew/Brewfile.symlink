@@ -27,4 +27,6 @@ brew 'wget'
 
 # Apps (macOS only)
 cask 'fuse-t' if OS.mac?
+cask 'posturr' if OS.mac?
 cask 'qview' if OS.mac?
+cask 'whyfi' if OS.mac?
