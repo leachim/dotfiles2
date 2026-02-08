@@ -45,6 +45,5 @@ run_optional "Oh My Zsh"      ./zsh/install.sh
 run_optional "Vim plugins"    ./vim/install.sh
 run_optional "Starship prompt" ./starship/install.sh
 run_optional "Rust (rustup)"  ./rust/install.sh
-run_optional "Node packages"  ./node/install.sh
 run_optional "Claude Code config" ./claude/install.sh
 run_optional "GitHub CLI (gh)" ./gh/install.sh

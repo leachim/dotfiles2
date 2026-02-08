@@ -18,7 +18,7 @@ then
   brew update
 
   # Install all our dependencies with bundle (See Brewfile)
-  brew bundle --file="$HOME/.Brewfile"
+  brew bundle --file="$HOME/.Brewfile" --verbose
 fi
 
 exit 0

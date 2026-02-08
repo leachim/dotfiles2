@@ -51,7 +51,3 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	echo "› brew update"
 	brew update
 fi
-
-# Install software
-echo "› $DOTFILES/script/install"
-$DOTFILES/script/install
