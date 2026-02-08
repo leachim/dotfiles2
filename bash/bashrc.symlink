@@ -172,8 +172,8 @@ if [ -f ~/.autocompletion/docker-machine.bash ]; then
     source ~/.autocompletion/docker-machine.bash
 fi
 
-if [ -f ~/.autocompletion/skim-key-bindings.bash ]; then
-    source ~/.autocompletion/skim-key-bindings.bash
+if [ -f ~/.skim/shell/key-bindings.bash ]; then
+    source ~/.skim/shell/key-bindings.bash
 fi
 
 if [ -f ~/.aliases ]; then
