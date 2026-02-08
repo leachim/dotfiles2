@@ -1,8 +1,7 @@
 {
   "env": {
     "AI_AGENT": "1",
-    "CONTEXT7_API_KEY": "${CONTEXT7_API}",
-    "GITHUB_PAT": "${GITHUB_PAT}"
+    "CONTEXT7_API_KEY": "${CONTEXT7_API}"
   },
   "permissions": {
     "allow": [
@@ -113,13 +112,6 @@
             "-y",
             "@context7/mcp-server"
           ]
-        }
-      }
-    },
-    "github@claude-plugins-official": {
-      "mcpServers": {
-        "github": {
-          "token": "${GITHUB_PAT}"
         }
       }
     }
