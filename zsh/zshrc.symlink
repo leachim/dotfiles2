@@ -30,8 +30,8 @@ do
   source $file
 done
 
-# load everything but the path and completion files
-for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
+# load everything but the path, completion, and skim files
+for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/skim-key-bindings.zsh}
 do
   source $file
 done
@@ -84,6 +84,9 @@ HIST_STAMPS="dd/mm/yyyy"
 plugins=(git history-substring-search shrink-path)
 
 [ -f $ZSH/oh-my-zsh.sh ] && source $ZSH/oh-my-zsh.sh
+
+# Skim keybindings (Ctrl+R, Ctrl+T, Alt+C) — must load after oh-my-zsh
+[ -f $DOTFILES/zsh/skim-key-bindings.zsh ] && source $DOTFILES/zsh/skim-key-bindings.zsh
 
 [ -f ~/.aliases ] && source ~/.aliases
 
