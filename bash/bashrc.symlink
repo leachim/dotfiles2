@@ -223,6 +223,7 @@ if [ "$STARSHIP_DISABLE" != "true" ] && command -v starship &> /dev/null; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
 
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc
