@@ -7,16 +7,15 @@ if [ -x "$(command -v br)" ]; then
 fi
 
 alias ma-tmux="tmux -CC new -A -s mac"
+alias dns-flush="sudo killall -HUP mDNSResponder"
 alias ns="nvidia-smi"
 alias hc="history -c"
 
 
 ## Shortcuts
-alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
 alias n-rsync-bam="rsync -aP --include=\"*/\" --include=\"*.bam\" --exclude=\"*\""
 alias n-ssh="ssh -x -C"
 alias lst="ls -lt"
-alias ls="ls --color=auto"
 alias gs="git status"
 alias sac="conda activate"
 alias vac=". .venv/bin/activate"
@@ -43,7 +42,7 @@ alias cpfile="rsync --progress"
 alias recently_changed='find . -newerct "15 minute ago" -print'
 recently_changed_x() { find . -newerct "$1 minute ago" -print; }
 
-alias tailwatch="watch -n 1 'tail $(ls -lA -t | head -n 1)'"
+tailwatch() { watch -n 1 "tail $(ls -lA -t | head -n 1)"; }
 alias brd="bash runDocker.sh"
 alias dun="du -chs | sort -h"
 alias dfn="df -Tha --total"
@@ -51,13 +50,11 @@ alias dfn="df -Tha --total"
 alias myip="curl http://ipecho.net/plain; echo"
 function myco () {
     IP=$(curl 'http://ipecho.net/plain' 2>/dev/null) ;
-    # echo $IP ;
-    curl 'http://www.geoplugin.net/json.gp?ip=$IP' 2>/dev/null| jq -r '"\(.geoplugin_city), \(.geoplugin_countryCode)"' ;
+    curl "http://www.geoplugin.net/json.gp?ip=$IP" 2>/dev/null| jq -r '"\(.geoplugin_city), \(.geoplugin_countryCode)"' ;
     }
 alias wgetNice="wget --cut-dirs=100 -nH -np -r -c"
 alias mkdir="mkdir -pv"
-alias psn="ps auxf"
-alias free="free -mt"
+alias psn="ps aux"
 psg () { ps aux | grep -v grep | grep -i -e VSZ -e "$1" ; }
 alias fhere="find . -name "
 alias cd..="cd .."
@@ -66,12 +63,6 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-alias apu="sudo apt update"
-alias apg="sudo apt upgrade"
-alias apa="sudo apt update && sudo apt upgrade"
-alias api="sudo apt install"
-alias reboot="sudo systemctl reboot"
-alias poweroff="sudo systemctl poweroff"
 
 
 #########################################
@@ -111,9 +102,6 @@ alias daily-info="weather && daily-cal && daily-quote"
 alias ugit="git pull origin master && git submodule update --recursive"
 function ugit-iterate () { for i in */ ; do cd $i; pwd -P; ugit; echo ""; cd ..; done ; }
 alias timestamp="date +%Y_%m_%d-%H_%M"
-alias suspend="systemctl suspend"
-alias m-timezone="timedatectl"
-alias m-timezone-update="sudo dpkg-reconfigure tzdata"
 alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
 
@@ -138,26 +126,22 @@ print-process-info () {
         # date '+%Y-%m-%d %H:%M:%S %Z'
         echo "$(date '+%H:%M:%S %Z') - $(hostname) @$(print-tmux-session-info):\nProcess finished [exit status $(echo $?)]" ; }
 
-#alias ding='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info)\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
-#alias dong="sleep 1; notify-send -u \"normal\" \"$(print-process-info)\""
-alias ring='~/.local/bin/sing $?'
-function  ting() {
+alias ring='push "$(print-process-info)" "$(hostname)"'
+function ting() {
     START=$SECONDS
     "$@"
     EXIT_CODE=$?
-    sing $EXIT_CODE $((SECONDS - START))
+    push "$(print-process-info) ($((SECONDS - START))s)" "$(hostname)"
     return $EXIT_CODE
 }
-alias rling="~/.local/bin/sling $? 0 $1"
-function  tling() {
+alias rling="slac $? 0 $1"
+function tling() {
     START=$SECONDS
     "$@"
     EXIT_CODE=$?
-    sling $EXIT_CODE $((SECONDS - START))
+    slac $EXIT_CODE $((SECONDS - START))
     return $EXIT_CODE
 }
-#alias ring='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info) RingRing! \", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
-#alias tam="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 
 ###########################
 ###       SERVICES      ###
@@ -282,12 +266,11 @@ function wc-dir () {
     done
 }
 
-alias scrotclip="scrot -s ~/.temp.png && xclip -selection clipboard -t image/png -i ~/.temp.png && rm -f ~/.temp.png"
 function screenshot_to_text () {
     bash ~/.dotfiles/scripts/screenshot_to_text.sh;
 }
 
-# compression on linux
+# compression
 alias targz="tar czvf"
 alias tarbz="tar cjvf"
 alias tarxy="tar cJvf"
@@ -296,7 +279,7 @@ function extract-helper {
     # display usage if no parameters given
     echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
  else
-    if [ -f $1 ] ; then
+    if [ -f "$1" ] ; then
         # NAME=${1%.*}
         # mkdir $NAME && cd $NAME
         case $1 in
@@ -513,50 +496,10 @@ alias m-drivemount="google-drive-ocamlfuse ~/Drive"
 ###        SYSTEM       ###
 ###########################
 
-alias firefox="Exec=env MOZ_X11_EGL=1 /usr/bin/firefox"
-alias pfirefox="/usr/bin/firefox -private-window"
-alias pchrome="/usr/bin/chromium -incognito"
-alias tchrome="/usr/bin/chromium --user-data-dir=`mktemp -d`"
 function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
 
 ## Remote file system
 alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
-
-# fix caps issue
-capsfix () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
-CAPSFIX () { /usr/bin/python3 -c "from ctypes import *; X11 = cdll.LoadLibrary(\"libX11.so.6\"); display = X11.XOpenDisplay(None); X11.XkbLockModifiers(display, c_uint(0x0100), c_uint(2), c_uint(0)); X11.XCloseDisplay(display)" ; }
-
-m-mode-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto ; }
-m-mode-savepower() { if [ ! -f /tmp/savedata.lock ]; then systemctl stop bluetooth.service && brightnessctl set 10% && touch /tmp/savedata.lock; else systemctl start bluetooth.service && brightnessctl set 30% && sleep 3 && rm -f /tmp/savedata.lock; fi; }
-m-mode-flightmode() { if [ ! -f /tmp/flightmode.lock ]; then nmcli radio wifi off && touch /tmp/flightmode.lock; echo "Turning flight mode on"; else nmcli radio wifi on && rm -f /tmp/flightmode.lock; echo "Turning flight mode off"; fi; }
-m-mode-quiet() { if [ ! -f /tmp/quiet.lock ]; then killall -SIGUSR1 dunst; touch /tmp/quiet.lock; echo "Turning quiet mode on"; else killall -SIGUSR2 dunst; rm -f /tmp/quiet.lock; echo "Turning quiet mode off"; fi; }
-### Monitor and presentation settings ###
-
-# set dual/single monitors
-dual-dp () {  xrandr --output eDP1 --primary --output DP1 --auto --right-of eDP1;}
-dual-vga (){ xrandr --output eDP1 --primary --output DP2 --auto --right-of eDP1;}
-dual-hdmi () {  xrandr --output eDP1 --primary --output HDMI1 --auto --right-of eDP1;}
-single () { xrandr --output DP1 --off; xrandr --output DP2 --off ; xrandr --output HDMI1 --off ; xrandr --output HDMI2 --off ;}
-present () { xrandr --output DP1 --auto ; xrandr --output DP2 --auto;}
-
-# set background light
-darken () { brightnessctl set 0% ; }
-lighten () { brightnessctl set 100% ;}
-
-# battery status
-function m-battery () { upower -i $(upower -e | grep BAT) | grep --color=never -E "state|to\ full|to\ empty|percentage" ; }
-
-### Internet and proxy commands ###
-alias wgup="sudo wg-quick up "
-alias wgdown="sudo wg-quick down "
-alias wgstatus="sudo wg"
-alias caup="sudo ipsec up CAM && touch /tmp/vpn.lock"
-alias cadown="sudo ipsec down CAM && rm -f /tmp/vpn.lock"
-alias browsh="docker run --rm -it browsh/browsh"
-alias nmshow="nmcli device wifi list"
-alias nmlist="nmcli con show --active"
-alias nmup="nmcli connection up"
-alias nmdown="nmcli connection down"
 
 ###########################
 ###       SERVICES      ###
@@ -584,12 +527,6 @@ alias proxyrdocker="ssh -N -L localhost:8786:localhost:8786 desktop"
 # copy only bam files
 alias m-rsync-bam="rsync -zarvP --prune-empty-dirs --include='*/\' --include='*.bam' --exclude='*'"
 
-alias m-connect-ext="nmcli device wifi connect 00:5F:67:13:6C:3B"
-alias m-connect-fre="nmcli device wifi connect A4:05:D6:08:38:00"
-alias m-connect-new="nmcli device wifi connect"
-alias m-connect-list="nmcli dev wifi list"
-alias m-connect-scan="nmcli dev wifi rescan"
-
 ################################
 ###  BACKUP & System updates ###
 ################################
@@ -606,8 +543,6 @@ backup-manager () { bash $HOME/.backup/duplicity.sh; }
 backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
 backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
 backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
-
-alias backup-package-list="dpkg --get-selections"
 
 function backup-conda-envs {
 	NOW=$(date "+%Y-%m-%d")

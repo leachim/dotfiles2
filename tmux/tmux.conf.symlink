@@ -23,9 +23,6 @@ set -g status-keys vi
 # Sane scrolling
 set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 
-# Enable function keys
-setw -g xterm-keys on
-
 # Default shell according to system in use
 set-option -g default-shell "$SHELL"
 
@@ -39,11 +36,13 @@ set-environment -g 'IGNOREEOF' 100
 # Copy paste
 # -----------------------
 
-# Copy & Paste from/to System Clipboard
-bind C-c run "tmux save-buffer - | xclip -i -sel clipboard"
-bind C-v run "tmux set-buffer \"$(xclip -o -sel clipboard)\"; tmux paste-buffer"
-bind C-p run "tmux set-buffer \"$(xclip -o -sel clipboard | tr -d '\n' | sed -n -e 's/ \+/ /g;s/\r//g;s/\\//gp;' | tr -s ' ')\"; tmux paste-buffer"
-# bind C-y run "tmux show-buffer | xclip -sel clip -i"
+# Copy & Paste from/to System Clipboard (platform-aware)
+if-shell 'test "$(uname)" = "Darwin"' \
+  'bind C-c run "tmux save-buffer - | pbcopy"' \
+  'bind C-c run "tmux save-buffer - | xclip -i -sel clipboard"'
+if-shell 'test "$(uname)" = "Darwin"' \
+  'bind C-v run "tmux set-buffer \"$(pbpaste)\"; tmux paste-buffer"' \
+  'bind C-v run "tmux set-buffer \"$(xclip -o -sel clipboard)\"; tmux paste-buffer"'
 
 # clever copy paste in tmux
 set -g mouse on
@@ -231,7 +230,7 @@ set -g bell-action any
 
 # show host name and public IP address on left side of status bar
 set -g status-left-length 70
-set -g status-left "#[fg=green] #h :: #[fg=brightblue]#(curl icanhazip.com)"
+set -g status-left "#[fg=green] #h"
 
 # show session name, window & pane number, date and time on right side of status bar
 set -g status-right-length 60
@@ -280,10 +279,13 @@ bind -n C-y choose-tree
 # set -g @plugin 'git@github.com/user/plugin'
 # set -g @plugin 'git@bitbucket.com/user/plugin'
 
-# copy on select
-bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear 'xsel -i'
-bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"
-bind -T copy-mode DoubleClick1Pane select-pane \; send -X select-word-no-clear \; send -X copy-pipe-no-clear "xsel -i"
+# copy on select (platform-aware)
+if-shell 'test "$(uname)" = "Darwin"' \
+  'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "pbcopy"' \
+  'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "xsel -i"'
+if-shell 'test "$(uname)" = "Darwin"' \
+  'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "pbcopy"' \
+  'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"'
 
 # # List of plugins
 # set -g @tpm_plugins '        \

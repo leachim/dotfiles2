@@ -1,28 +1,22 @@
-# Don't print a new line at the start of the prompt
+# Fast starship config for cluster/network filesystems (NFS, Lustre, GPFS)
+# Disables git scanning, language detection, and custom commands to avoid
+# expensive stat() calls and subprocess spawns on high-latency mounts.
+# Switched automatically by set_starship_config() in hosts/hpc.sh
 add_newline = false
 
-# Which is equivalent to
 format = """
 $username\
 $hostname\
-$shlvl\
 $singularity\
 $directory\
-$docker_context\
-$julia\
-$python\
-$memory_usage\
-$aws\
-$gcloud\
-$env_var\
 $cmd_duration\
-$custom\
 $line_break\
 $jobs\
-$battery\
-$time\
 $status\
 $character"""
+
+command_timeout = 100
+scan_timeout = 10
 
 [line_break]
 disabled = true
@@ -49,29 +43,44 @@ format = "[$user]($style) "
 disabled = false
 show_always = true
 
-[aws]
-format = ''
-disabled = true
-
-[docker_context]
-format = "via [🐋 $context](blue bold)"
-
-[gcloud]
-disabled = true
-
-[julia]
-symbol = "∴ "
-
 [singularity]
 format = '[📦 \[$env\]]($style) '
 
-command_timeout = 100  # milliseconds, default is 500
-scan_timeout = 10      # milliseconds for scanning directories
+# Explicitly disable all scanning modules
+[git_branch]
+disabled = true
+[git_commit]
+disabled = true
+[git_state]
+disabled = true
+[git_status]
+disabled = true
+[git_metrics]
+disabled = true
 
-[custom.uv_python]
-command = 'uv python find --show-version'
-format = 'via [${symbol}(${output} )]($style)'
-symbol = "uv "
-detect_extensions = ['py', 'ipynb']
-detect_files = ['.python-version', 'Pipfile', '__init__.py', 'pyproject.toml', 'requirements.txt', 'setup.py', 'tox.ini', 'uv.lock', 'pylock.toml']
-style = "bold purple"
+[python]
+disabled = true
+[julia]
+disabled = true
+[nodejs]
+disabled = true
+[rust]
+disabled = true
+[golang]
+disabled = true
+[java]
+disabled = true
+[ruby]
+disabled = true
+[conda]
+disabled = true
+[docker_context]
+disabled = true
+[package]
+disabled = true
+[cmake]
+disabled = true
+[aws]
+disabled = true
+[gcloud]
+disabled = true

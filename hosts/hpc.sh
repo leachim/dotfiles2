@@ -23,12 +23,12 @@ alias m-jobmonitor="SACCT_FORMAT=\"JobID%20,JobName,User,Partition,NodeList,Elap
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
 alias m-squeuew="squeue-watch"
 
-alias pd="~/.local/bin/push \"Run ended!\" \"euler\" -p \"0\""
+alias pd='push "Run ended!" "euler" -p 0'
 alias gemini-api="GEMINI_API_KEY=\$GEMINI_API_KEY gemini"
 
-# Skip heavy cluster initialization for Claude Code
+# Skip heavy cluster initialization for AI agents
 # Module loads and conda can hang if cluster services are slow/unresponsive
-if [ "$CLAUDE_CODE" != "1" ]; then
+if [ "$AI_AGENT" != "1" ]; then
     [ -f /etc/profile.d/lmod.sh ] && source /etc/profile.d/lmod.sh
     [ -f /etc/profile.d/module_path.sh ] && source /etc/profile.d/module_path.sh
 
@@ -37,15 +37,20 @@ if [ "$CLAUDE_CODE" != "1" ]; then
     module load gcc/12.2.0 2>/dev/null
     module load cuda/12.8.0 2>/dev/null
 
-    # Starship config switcher: disable git on cluster filesystems
-    function set_starship_config() {
+    # Starship config switcher: use fast config on cluster filesystems
+    # (disables git scanning, language detection, custom commands)
+    set_starship_config() {
         if [[ $PWD == /cluster/* ]]; then
-            export STARSHIP_CONFIG=~/.config/starship-nogit.toml
+            export STARSHIP_CONFIG=~/.starship_nogit.toml
         else
-            export STARSHIP_CONFIG=~/.config/starship.toml
+            export STARSHIP_CONFIG=~/.starship.toml
         fi
     }
-    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}set_starship_config"
+    if [ -n "$ZSH_VERSION" ]; then
+        precmd_functions+=(set_starship_config)
+    elif [ -n "$BASH_VERSION" ]; then
+        PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}set_starship_config"
+    fi
 
     # >>> conda initialize >>>
     __conda_setup="$("$HOME/miniforge3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"

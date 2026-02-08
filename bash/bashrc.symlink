@@ -67,8 +67,8 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 ## add specific file colors
-if [ -f ~/.dir_colors ] ; then
-    eval "`dircolors -b ~/.dir_colors`"
+if command -v dircolors >/dev/null 2>&1 && [ -f ~/.dir_colors ] ; then
+    eval "$(dircolors -b ~/.dir_colors)"
 fi
 
 # Get repo info
@@ -91,7 +91,10 @@ esac
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-shopt -s globstar
+# globstar requires bash 4+
+if [ "${BASH_VERSINFO[0]}" -ge 4 ] 2>/dev/null; then
+  shopt -s globstar
+fi
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"

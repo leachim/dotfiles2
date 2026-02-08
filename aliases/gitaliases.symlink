@@ -18,7 +18,7 @@ alias gm='git commit -m'
 alias gd='git diff'
 alias gdc='git diff --cached'
 alias gc='git checkout '
-alias gcm='git checkout master'
+alias gcm='git checkout main'
 alias gcd="git checkout devel"
 
 alias gst="git stash"
@@ -45,7 +45,7 @@ alias lg3="git log --graph --abbrev-commit --decorate --format=format:'%C(bold b
 
 # working with forks
 alias gfu="git fetch upstream"
-alias gru="git rebase upstream/master"
+alias gru="git rebase upstream/main"
 
 # Branch (b)
 #alias gb='git branch'

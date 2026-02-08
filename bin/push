@@ -1,0 +1,70 @@
+#!/bin/bash
+# Send push notifications via Pushover API
+# Requires: PUSHOVER_API_TOKEN, PUSHOVER_USER_KEY in ~/.localrc
+
+if [ -z "$PUSHOVER_API_TOKEN" ] || [ -z "$PUSHOVER_USER_KEY" ]; then
+    echo "Error: PUSHOVER_API_TOKEN and PUSHOVER_USER_KEY must be set" >&2
+    exit 1
+fi
+
+DEFAULT_MESSAGE="Ring"
+DEFAULT_TITLE="Notification"
+DEFAULT_DEVICES=""
+
+usage() {
+    echo "Usage: push [message] [title] [options]"
+    echo "Options:"
+    echo "  -p, --priority  Priority: -2(lowest) to 2(emergency) (default: 0)"
+    echo "  -d, --device    Device name"
+    echo "  -a, --all       Send to all devices"
+    echo "  -s, --sound     Sound name (pushover, bike, bugle, etc.)"
+    echo "  -u, --url       URL to include"
+    exit 1
+}
+
+[[ "$1" == "-h" || "$1" == "--help" ]] && usage
+
+MESSAGE="${1:-$DEFAULT_MESSAGE}"
+TITLE="${2:-$DEFAULT_TITLE}"
+shift 2 2>/dev/null
+
+PRIORITY=0
+DEVICE="$DEFAULT_DEVICES"
+SOUND=""
+URL=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p|--priority) PRIORITY="$2"; shift 2 ;;
+        -d|--device)   DEVICE="$2"; shift 2 ;;
+        -a|--all)      DEVICE=""; shift ;;
+        -s|--sound)    SOUND="$2"; shift 2 ;;
+        -u|--url)      URL="$2"; shift 2 ;;
+        *) echo "Unknown option: $1"; usage ;;
+    esac
+done
+
+CURL_ARGS=(
+    --form-string "token=$PUSHOVER_API_TOKEN"
+    --form-string "user=$PUSHOVER_USER_KEY"
+    --form-string "message=$MESSAGE"
+    --form-string "title=$TITLE"
+    --form-string "priority=$PRIORITY"
+)
+
+[[ -n "$DEVICE" ]] && CURL_ARGS+=(--form-string "device=$DEVICE")
+[[ -n "$SOUND" ]]  && CURL_ARGS+=(--form-string "sound=$SOUND")
+[[ -n "$URL" ]]    && CURL_ARGS+=(--form-string "url=$URL")
+
+if [[ "$PRIORITY" -eq 2 ]]; then
+    CURL_ARGS+=(--form-string "retry=60" --form-string "expire=3600")
+fi
+
+RESPONSE=$(curl -s "${CURL_ARGS[@]}" https://api.pushover.net/1/messages.json)
+
+if echo "$RESPONSE" | grep -q '"status":1'; then
+    echo "sent"
+else
+    echo "failed: $RESPONSE" >&2
+    exit 1
+fi

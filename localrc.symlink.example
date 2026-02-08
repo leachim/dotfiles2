@@ -1,3 +1,51 @@
 # Machine-specific environment variables.
 # Sourced by both bash and zsh. Keep secrets and per-machine config here.
 # This file is symlinked to ~/.localrc — do not commit secrets.
+# Copy to localrc.symlink and fill in values for your machine.
+
+# =============================================
+# Agent-safe variables (exposed to AI agents)
+# AI_AGENT=1 is set by Claude Code, Cursor, etc.
+# =============================================
+
+# --- GitHub ---
+# Personal access token (fine-grained or classic)
+# Generate at: https://github.com/settings/tokens
+# export GH_TOKEN=""
+# export GITHUB_PAT=""        # used by Claude Code MCP github plugin
+# export GH_USER=""           # org/repo for default operations
+
+# --- Context7 (Claude Code plugin) ---
+# API key for context7 MCP server
+# export CONTEXT7_API=""
+
+# =============================================
+# Restricted variables (hidden from AI agents)
+# Set AI_AGENT=1 in your agent's env config
+# to skip these exports.
+# =============================================
+if [ "$AI_AGENT" != "1" ]; then
+
+    # --- Pushover (push notifications) ---
+    # Create app + get keys at: https://pushover.net/apps/build
+    # export PUSHOVER_API_TOKEN=""
+    # export PUSHOVER_USER_KEY=""
+
+    # --- Slack ---
+    # Incoming webhook URL suffix (after hooks.slack.com/services/)
+    # Create at: https://api.slack.com/messaging/webhooks
+    # export NOTIFICATION_HOOK=""
+
+    # --- Google Gemini ---
+    # API key from: https://aistudio.google.com/apikey
+    # export GEMINI_API_KEY=""
+
+    # --- AWS ---
+    # ECR account ID for docker login
+    # export AWS_ACCOUNT=""
+
+    # --- Anthropic ---
+    # export ANTHROPIC_API_KEY=""
+
+    :  # placeholder — remove when you uncomment exports above
+fi

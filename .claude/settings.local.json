@@ -8,7 +8,12 @@
       "Bash(grep:*)",
       "Bash(bash:*)",
       "Bash(/bin/zsh:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(GIT_DIR=/Users/michaes/.dotfiles/.git git diff:*)",
+      "Bash(command -v:*)",
+      "Bash(git -C /Users/michaes/.dotfiles log --oneline -10)",
+      "Bash(zsh -n:*)",
+      "Bash(zsh:*)"
     ]
   }
 }

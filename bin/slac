@@ -1,0 +1,74 @@
+#!/bin/bash
+# Send notifications via Slack Bot API (ephemeral messages)
+# Requires: SLACK_BOT_TOKEN, SLACK_CHANNEL, SLACK_USER_ID in ~/.localrc
+
+if [ -z "$SLACK_BOT_TOKEN" ] || [ -z "$SLACK_CHANNEL" ] || [ -z "$SLACK_USER_ID" ]; then
+    echo "Error: SLACK_BOT_TOKEN, SLACK_CHANNEL, and SLACK_USER_ID must be set" >&2
+    exit 1
+fi
+
+usage() {
+    echo "Usage: sling [exit_status] [runtime_secs] [message]"
+    echo "       sling [message]"
+    echo ""
+    echo "Examples:"
+    echo "  sling 0 120              # success after 2min"
+    echo "  sling 1 60 'build broke' # failure after 1min with message"
+    echo "  sling 'deploy finished'  # plain message"
+    exit 1
+}
+
+[[ "$1" == "-h" || "$1" == "--help" ]] && usage
+
+# Parse arguments: single arg can be exit status (integer) or message (string)
+if [ $# -eq 1 ]; then
+    if [[ "$1" =~ ^[0-9]+$ ]]; then
+        EXIT_STATUS="$1"
+        RUNTIME=""
+        CUSTOM_MESSAGE=""
+    else
+        EXIT_STATUS=""
+        RUNTIME=""
+        CUSTOM_MESSAGE="$1"
+    fi
+else
+    EXIT_STATUS="${1:-""}"
+    RUNTIME="${2:-""}"
+    CUSTOM_MESSAGE="${3:-""}"
+fi
+
+LOCATION="[$(hostname):$(pwd)]"
+
+if [ -n "$EXIT_STATUS" ]; then
+    STATUS_TEXT=$( [ "$EXIT_STATUS" -eq 0 ] && echo "ok" || echo "FAILED (exit $EXIT_STATUS)" )
+    if [ -n "$RUNTIME" ]; then
+        HOURS=$((RUNTIME / 3600))
+        MINS=$(((RUNTIME % 3600) / 60))
+        SECS=$((RUNTIME % 60))
+        STATUS_TEXT="$STATUS_TEXT ($(printf "%02d:%02d:%02d" $HOURS $MINS $SECS))"
+    fi
+else
+    STATUS_TEXT="notification"
+fi
+
+if [ -n "$CUSTOM_MESSAGE" ]; then
+    FULL_MESSAGE="$CUSTOM_MESSAGE - $LOCATION $STATUS_TEXT"
+else
+    FULL_MESSAGE="$LOCATION $STATUS_TEXT"
+fi
+
+RESPONSE=$(curl -s -X POST "https://slack.com/api/chat.postEphemeral" \
+  -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"channel\": \"$SLACK_CHANNEL\",
+    \"user\": \"$SLACK_USER_ID\",
+    \"text\": \"$FULL_MESSAGE\"
+  }")
+
+if echo "$RESPONSE" | grep -q '"ok":true'; then
+    echo "sent"
+else
+    echo "failed: $RESPONSE" >&2
+    exit 1
+fi

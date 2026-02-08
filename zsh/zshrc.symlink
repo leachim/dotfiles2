@@ -79,35 +79,17 @@ bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
 
 
 export ZSH=$HOME/.oh-my-zsh
-[ -f $ZSH/oh-my-zsh.sh ] && source $ZSH/oh-my-zsh.sh
 
-# Themes
-#[[ -f "$HOME/.dotfiles/zsh/themes" ]] && . "$HOME/.dotfiles/zsh/themes"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
 HIST_STAMPS="dd/mm/yyyy"
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(git fasd history-substring-search shrink-path)
+
+[ -f $ZSH/oh-my-zsh.sh ] && source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.aliases ] && source ~/.aliases
 
 [ -f ~/.gitaliases ] && source ~/.gitaliases
 
 [ -f ~/.profile ] && source ~/.profile
-
-# Better history
-setopt EXTENDED_HISTORY
-setopt inc_append_history_time
 
 command -v starship &> /dev/null && eval "$(starship init zsh)"
 

@@ -1,5 +1,6 @@
 {
   "env": {
+    "AI_AGENT": "1",
     "CONTEXT7_API_KEY": "${CONTEXT7_API}",
     "GITHUB_PAT": "${GITHUB_PAT}"
   },
