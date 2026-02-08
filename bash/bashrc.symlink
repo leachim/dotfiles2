@@ -12,7 +12,6 @@ esac
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.tmux_bin/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="/cluster/work/bewi/members/michaes/npm-global/v22.14.0/bin:$PATH"
 export TERMINFO=$HOME/.terminfo
 
 # BASH OPTIONS {{{
@@ -247,79 +246,24 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# Skip heavy initialization for Claude Code (module loads, NVM, Starship, Conda)
-# These can hang if cluster services are slow/unresponsive
-if [ "$CLAUDE_CODE" != "1" ]; then
-    . "$HOME/.cargo/env"
+# Optional tool initialization (guarded for portability)
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-    export PATH=~/.npm-global/bin:$PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-    # Set Oh My Zsh theme conditionally
-    if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-      STARSHIP_DISABLE="true"
-      PROMPT='%n@%m:%~%# '
-      RPROMPT=''
-    # . ~/hyperion/.venv/bin/activate  # commented out by conda initialize
-    fi
-
-    # Initialize Starship (unless disabled)
-    if [ "$STARSHIP_DISABLE" != "true" ]; then
-        if command -v starship &> /dev/null; then
-            eval "$(starship init bash)"
-        fi
-    fi
-
-    export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$PATH
-    export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
-
-    # Load paths and variables
-    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-
-    module load eth_proxy
-    module load stack/2024-06 2>/dev/null
-    module load gcc/12.2.0
-    module load cuda/12.8.0
-
-    export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
-
-    ## disable path issues on LFS filesystem due to git
-    function set_starship_config() {
-        if [[ $PWD == /cluster/* ]]; then
-            export STARSHIP_CONFIG=~/.config/starship-nogit.toml
-        else
-            export STARSHIP_CONFIG=~/.config/starship.toml
-        fi
-    }
-
-    # Append starship config switcher to PROMPT_COMMAND
-    # At this point, PROMPT_COMMAND contains history management + starship's prompt function
-    PROMPT_COMMAND="${PROMPT_COMMAND}; set_starship_config"
-
-
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/cluster/home/michaes/miniforge3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/cluster/home/michaes/miniforge3/etc/profile.d/conda.sh" ]; then
-            . "/cluster/home/michaes/miniforge3/etc/profile.d/conda.sh"
-        else
-            export PATH="/cluster/home/michaes/miniforge3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
-else
-    # Minimal PATH setup for Claude Code
-    export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH
-    export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
-    export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
+# Disable starship in vscode terminal
+if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+    STARSHIP_DISABLE="true"
 fi
+
+# Initialize Starship (unless disabled)
+if [ "$STARSHIP_DISABLE" != "true" ] && command -v starship &> /dev/null; then
+    eval "$(starship init bash)"
+fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc

@@ -4,6 +4,9 @@
 export BEEP=$HOME/.dotfiles/files/soft_beep.wav
 export TERM="xterm-256color"
 
+alias zotero="/opt/Zotero_linux-x86_64/zotero"
+alias matlab-desktop="$HOME/.matlab/bin/matlab &"
+
 # If running from tty1, start Sway desktop session
 if [ "$(tty)" = "/dev/tty1" ]; then
     export XKB_DEFAULT_LAYOUT=us,de
