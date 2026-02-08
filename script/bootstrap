@@ -98,21 +98,21 @@ install_dotfiles () {
   fi
 }
 
-setup_conda () {
-  user ' - Do you want to install Miniconda? [y/N]'
-  read -n 1 install_conda
+setup_pixi () {
+  user ' - Do you want to install pixi? [y/N]'
+  read -n 1 install_pixi
   echo ''
-  if [ "$install_conda" == "y" ] || [ "$install_conda" == "Y" ]
+  if [ "$install_pixi" == "y" ] || [ "$install_pixi" == "Y" ]
   then
-    info "installing miniconda"
-    if bash "$DOTFILES_ROOT/script/conda-setup"
+    info "installing pixi"
+    if bash "$DOTFILES_ROOT/script/pixi-setup"
     then
-      success "miniconda installed"
+      success "pixi installed"
     else
-      fail "error installing miniconda"
+      fail "error installing pixi"
     fi
   else
-    success "skipped miniconda"
+    success "skipped pixi"
   fi
 }
 
@@ -158,10 +158,10 @@ then
   fi
 fi
 
-# Optional: install conda
-if ! [ -d "$HOME/.miniconda" ]
+# Optional: install pixi
+if ! [ -d "$HOME/.pixi" ]
 then
-  setup_conda
+  setup_pixi
 fi
 
 # Optional tool installation (rust, starship, claude, oh-my-zsh, etc.)

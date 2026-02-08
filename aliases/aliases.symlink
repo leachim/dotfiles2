@@ -16,7 +16,6 @@ alias n-rsync-bam="rsync -aP --include=\"*/\" --include=\"*.bam\" --exclude=\"*\
 alias n-ssh="ssh -x -C"
 alias lst="ls -lt"
 alias gs="git status"
-alias sac="conda activate"
 alias vac=". .venv/bin/activate"
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
@@ -67,9 +66,6 @@ alias .....="cd ../../../.."
 ## python
 function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 
-# conda backup
-alias backup-conda-all="bash ~/.dotfiles/scripts/conda_backup.sh"
-
 
 #########################################
 ###              SYSTEM               ###
@@ -87,7 +83,6 @@ function daily-quote () {
   echo ${quotearray[$rand]} ; }
 alias clock="date | cut -d ' ' -f 4"
 alias daily-cal="ncal -A 1 -M -b -w"
-alias upip="conda list | grep \"<pip>\" | awk '{print $1}' | xargs pip install -U"
 
 #if ! type "doremi" > /dev/null 2>&1; then
     #alias doremi="apt-mark showhold && sudo apt update && sudo apt upgrade && echo \"\" && weather && echo \"Tage im Mai: $(datediff 05/01/2024)\tTage im September: $(datediff 06/23/2016)\" && daily-cal && daily-quote"
@@ -140,6 +135,14 @@ alias np='notify-push'
 alias npt='tnotify-push'
 alias ns='notify-slack'
 alias nst='tnotify-slack'
+pd() {
+    local EXIT_CODE=$?
+    local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "done" || echo "FAILED ($EXIT_CODE)" )
+    notify-push "$STATUS"
+}
+
+# Rust CLI tools
+alias tre='eza --tree'
 
 ###########################
 ###       SERVICES      ###
@@ -539,20 +542,6 @@ backup-manager () { bash $HOME/.backup/duplicity.sh; }
 backup-list () { ls $HOME/.backup/ | sort -r | grep backup.tar.gz | head -1; }
 backup-zotero () { bash $HOME/.backup/zotero-backup.sh; }
 backup-email () { gmvault sync -d $HOME/.mail --emails-only $1; }
-
-function backup-conda-envs {
-	NOW=$(date "+%Y-%m-%d")
-    mkdir "$HOME/conda-$NOW"
-	ENVS=$(conda env list | grep '^\w' | cut -d' ' -f1)
-    while read -r env; do
-		source activate $env
-		conda env export > $HOME/conda-$NOW/$env.yml
-		echo "Exporting $env"
-        source deactivate
-    done <<< "$ENVS"
-    zip -r "$HOME/conda-$NOW.zip" "$HOME/conda-$NOW"
-    rm -rf "$HOME/conda-$NOW"
-}
 
 
 function backup-restore-signed {

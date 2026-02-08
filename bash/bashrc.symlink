@@ -153,30 +153,12 @@ bind "set menu-complete-display-prefix on"
 set -o vi
 
 
-if [ -x "$(command -v fasd)" ]; then
-    # quicker startup with fasd
-    fasd_cache="$HOME/.fasd-init-bash"
-    if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-      fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
-    fi
-    if [ -e $fasd_cache ]; then
-        source "$fasd_cache"
-    fi
-    unset fasd_cache
-fi
-
 #######################################################
 # BEGIN PROMPT DEFINITION (simplified for Starship compatibility)
 
 # Only keep history management, let Starship handle prompt rendering
 # Set PROMPT_COMMAND before Starship init so it can preserve it
-if [ -x "$(command -v fasd)" ] && type _fasd_prompt_func | grep -i function > /dev/null; then
-    # shared history with fasd
-    PROMPT_COMMAND='history -n; history -w; history -c; history -r; _fasd_prompt_func'
-else
-    # shared history without fasd
-    PROMPT_COMMAND='history -n; history -w; history -c; history -r'
-fi
+PROMPT_COMMAND='history -n; history -w; history -c; history -r'
 
 # END PROMPT DEFINITION
 #########################################
@@ -222,8 +204,8 @@ if [ "$STARSHIP_DISABLE" != "true" ] && command -v starship &> /dev/null; then
     eval "$(starship init bash)"
 fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
+command -v uv &> /dev/null && eval "$(uv generate-shell-completion bash)"
 
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc

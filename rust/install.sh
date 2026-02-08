@@ -12,6 +12,6 @@ else
     . "$HOME/.cargo/env"
 fi
 
-cargo install skim zoxide
+cargo install cargo-update skim zoxide bat fd-find eza git-delta
 
 exit 0

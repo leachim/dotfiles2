@@ -4,27 +4,61 @@
 [alias]
         co = checkout
         count   = !git shortlog -sn
+        prune = fetch --prune
+        undo = reset --soft HEAD^
+        stash-all = stash save --include-untracked
+        glog = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+        glogfull = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
 [color]
         diff = auto
         status = auto
         branch = auto
         ui = true
+        interactive = auto
+[color "branch"]
+        current = yellow reverse
+        local = yellow bold
+        remote = green bold
+[color "diff"]
+        meta = yellow bold
+        frag = magenta bold
+        old = red bold
+        new = green bold
+        whitespace = red reverse
+[color "status"]
+        added = green bold
+        changed = yellow bold
+        untracked = red bold
 [core]
         excludesfile = ~/.gitignore
         editor = vim
+        whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol,blank-at-eof,blank-at-eol
+        pager = delta
+        compression = 9
 [apply]
         whitespace = nowarn
+[interactive]
+        diffFilter = delta --color-only
+[delta]
+        navigate = true
+        syntax-theme = ansi
+[diff]
+        colorMoved = default
 [mergetool]
         keepBackup = false
-[difftool]
-        prompt = false
 [help]
         autocorrect = prompt
 [push]
-        # See `git help config` (search for push.default)
-        # for more information on different options of the below setting.
-        #
-        # Setting to git 2.0 default to suppress warning message
         default = simple
+        followTags = true
+[merge]
+        ff = only
+        conflictstyle = diff3
+[transfer]
+        fsckobjects = true
+[pull]
+        ff = only
+[fsck]
+        zeroPaddedFilemode = ignore
 [init]
 	defaultBranch = main

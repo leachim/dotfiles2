@@ -3,3 +3,5 @@ host_role
 *.bak
 localrc.symlink
 !localrc.symlink.example
+gitconfig.local.symlink
+!gitconfig.local.symlink.example

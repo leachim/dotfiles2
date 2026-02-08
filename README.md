@@ -23,7 +23,7 @@ Bootstrap will prompt you for:
    - Rust (via rustup)
    - Node packages
    - Claude Code config
-6. **Miniconda** -- optional, cross-platform
+6. **pixi** -- optional, cross-platform
 
 ## Updating
 
@@ -47,7 +47,7 @@ Run `dot` to update an existing installation. On macOS this applies system defau
 ├── node/              Node.js packages
 ├── ruby/              Ruby/RVM config
 ├── rust/              Rust install via rustup
-├── script/            Bootstrap, install, conda-setup
+├── script/            Bootstrap, install, pixi-setup
 ├── starship/          Starship prompt config
 ├── system/            Environment, PATH, keys, aliases (*.zsh)
 ├── tmux/              Tmux configuration
@@ -104,7 +104,7 @@ Available roles:
 
 | Role | Platform | Purpose |
 |------|----------|---------|
-| `mac` | macOS | Conda PATH, macOS-specific setup |
+| `mac` | macOS | pixi PATH, macOS-specific setup |
 | `linux-desktop` | Linux | Wayland/Sway desktop session |
 | `hpc` | Linux | HPC cluster paths |
 
@@ -128,7 +128,7 @@ API keys and secrets go in `~/.dotfiles/private/env` (gitignored). Sourced by `p
 | Git config | Yes | Yes |
 | Starship prompt | Homebrew | curl installer |
 | Rust | rustup | rustup |
-| Conda | Optional | Optional |
+| pixi | Optional | Optional |
 | Homebrew + Brewfile | Yes | -- |
 | macOS defaults | Yes | -- |
 | Claude Code | Yes | Yes |

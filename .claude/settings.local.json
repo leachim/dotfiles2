@@ -14,7 +14,24 @@
       "Bash(git -C /Users/michaes/.dotfiles log --oneline -10)",
       "Bash(zsh -n:*)",
       "Bash(zsh:*)",
-      "Bash(/bin/bash:*)"
+      "Bash(/bin/bash:*)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"AIzaSy\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"sk-\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"ghp_\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"ghs_\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"token\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"password\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"secret\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p --diff-filter=D -- \"*.env\" \"*.key\" \"*.pem\" \"*credentials*\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all --oneline -S \"AIzaSyDqzuuZoBJRf93bOQ_EatJGnrk8seWNMS0\")",
+      "Bash(git -C /Users/michaes/.dotfiles show a9dc622:aliases/aliases.symlink)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"PUSHOVER\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"NOTIFICATION_HOOK\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"hooks.slack\")",
+      "Bash(git rm:*)",
+      "Bash(git -C /Users/michaes/.dotfiles status --short)",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"hooks.slack.com/services\")",
+      "Bash(git -C /Users/michaes/.dotfiles log --all -p -S \"ANTHROPIC_API_KEY=\" --pickaxe-regex)"
     ]
   }
 }

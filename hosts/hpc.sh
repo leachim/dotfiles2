@@ -6,7 +6,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
 export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
-export XDG_CONFIG_HOME="$HOME"
+export XDG_CONFIG_HOME="$HOME/.config"
 
 # Cluster aliases
 alias qqsqu="squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
@@ -23,11 +23,10 @@ alias m-jobmonitor="SACCT_FORMAT=\"JobID%20,JobName,User,Partition,NodeList,Elap
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
 alias m-squeuew="squeue-watch"
 
-alias pd='notify-push "Run ended!" "euler"'
 alias gemini-api="GEMINI_API_KEY=\$GEMINI_API_KEY gemini"
 
 # Skip heavy cluster initialization for AI agents
-# Module loads and conda can hang if cluster services are slow/unresponsive
+# Module loads can hang if cluster services are slow/unresponsive
 if [ "$AI_AGENT" != "1" ]; then
     [ -f /etc/profile.d/lmod.sh ] && source /etc/profile.d/lmod.sh
     [ -f /etc/profile.d/module_path.sh ] && source /etc/profile.d/module_path.sh
@@ -52,17 +51,9 @@ if [ "$AI_AGENT" != "1" ]; then
         PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}set_starship_config"
     fi
 
-    # >>> conda initialize >>>
-    __conda_setup="$("$HOME/miniforge3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "$HOME/miniforge3/etc/profile.d/conda.sh" ]; then
-            . "$HOME/miniforge3/etc/profile.d/conda.sh"
-        else
-            export PATH="$HOME/miniforge3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
+fi
+
+# Add pixi to path if present
+if [ -d "$HOME/.pixi/bin" ]; then
+    PATH="$PATH:$HOME/.pixi/bin"
 fi

@@ -706,9 +706,6 @@ endif
 if (executable('ag'))
     let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 endif
-if isdirectory(expand('~/.dotfiles/dependencies/fzf'))
-  set rtp+=~/.dotfiles/dependencies/fzf
-endif
 nmap ; :buffers<CR>
 nmap <Leader>f :files<CR>
 " nnoremap <C-p> :Files<CR>
