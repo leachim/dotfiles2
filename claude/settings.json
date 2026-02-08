@@ -23,6 +23,7 @@
       "Bash(head:*)",
       "Bash(ls:*)",
       "Bash(man:*)",
+      "Bash(mkdir:*)",
       "Bash(pwd:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
@@ -58,7 +59,6 @@
       "Bash(git checkout:*)",
       "Bash(git reset --hard:*)",
       "Bash(git restore:*)",
-      "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(rm:*)",
       "Bash(rmdir:*)"
@@ -71,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sling 'Claude Code - Task completed ' || true"
+            "command": "pd 'Claude Code - Task completed ' || true"
           }
         ]
       }
@@ -82,7 +82,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sling 'Claude Code - Awaiting your input' || true"
+            "command": "pd 'Claude Code - Awaiting your input' || true"
           }
         ]
       }

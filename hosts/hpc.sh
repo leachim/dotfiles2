@@ -23,7 +23,7 @@ alias m-jobmonitor="SACCT_FORMAT=\"JobID%20,JobName,User,Partition,NodeList,Elap
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
 alias m-squeuew="squeue-watch"
 
-alias pd='push "Run ended!" "euler" -p 0'
+alias pd='notify-push "Run ended!" "euler"'
 alias gemini-api="GEMINI_API_KEY=\$GEMINI_API_KEY gemini"
 
 # Skip heavy cluster initialization for AI agents

@@ -8,9 +8,8 @@ fi
 
 alias ma-tmux="tmux -CC new -A -s mac"
 alias dns-flush="sudo killall -HUP mDNSResponder"
-alias ns="nvidia-smi"
+alias nsmi="nvidia-smi"
 alias hc="history -c"
-
 
 ## Shortcuts
 alias n-rsync-bam="rsync -aP --include=\"*/\" --include=\"*.bam\" --exclude=\"*\""
@@ -32,8 +31,6 @@ alias ccu="ccusage blocks --live --offline --compact"
 alias qqccu="watch -n 30 -d \"ccusage blocks --live --offline --no-color --compact \| tail -n 15 \""
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
-alias s="dirs -v" # zprezto directory module
-alias f='fasd_cd -i' # zprezto fasd module
 alias agenda="gcalcli agenda"
 do-most_recent_container() { docker exec -it `docker ps -a --no-trunc -q | head -n 1` bash; }
 
@@ -62,8 +59,6 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-
-
 
 #########################################
 ###              CODING               ###
@@ -105,43 +100,46 @@ alias timestamp="date +%Y_%m_%d-%H_%M"
 alias m-rsync="rsync -azP"
 m-filesize () { echo "df -h" | sftp $1 ;}
 
-## Alerts, a set of flexible alerts to notify about the end of a computation in terminal and tmux
-print-tmux-session-info () {
-    (if type tmux >/dev/null 2>/dev/null; then
-        if tmux info &> /dev/null; then
-            if ! { [ "$TERM" = "screen" ] && [ -n "$TMUX" ]; } then
-                for s in $(tmux list-sessions -F '#{session_name}'); do
-                    tmux list-panes -F '#{pane_tty} #{session_name}' -t "$s"
-                done | grep "$(tty)" | awk '{print $2}' #&2>/dev/null
-            else
-                echo "elsewhere";
-            fi;
-        else
-            echo "none";
-        fi;
-    fi) 2> /dev/null ;
+## Notifications
+# Two backends: push (Pushover), slac (Slack)
+# Pattern: notify-{backend} = fire after previous command
+#          tnotify-{backend} = timed wrapper around a command
+
+_notify-context() {
+    echo "$(date '+%H:%M:%S %Z') $(hostname)"
 }
 
-print-process-info () {
-        # date '+%Y-%m-%d %H:%M:%S %Z'
-        echo "$(date '+%H:%M:%S %Z') - $(hostname) @$(print-tmux-session-info):\nProcess finished [exit status $(echo $?)]" ; }
+notify-push() {
+    push "$(_notify-context): ${1:-done}" "${2:-$(hostname)}"
+}
 
-alias ring='push "$(print-process-info)" "$(hostname)"'
-function ting() {
-    START=$SECONDS
+tnotify-push() {
+    local START=$SECONDS
     "$@"
-    EXIT_CODE=$?
-    push "$(print-process-info) ($((SECONDS - START))s)" "$(hostname)"
+    local EXIT_CODE=$?
+    local ELAPSED=$((SECONDS - START))
+    local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "ok" || echo "FAILED ($EXIT_CODE)" )
+    push "$(_notify-context): $STATUS (${ELAPSED}s)" "$(hostname)"
     return $EXIT_CODE
 }
-alias rling="slac $? 0 $1"
-function tling() {
-    START=$SECONDS
+
+notify-slack() {
+    slac "${1:-}"
+}
+
+tnotify-slack() {
+    local START=$SECONDS
     "$@"
-    EXIT_CODE=$?
+    local EXIT_CODE=$?
     slac $EXIT_CODE $((SECONDS - START))
     return $EXIT_CODE
 }
+
+# Short aliases
+alias np='notify-push'
+alias npt='tnotify-push'
+alias ns='notify-slack'
+alias nst='tnotify-slack'
 
 ###########################
 ###       SERVICES      ###
@@ -229,8 +227,6 @@ alias tmn='tmux new -s $(basename $(pwd))'
 alias tml='tmux list-sessions'
 alias tls='tmux ls'
 alias tdelete="tmux kill-session -t"
-tcreate () { bash ~/.dotfiles/scripts/tmux-dev.sh "$1" ; }
-tmonitor () { bash ~/.dotfiles/scripts/tmux-mon.sh "$1" ; }
 
 
 ###########################
