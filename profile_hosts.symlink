@@ -19,4 +19,7 @@ if [ "$HOSTNAME" = "glaux-clio" ]; then
        exec env MESA_LOADER_DRIVER_OVERRIDE=i965 QT_WAYLAND_FORCE_DPI=physical QT_QPA_PLATFORM=wayland-egl QT_WAYLAND_DISABLE_WINDOWDECORATION=1 QT_QPA_PLATFORMTHEME=qt5ct ECORE_EVAS_ENGINE=wayland_egl ELM_ENGINE=wayland_egl CLUTTER_BACKEND=wayland SDL_VIDEODRIVER=wayland BEMENU_BACKEND=wayland MOZ_ENABLE_WAYLAND=1 dbus-run-session sway
        # exec sway
     fi
+elif [ "$HOSTNAME" = "bs-mbpas-0085" ]; then
+	PATH="$PATH:/Users/michaes/.miniconda/condabin"
+
 fi

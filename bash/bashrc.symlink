@@ -8,6 +8,23 @@ esac
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+# Claude Code optimizations - minimal setup for faster startup
+if [[ -n "${CLAUDECODE}" ]]; then
+    # Essential aliases only
+    alias ls='ls --color=auto'
+    alias ll='ls -alF'
+    alias la='ls -A'
+    alias l='ls -CF'
+    alias c="clear"
+    alias vi="vim"
+
+    # Basic prompt
+    PS1='\u@\h:\w\$ '
+
+    # Skip heavy initialization
+    return
+fi
+
 # User specific aliases and functions
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -176,7 +193,7 @@ alias takeover="tmux detach -a"
 alias vi="vim"
 alias le="less"
 
-if [ -x "$(command -v fasd)" ]; then
+if [[ -x "$(command -v fasd)" ]] && [[ -z "${CLAUDECODE}" ]]; then
     # quicker startup with fasd
     fasd_cache="$HOME/.fasd-init-bash"
     if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
@@ -245,6 +262,9 @@ if [ -z "$BASH" ] & [ -f ~/.gitaliases ]; then
     source ~/.gitaliases
 fi
 
+if [[ -f ~/.starship.toml ]] && [[ -z "${CLAUDECODE}" ]] && command -v starship >/dev/null 2>&1; then
+    eval "$(starship init bash)"
+fi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then

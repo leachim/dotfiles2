@@ -1,32 +1,23 @@
 #!/bin/sh
 
+SOCKET_DIR="$HOME/.tmux_server"
+SOCKET_FILE="$SOCKET_DIR/tmux.sock"
+
+# Create socket directory if it doesn't exist
+mkdir -p "$SOCKET_DIR"
+
 # setup session and first window
-tmux new-session -d -s "$1" -n "$1"
-tmux send-keys "clear" 'C-m' "cd $HOME" 'C-m'
-tmux split-window -h
+tmux -S "$SOCKET_FILE" new-session -d -s "$1" -n "$1"
+tmux -S "$SOCKET_FILE" split-window -h
+tmux -S "$SOCKET_FILE" split-window -v
 
-# second window (2)
-if [ "$1" = "Desktop" ]; then
-  tmux new-window -n control
-elif [ "$1" = "Darwin" ]; then
-  tmux rename-session -tfirst Darwin
-  tmux new-window -n Darwin
-elif [ "$1" = "Data" ]; then
-  tmux new-window -n transfer
-elif [ "$1" = "Clust" ]; then
-  tmux new-window -n monitor
+# second window
+if ! [ "$1" = "darwin" ]; then
+	tmux -S "$SOCKET_FILE" new-window -n claude
+	tmux -S "$SOCKET_FILE" split-window -h
+	tmux -S "$SOCKET_FILE" split-window -v
 else
-  tmux new-window -n test
+	echo "There is only one Darwin."
 fi
-tmux split-window -h
-tmux send-keys "clear" 'C-m' "cd $HOME" 'C-m' #"htop" "C-m"
-# tmux send-keys "clear" 'C-m'
-tmux split-window -v 
-tmux send-keys "clear" 'C-m' "cd $HOME" 'C-m' 
 
-# third window (3)
-#tmux new-window -n jupyter 
-#tmux send-keys "clear" 'C-m'
-#tmux send-keys "cd ~/current/lab" "C-m" "jupyter lab" 'C-m'
-
-tmux attach-session -d 
+tmux -S "$SOCKET_FILE" attach-session -d

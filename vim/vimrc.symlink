@@ -258,7 +258,9 @@ Plug 'ekalinin/Dockerfile.vim'
 
 " flexible search
 "Plugin 'kien/ctrlp.vim' -> replaced by fzf
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } -> replaced
+"by skim
+Plug 'skim-rs/skim', { 'dir': '~/.skim', 'do': './install' }
 Plug 'mileszs/ack.vim'
 
 " git integration

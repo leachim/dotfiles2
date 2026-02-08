@@ -15,6 +15,13 @@ alias sqw="watch -n 10 'squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.
 alias sqg="squeue -u $(whoami) -h -o \"%i %j\" | while read jobid name; do gpu=\$(scontrol show job \$jobid 2>/dev/null | sed -n 's/.*gres\/gpu:\([0-9]\+\).*/\1/p' | head -1); echo \"Job \$jobid (\$name): \${gpu:-0} GPUs\"; done"
 sqcc() { [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]] && { echo "Error: Pattern required" >&2; return 1; }; squeue -u michaes -h -o "%i %j" | grep "$1" | awk '{print $1}' | xargs scancel ; }
 
+qqssh-hetzner() {
+    local target_ip="vps"
+    local identity="~/.ssh/hetzner_openclaw"
+    local user="${1:-root}"
+    ssh -o ConnectTimeout=5 -i "$identity" "$user"@"$target_ip"
+}
+alias alps="bash ~/Github/sshservice-cli/cscs-keygen.sh && ssh-add -t 1d ~/.ssh/cscs-key"
 
 ## Shortcuts
 alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
@@ -38,7 +45,11 @@ alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
 alias s="dirs -v" # zprezto directory module
 alias f='fasd_cd -i' # zprezto fasd module
-alias agenda="gcalcli agenda"
+heic2jpg() {
+    for file in "$@"; do
+        sips -s format jpeg "$file" --out "${file%.*}.jpg" && rm "$file"
+    done
+}
 do-most_recent_container() { docker exec -it `docker ps -a --no-trunc -q | head -n 1` bash; }
 
 alias newest_ls="ls -lh --sort date -r --color=always | head -25"
