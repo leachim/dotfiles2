@@ -1,10 +1,36 @@
 #!/bin/bash
+# Install Miniconda (cross-platform)
 
-mkdir -p ~/.miniconda
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/.miniconda/miniconda.sh
-bash ~/.miniconda/miniconda.sh -b -u -p ~/.miniconda
-rm -rf ~/.miniconda/miniconda.sh
-# After installing, initialize your newly-installed Miniconda. The following commands initialize for bash and zsh shells:
+set -e
 
-#~/.miniconda/bin/conda init bash
-#~/.miniconda/bin/conda init zsh
+CONDA_DIR="$HOME/.miniconda"
+
+if [ -d "$CONDA_DIR" ]; then
+    echo "Miniconda already installed at $CONDA_DIR"
+    exit 0
+fi
+
+mkdir -p "$CONDA_DIR"
+
+case "$(uname -s)" in
+    Darwin)
+        ARCH=$(uname -m)
+        URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-${ARCH}.sh"
+        ;;
+    Linux)
+        ARCH=$(uname -m)
+        URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-${ARCH}.sh"
+        ;;
+    *)
+        echo "Unsupported platform: $(uname -s)"
+        exit 1
+        ;;
+esac
+
+echo "Downloading Miniconda for $(uname -s) ${ARCH}..."
+curl -fsSL "$URL" -o "$CONDA_DIR/miniconda.sh"
+bash "$CONDA_DIR/miniconda.sh" -b -u -p "$CONDA_DIR"
+rm -f "$CONDA_DIR/miniconda.sh"
+
+echo "Miniconda installed to $CONDA_DIR"
+echo "Run 'conda init bash' and/or 'conda init zsh' to set up your shell."

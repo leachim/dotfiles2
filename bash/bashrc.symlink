@@ -8,20 +8,20 @@ esac
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Claude Code optimizations - minimal setup for faster startup
-if [[ -n "${CLAUDECODE}" ]]; then
-    # Essential aliases only
+# Detect AI coding agents -- add new agent env vars here
+if [[ -n "${CLAUDECODE}" ]] || [[ -n "${GEMINI}" ]] || [[ -n "${CODEX}" ]]; then
+    export AGENT_MODE=1
+fi
+
+# Agent mode: minimal shell for fast startup
+if [[ -n "${AGENT_MODE}" ]]; then
     alias ls='ls --color=auto'
     alias ll='ls -alF'
     alias la='ls -A'
     alias l='ls -CF'
     alias c="clear"
     alias vi="vim"
-
-    # Basic prompt
     PS1='\u@\h:\w\$ '
-
-    # Skip heavy initialization
     return
 fi
 
@@ -193,7 +193,7 @@ alias takeover="tmux detach -a"
 alias vi="vim"
 alias le="less"
 
-if [[ -x "$(command -v fasd)" ]] && [[ -z "${CLAUDECODE}" ]]; then
+if [[ -x "$(command -v fasd)" ]] && [[ -z "${AGENT_MODE}" ]]; then
     # quicker startup with fasd
     fasd_cache="$HOME/.fasd-init-bash"
     if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
@@ -258,11 +258,11 @@ if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
 
-if [ -z "$BASH" ] & [ -f ~/.gitaliases ]; then
-    source ~/.gitaliases
+if [ -z "$BASH" ] && [ -f ~/.gitalias ]; then
+    source ~/.gitalias
 fi
 
-if [[ -f ~/.starship.toml ]] && [[ -z "${CLAUDECODE}" ]] && command -v starship >/dev/null 2>&1; then
+if [[ -f ~/.starship.toml ]] && [[ -z "${AGENT_MODE}" ]] && command -v starship >/dev/null 2>&1; then
     eval "$(starship init bash)"
 fi
 
@@ -271,7 +271,7 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-. "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -286,14 +286,8 @@ if [[ "$TERM_PROGRAM" == "vscode" ]]; then
   . ~/hyperion/.venv/bin/activate
 fi
 
-if [ -f ~/.starship.toml ]; then
-    [ "$STARSHIP_DISABLE" = "true" ] || eval "$(starship init bash)"
-fi
-
 export PATH=$HOME/cuda/bin:$HOME/.claude/local:$PATH
 export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
 
 # Load paths and variables
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-

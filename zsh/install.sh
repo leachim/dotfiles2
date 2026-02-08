@@ -1,7 +1,14 @@
 #!/bin/sh
+#
+# Oh My Zsh
 
-# Check for Oh My Zsh and install if we don't have it
-if test ! $(which omz); then
-  #git clone --depth 1 --recurse-submodules https://github.com/ohmyzsh/ohmyzsh /home/$USER/.ohmyzsh
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    echo "  Oh My Zsh already installed"
+    exit 0
 fi
+
+# --keep-zshrc: don't overwrite existing .zshrc (our symlink)
+# RUNZSH=no: don't launch zsh at end of install
+RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
+
+exit 0

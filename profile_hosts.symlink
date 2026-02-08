@@ -1,25 +1,20 @@
 #!/bin/bash
-# custom profile options for different hosts
+# Load host/role-specific configuration
+#
+# To configure a machine, create ~/.dotfiles/host_role containing one of:
+#   mac, workstation, hpc
+#
+# Or create a custom file in ~/.dotfiles/hosts/ROLENAME.sh
+#
+# The host_role file is .gitignored — set it per machine during bootstrap.
 
-HOSTNAME=`hostname`
-USER=`whoami`
+DOTFILES_DIR="${HOME}/.dotfiles"
+HOST_ROLE_FILE="${DOTFILES_DIR}/host_role"
 
-if [ "$HOSTNAME" = "glaux-clio" ]; then
-
-    # soft notification sound
-    export BEEP=$HOME/.dotfiles/files/soft_beep.way
-    export TERM="xterm-256color"
-
-
-    # if running from tty1 start sway  -> desktop session
-    if [ $(tty) = "/dev/tty1" ]; then
-       export XKB_DEFAULT_LAYOUT=us,de
-       export XKB_DEFAULT_OPTIONS=grp:alt_shift_toggle
-
-       exec env MESA_LOADER_DRIVER_OVERRIDE=i965 QT_WAYLAND_FORCE_DPI=physical QT_QPA_PLATFORM=wayland-egl QT_WAYLAND_DISABLE_WINDOWDECORATION=1 QT_QPA_PLATFORMTHEME=qt5ct ECORE_EVAS_ENGINE=wayland_egl ELM_ENGINE=wayland_egl CLUTTER_BACKEND=wayland SDL_VIDEODRIVER=wayland BEMENU_BACKEND=wayland MOZ_ENABLE_WAYLAND=1 dbus-run-session sway
-       # exec sway
+if [ -f "$HOST_ROLE_FILE" ]; then
+    _role=$(cat "$HOST_ROLE_FILE")
+    if [ -f "${DOTFILES_DIR}/hosts/${_role}.sh" ]; then
+        source "${DOTFILES_DIR}/hosts/${_role}.sh"
     fi
-elif [ "$HOSTNAME" = "bs-mbpas-0085" ]; then
-	PATH="$PATH:/Users/michaes/.miniconda/condabin"
-
+    unset _role
 fi

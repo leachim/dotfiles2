@@ -31,13 +31,5 @@
         #
         # Setting to git 2.0 default to suppress warning message
         default = simple
-[credential]
-	helper = osxkeychain
-[diff "spaceman-diff"]
-  command = /opt/homebrew/bin/spaceman-diff
-
 [init]
 	defaultBranch = main
-[user]
-	name = leachim
-	email = leachim@users.noreply.github.com

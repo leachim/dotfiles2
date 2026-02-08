@@ -22,10 +22,11 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 ###############################################################################
 
 # Set computer name (as done via System Preferences → Sharing)
-sudo scutil --set ComputerName "glaux-erato"
-sudo scutil --set HostName "glaux-erator"
-sudo scutil --set LocalHostName "glaux-erato"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "glaux-erator"
+# Uncomment and customize for new machines:
+# sudo scutil --set ComputerName "my-machine"
+# sudo scutil --set HostName "my-machine"
+# sudo scutil --set LocalHostName "my-machine"
+# sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "my-machine"
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "

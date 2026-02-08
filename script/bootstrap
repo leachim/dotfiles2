@@ -7,6 +7,10 @@ DOTFILES_ROOT=$(pwd -P)
 
 set -e
 
+# Shared backup directory for this run -- all replaced configs go here
+BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
+export BACKUP_DIR
+
 echo ''
 
 info () {
@@ -50,94 +54,86 @@ setup_gitconfig () {
 }
 
 
+backup_file () {
+  local file=$1
+  if [ -e "$file" ] || [ -L "$file" ]; then
+    mkdir -p "$BACKUP_DIR"
+    local basename=$(basename "$file")
+    mv "$file" "$BACKUP_DIR/$basename"
+    success "backed up $file to $BACKUP_DIR/$basename"
+  fi
+}
+
 link_file () {
   local src=$1 dst=$2
 
-  local overwrite= backup= skip=
-  local action=
-
-  if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
-  then
-
-    if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
-    then
-
-      local currentSrc="$(readlink $dst)"
-
-      if [ "$currentSrc" == "$src" ]
-      then
-
-        skip=true;
-
-      else
-
-        user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
-        [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-        read -n 1 action
-
-        case "$action" in
-          o )
-            overwrite=true;;
-          O )
-            overwrite_all=true;;
-          b )
-            backup=true;;
-          B )
-            backup_all=true;;
-          s )
-            skip=true;;
-          S )
-            skip_all=true;;
-          * )
-            ;;
-        esac
-
-      fi
-
+  if [ -L "$dst" ]; then
+    local currentSrc="$(readlink "$dst")"
+    if [ "$currentSrc" == "$src" ]; then
+      success "already linked $dst"
+      return
     fi
-
-    overwrite=${overwrite:-$overwrite_all}
-    backup=${backup:-$backup_all}
-    skip=${skip:-$skip_all}
-
-    if [ "$overwrite" == "true" ]
-    then
-      rm -rf "$dst"
-      success "removed $dst"
-    fi
-
-    if [ "$backup" == "true" ]
-    then
-      mv "$dst" "${dst}.backup"
-      success "moved $dst to ${dst}.backup"
-    fi
-
-    if [ "$skip" == "true" ]
-    then
-      success "skipped $src"
-    fi
+    # Existing symlink points elsewhere -- back it up
+    backup_file "$dst"
+  elif [ -f "$dst" ] || [ -d "$dst" ]; then
+    # Existing real file/dir -- back it up
+    backup_file "$dst"
   fi
 
-  if [ "$skip" != "true" ]  # "false" or empty
-  then
-    ln -s "$1" "$2"
-    success "linked $1 to $2"
-  fi
+  ln -s "$src" "$dst"
+  success "linked $src to $dst"
 }
 
 install_dotfiles () {
   info 'installing dotfiles'
-
-  local overwrite_all=false backup_all=false skip_all=false
 
   for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
   do
     dst="$HOME/.$(basename "${src%.*}")"
     link_file "$src" "$dst"
   done
+
+  if [ -d "$BACKUP_DIR" ]; then
+    info "existing configs backed up to $BACKUP_DIR"
+  fi
+}
+
+setup_conda () {
+  user ' - Do you want to install Miniconda? [y/N]'
+  read -n 1 install_conda
+  echo ''
+  if [ "$install_conda" == "y" ] || [ "$install_conda" == "Y" ]
+  then
+    info "installing miniconda"
+    if bash "$DOTFILES_ROOT/script/conda-setup"
+    then
+      success "miniconda installed"
+    else
+      fail "error installing miniconda"
+    fi
+  else
+    success "skipped miniconda"
+  fi
+}
+
+setup_host_role () {
+  if ! [ -f "$DOTFILES_ROOT/host_role" ]
+  then
+    info 'setup host role'
+    user ' - What role is this machine? [mac/linux-desktop/hpc]'
+    read -e host_role
+    if [ -n "$host_role" ] && [ -f "$DOTFILES_ROOT/hosts/${host_role}.sh" ]
+    then
+      echo "$host_role" > "$DOTFILES_ROOT/host_role"
+      success "host role set to $host_role"
+    else
+      user " - No config found for '$host_role', skipping"
+    fi
+  fi
 }
 
 setup_gitconfig
+setup_host_role
 install_dotfiles
 
 # If we're on a Mac, let's install and setup homebrew.
@@ -150,6 +146,12 @@ then
   else
     fail "error installing dependencies"
   fi
+fi
+
+# Optional: install conda
+if ! [ -d "$HOME/.miniconda" ]
+then
+  setup_conda
 fi
 
 echo ''

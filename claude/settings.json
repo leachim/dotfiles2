@@ -1,0 +1,126 @@
+{
+  "env": {
+    "CONTEXT7_API_KEY": "${CONTEXT7_API}",
+    "GITHUB_PAT": "${GITHUB_PAT}"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(awk:*)",
+      "Bash(cat:*)",
+      "Bash(cd:*)",
+      "Bash(cp:*)",
+      "Bash(curl:*)",
+      "Bash(diff:*)",
+      "Bash(echo:*)",
+      "Bash(file:*)",
+      "Bash(find:*)",
+      "Bash(gh:*)",
+      "Bash(git:*)",
+      "Bash(grep:*)",
+      "Bash(gunzip:*)",
+      "Bash(gzip:*)",
+      "Bash(head:*)",
+      "Bash(ls:*)",
+      "Bash(man:*)",
+      "Bash(pwd:*)",
+      "Bash(sed:*)",
+      "Bash(sort:*)",
+      "Bash(tail:*)",
+      "Bash(tar:*)",
+      "Bash(test:*)",
+      "Bash(timeout:*)",
+      "Bash(touch:*)",
+      "Bash(tree:*)",
+      "Bash(uniq:*)",
+      "Bash(unzip:*)",
+      "Bash(wc:*)",
+      "Bash(wget:*)",
+      "Bash(whereis:*)",
+      "Bash(which:*)",
+      "MCP(context7:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ],
+    "deny": [
+      "Bash(chown:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(reboot:*)",
+      "Bash(service:*)",
+      "Bash(shutdown:*)",
+      "Bash(su:*)",
+      "Bash(sudo:*)",
+      "Bash(systemctl:*)"
+    ],
+    "ask": [
+      "Bash(chmod:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git restore:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(rmdir:*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sling 'Claude Code - Task completed ' || true"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sling 'Claude Code - Awaiting your input' || true"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "ccusage statusline",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "github@claude-plugins-official": false,
+    "context7@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "pluginConfigs": {
+    "context7@claude-plugins-official": {
+      "mcpServers": {
+        "context7": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@context7/mcp-server"
+          ]
+        }
+      }
+    },
+    "github@claude-plugins-official": {
+      "mcpServers": {
+        "github": {
+          "token": "${GITHUB_PAT}"
+        }
+      }
+    }
+  }
+}

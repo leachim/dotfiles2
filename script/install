@@ -1,11 +1,54 @@
 #!/usr/bin/env bash
 #
-# Run all dotfiles installers.
+# Run dotfiles installers with prompts for optional components.
 
 set -e
 
 cd "$(dirname $0)"/..
 
-# find the installers and run them iteratively
-find . -name install.sh | grep -v "vim" | while read installer ; do sh -c "${installer}" ; done
-sh -c ./vim/install.sh
+info () {
+  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
+}
+
+user () {
+  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+}
+
+success () {
+  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+}
+
+# Prompt to run an installer
+# Usage: run_optional "description" "path/to/install.sh"
+run_optional () {
+  local name=$1
+  local script=$2
+
+  if [ ! -f "$script" ]; then
+    return
+  fi
+
+  user "Install ${name}? [y/N]"
+  read -n 1 answer
+  echo ''
+  if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
+    info "installing ${name}"
+    sh -c "$script"
+    success "${name} installed"
+  else
+    success "skipped ${name}"
+  fi
+}
+
+# Always run macOS-specific installs (they self-guard on platform)
+if [ "$(uname -s)" = "Darwin" ] && [ -f ./macos/install.sh ]; then
+  sh -c ./macos/install.sh
+fi
+
+# Optional components
+run_optional "Oh My Zsh"      ./zsh/install.sh
+run_optional "Vim plugins"    ./vim/install.sh
+run_optional "Starship prompt" ./starship/install.sh
+run_optional "Rust (rustup)"  ./rust/install.sh
+run_optional "Node packages"  ./node/install.sh
+run_optional "Claude Code config" ./claude/install.sh
