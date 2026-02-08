@@ -10,18 +10,25 @@ fi
 alias ma-tmux="tmux -CC new -A -s mac"
 alias quota_euler="cat /cluster/work/bewi/.bewi_user_data_usage.txt"
 alias ns="nvidia-smi"
-alias squ="squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.6D %.4C %R\""
-alias sqw="watch -n 10 'squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.6D %.4C %R\"'"
+alias hc="history -c"
+alias qqsqu="squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
+alias qqsqw="watch -n 10 'squeue -u $(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\"'"
+alias qqsqwa='watch -n 10 '\''squeue -o "%.18i %.12P %.20j %.8u %.3T %.12M %.10l %.6D %.4C %.16b %R" | sed "1!s/gres\/gpu:[^:]*://g; 1!s/N\/A/0/g"'\'''
 alias sqg="squeue -u $(whoami) -h -o \"%i %j\" | while read jobid name; do gpu=\$(scontrol show job \$jobid 2>/dev/null | sed -n 's/.*gres\/gpu:\([0-9]\+\).*/\1/p' | head -1); echo \"Job \$jobid (\$name): \${gpu:-0} GPUs\"; done"
 sqcc() { [[ -z "$1" || "$1" =~ ^[[:space:]]*$ ]] && { echo "Error: Pattern required" >&2; return 1; }; squeue -u michaes -h -o "%i %j" | grep "$1" | awk '{print $1}' | xargs scancel ; }
 
-qqssh-hetzner() {
-    local target_ip="vps"
-    local identity="~/.ssh/hetzner_openclaw"
-    local user="${1:-root}"
-    ssh -o ConnectTimeout=5 -i "$identity" "$user"@"$target_ip"
+claude() {
+    (
+        set -a
+        source ~/hyperion/.env
+        set +a
+        /cluster/home/michaes/.local/bin/claude "$@"
+    )
 }
-alias alps="bash ~/Github/sshservice-cli/cscs-keygen.sh && ssh-add -t 1d ~/.ssh/cscs-key"
+alias claude-sub='CLAUDE_CONFIG_DIR=~/.claude-subscription claude'
+alias pd="~/.local/bin/push \"Run ended!\" \"euler\" -p \"0\""
+alias gemini-api="GEMINI_API_KEY=AIzaSyDqzuuZoBJRf93bOQ_EatJGnrk8seWNMS0 gemini"
+
 
 ## Shortcuts
 alias google-chrome="google-chrome -enable-features=UseOzonePlatform -ozone-platform=wayland"
@@ -41,15 +48,13 @@ alias le="less"
 alias fe="feh --conversion-timeout 1"
 alias c="clear"
 alias cdp="cd -P"
+alias ccu="ccusage blocks --live --offline --compact"
+alias qqccu="watch -n 30 -d \"ccusage blocks --live --offline --no-color --compact \| tail -n 15 \""
 alias pack="tar -zcvf"
 alias pingg="ping 8.8.8.8"
 alias s="dirs -v" # zprezto directory module
 alias f='fasd_cd -i' # zprezto fasd module
-heic2jpg() {
-    for file in "$@"; do
-        sips -s format jpeg "$file" --out "${file%.*}.jpg" && rm "$file"
-    done
-}
+alias agenda="gcalcli agenda"
 do-most_recent_container() { docker exec -it `docker ps -a --no-trunc -q | head -n 1` bash; }
 
 alias newest_ls="ls -lh --sort date -r --color=always | head -25"
@@ -154,8 +159,24 @@ print-process-info () {
 
 #alias ding='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info)\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
 #alias dong="sleep 1; notify-send -u \"normal\" \"$(print-process-info)\""
-alias ring='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info) RingRing! \", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
-alias tam="aplay -q $HOME/.dotfiles/files/soft_beep.way"
+alias ring='~/.local/bin/sing $?'
+function  ting() {
+    START=$SECONDS
+    "$@"
+    EXIT_CODE=$?
+    sing $EXIT_CODE $((SECONDS - START))
+    return $EXIT_CODE
+}
+alias rling="~/.local/bin/sling $? 0 $1"
+function  tling() {
+    START=$SECONDS
+    "$@"
+    EXIT_CODE=$?
+    sling $EXIT_CODE $((SECONDS - START))
+    return $EXIT_CODE
+}
+#alias ring='sleep 1; curl -s --output /dev/null -X POST --data-urlencode "payload={\"channel\": \"#notifications\", \"username\": \"glauxbot\", \"text\": \"$(print-process-info) RingRing! \", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/${NOTIFICATION_HOOK} 2>/dev/null'
+#alias tam="aplay -q $HOME/.dotfiles/files/soft_beep.way"
 
 ###########################
 ###       SERVICES      ###

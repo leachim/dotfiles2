@@ -8,26 +8,12 @@ esac
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# Detect AI coding agents -- add new agent env vars here
-if [[ -n "${CLAUDECODE}" ]] || [[ -n "${GEMINI}" ]] || [[ -n "${CODEX}" ]]; then
-    export AGENT_MODE=1
-fi
-
-# Agent mode: minimal shell for fast startup
-if [[ -n "${AGENT_MODE}" ]]; then
-    alias ls='ls --color=auto'
-    alias ll='ls -alF'
-    alias la='ls -A'
-    alias l='ls -CF'
-    alias c="clear"
-    alias vi="vim"
-    PS1='\u@\h:\w\$ '
-    return
-fi
-
 # User specific aliases and functions
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.tmux_bin/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/cluster/work/bewi/members/michaes/npm-global/v22.14.0/bin:$PATH"
+export TERMINFO=$HOME/.terminfo
 
 # BASH OPTIONS {{{
 shopt -s cdspell                 # Correct cd typos
@@ -39,6 +25,19 @@ shopt -s no_empty_cmd_completion  # No empty completion
 shopt -s cmdhist
 # checks the window size after each command 
 shopt -s checkwinsize
+
+## History
+function use_shared_history() {
+  export HISTFILE=~/.bash_history
+  shopt -s histappend
+  PROMPT_COMMAND="history -a; history -c; history -r"
+}
+
+function use_separate_history() {
+  export HISTFILE="$HOME/.bash_history_$$"
+  shopt -u histappend
+  PROMPT_COMMAND=""
+}
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=50000
@@ -193,7 +192,7 @@ alias takeover="tmux detach -a"
 alias vi="vim"
 alias le="less"
 
-if [[ -x "$(command -v fasd)" ]] && [[ -z "${AGENT_MODE}" ]]; then
+if [ -x "$(command -v fasd)" ]; then
     # quicker startup with fasd
     fasd_cache="$HOME/.fasd-init-bash"
     if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
@@ -206,37 +205,17 @@ if [[ -x "$(command -v fasd)" ]] && [[ -z "${AGENT_MODE}" ]]; then
 fi
 
 #######################################################
-# BEGIN PROMPT DEFINITION
+# BEGIN PROMPT DEFINITION (simplified for Starship compatibility)
 
-# Highlight the user name when logged in as root.
-if [[ "${USER}" == "root" ]]; then
-	userStyle="\e[1;31m"; # red
-else
-    userStyle="\e[38;5;33m"; # blue
-    #userStyle="\e[38;5;166m"; # orange
-fi;
-hostStyle="\e[1;33m"; # yellow
-gitStyle="\e[38;5;64m"; # green
-
+# Only keep history management, let Starship handle prompt rendering
+# Set PROMPT_COMMAND before Starship init so it can preserve it
 if [ -x "$(command -v fasd)" ] && type _fasd_prompt_func | grep -i function > /dev/null; then
-    # per terminal history
-    #PROMPT_COMMAND='history -w; history -c; history -r; _fasd_prompt_func;'
-    # shared history
-    PROMPT_COMMAND='history -n; history -w; history -c; history -r; _fasd_prompt_func;'
+    # shared history with fasd
+    PROMPT_COMMAND='history -n; history -w; history -c; history -r; _fasd_prompt_func'
 else
-    PROMPT_COMMAND='history -n; history -w; history -c; history -r;'
+    # shared history without fasd
+    PROMPT_COMMAND='history -n; history -w; history -c; history -r'
 fi
-PROMPT_COMMAND+='__git_ps1 "\[${userStyle}\]\u\[\e[1;32m\]@\[${hostStyle}\]\h\[\e[35;m\]:'
-
-# choice between short and long version of path:
-PROMPT_COMMAND+='\[\e[m\]$(sed -e "s:$HOME:~:" -e "s:\(\.\?[^/]\)[^/]*/:\1/:g" <<<$PWD)'
-#PROMPT_COMMAND+='\[\e[m\]\w\[\e[1;31m\]'
-
-# git line
-PROMPT_COMMAND+='\[\e[0m\]" "\[${gitStyle}\]\[\e[m\]'
-PROMPT_COMMAND+='\[\e[1;31m\]> ' 
-
-PROMPT_COMMAND+='\[\e[0m\]"'
 
 # END PROMPT DEFINITION
 #########################################
@@ -258,36 +237,89 @@ if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
 
-if [ -z "$BASH" ] && [ -f ~/.gitalias ]; then
-    source ~/.gitalias
+if [ -z "$BASH" ] & [ -f ~/.gitaliases ]; then
+    source ~/.gitaliases
 fi
 
-if [[ -f ~/.starship.toml ]] && [[ -z "${AGENT_MODE}" ]] && command -v starship >/dev/null 2>&1; then
-    eval "$(starship init bash)"
-fi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+# Skip heavy initialization for Claude Code (module loads, NVM, Starship, Conda)
+# These can hang if cluster services are slow/unresponsive
+if [ "$CLAUDE_CODE" != "1" ]; then
+    . "$HOME/.cargo/env"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH=~/.npm-global/bin:$PATH
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    export PATH=~/.npm-global/bin:$PATH
 
-# Set Oh My Zsh theme conditionally
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  STARSHIP_DISABLE="true"
-  PROMPT='%n@%m:%~%# '
-  RPROMPT=''
-  . ~/hyperion/.venv/bin/activate
+    # Set Oh My Zsh theme conditionally
+    if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+      STARSHIP_DISABLE="true"
+      PROMPT='%n@%m:%~%# '
+      RPROMPT=''
+    # . ~/hyperion/.venv/bin/activate  # commented out by conda initialize
+    fi
+
+    # Initialize Starship (unless disabled)
+    if [ "$STARSHIP_DISABLE" != "true" ]; then
+        if command -v starship &> /dev/null; then
+            eval "$(starship init bash)"
+        fi
+    fi
+
+    export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$PATH
+    export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
+
+    # Load paths and variables
+    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+
+    module load eth_proxy
+    module load stack/2024-06 2>/dev/null
+    module load gcc/12.2.0
+    module load cuda/12.8.0
+
+    export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
+
+    ## disable path issues on LFS filesystem due to git
+    function set_starship_config() {
+        if [[ $PWD == /cluster/* ]]; then
+            export STARSHIP_CONFIG=~/.config/starship-nogit.toml
+        else
+            export STARSHIP_CONFIG=~/.config/starship.toml
+        fi
+    }
+
+    # Append starship config switcher to PROMPT_COMMAND
+    # At this point, PROMPT_COMMAND contains history management + starship's prompt function
+    PROMPT_COMMAND="${PROMPT_COMMAND}; set_starship_config"
+
+
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/cluster/home/michaes/miniforge3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/cluster/home/michaes/miniforge3/etc/profile.d/conda.sh" ]; then
+            . "/cluster/home/michaes/miniforge3/etc/profile.d/conda.sh"
+        else
+            export PATH="/cluster/home/michaes/miniforge3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+else
+    # Minimal PATH setup for Claude Code
+    export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH
+    export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
+    export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
 fi
 
-export PATH=$HOME/cuda/bin:$HOME/.claude/local:$PATH
-export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
-
-# Load paths and variables
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# machine-specific env (tokens, etc.) — shared with zshrc
+[ -f ~/.localrc ] && source ~/.localrc

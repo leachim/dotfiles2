@@ -2,7 +2,10 @@
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login exists.
 
 export PATH="/opt/bin:$HOME/.local/bin:$HOME/.linuxbrew/bin:$HOME/.dotfiles/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/cluster/work/bewi/members/michaes/npm-global/v22.14.0/bin/:$PATH"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+export PATH="/$HOME/.cargo/bin:$PATH"
 #export WLR_NO_HARDWARE_CURSORS=1
 export EDITOR='vim'
 export VISUAL='vim'
@@ -13,7 +16,7 @@ export STARSHIP_CONFIG=~/.starship.toml
 export USER=`whoami`
 if [ -e ~/.tmux_conf ]; then
     # mkdir -p $HOME/.tmux_socket;
-    export TMUX_TMPDIR=$HOME/.tmux_socket
+    export TMUX_TMPDIR=/home/$USER/.tmux_socket
 fi
 
 # load arbitrary API environment variables

@@ -1,0 +1,77 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+# Which is equivalent to
+format = """
+$username\
+$hostname\
+$shlvl\
+$singularity\
+$directory\
+$docker_context\
+$julia\
+$python\
+$memory_usage\
+$aws\
+$gcloud\
+$env_var\
+$cmd_duration\
+$custom\
+$line_break\
+$jobs\
+$battery\
+$time\
+$status\
+$character"""
+
+[line_break]
+disabled = true
+
+[cmd_duration]
+min_time = 432000
+disabled = false
+
+[directory]
+format = " [$path]($style)[$read_only]($read_only_style)"
+fish_style_pwd_dir_length = 1
+truncation_length = 3
+
+[hostname]
+ssh_only = false
+format = "at [$hostname](bold dimmed green):"
+trim_at = "."
+disabled = false
+
+[username]
+style_user = "white bold"
+style_root = "black bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[aws]
+format = ''
+disabled = true
+
+[docker_context]
+format = "via [🐋 $context](blue bold)"
+
+[gcloud]
+disabled = true
+
+[julia]
+symbol = "∴ "
+
+[singularity]
+format = '[📦 \[$env\]]($style) '
+
+command_timeout = 100  # milliseconds, default is 500
+scan_timeout = 10      # milliseconds for scanning directories
+
+[custom.uv_python]
+command = 'uv python find --show-version'
+format = 'via [${symbol}(${output} )]($style)'
+symbol = "uv "
+detect_extensions = ['py', 'ipynb']
+detect_files = ['.python-version', 'Pipfile', '__init__.py', 'pyproject.toml', 'requirements.txt', 'setup.py', 'tox.ini', 'uv.lock', 'pylock.toml']
+style = "bold purple"
