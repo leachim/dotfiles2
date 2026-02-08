@@ -3,14 +3,12 @@
 
 # Cluster-specific paths
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="/cluster/work/bewi/members/michaes/npm-global/v22.14.0/bin:$PATH"
 export PATH=$HOME/cuda/bin:$HOME/.claude/local:$HOME/mmseqs2/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
 export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
 export XDG_CONFIG_HOME="$HOME"
 
 # Cluster aliases
-alias quota_euler="cat /cluster/work/bewi/.bewi_user_data_usage.txt"
 alias qqsqu="squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
 alias qqsqw="watch -n 10 'squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\"'"
 alias qqsqwa='watch -n 10 '\''squeue -o "%.18i %.12P %.20j %.8u %.3T %.12M %.10l %.6D %.4C %.16b %R" | sed "1!s/gres\/gpu:[^:]*://g; 1!s/N\/A/0/g"'\'''
@@ -24,17 +22,7 @@ alias m-squeuea="squeue -o \"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\
 alias m-jobmonitor="SACCT_FORMAT=\"JobID%20,JobName,User,Partition,NodeList,Elapsed,State,ExitCode,MaxRSS,AllocTRES%32\" sacct"
 squeue-watch () { watch -n 3 -d "squeue -u $(whoami) --format=\"%.14i %.5j %.2t %.10M %.9l %.5D %16R %5K %3C %Q %o\"" ; }
 alias m-squeuew="squeue-watch"
-alias clusterquota='lfs quota -h -g fmlab'
 
-claude() {
-    (
-        set -a
-        source ~/hyperion/.env
-        set +a
-        "$HOME/.local/bin/claude" "$@"
-    )
-}
-alias claude-sub='CLAUDE_CONFIG_DIR=~/.claude-subscription claude'
 alias pd="~/.local/bin/push \"Run ended!\" \"euler\" -p \"0\""
 alias gemini-api="GEMINI_API_KEY=\$GEMINI_API_KEY gemini"
 

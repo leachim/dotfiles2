@@ -1,9 +1,14 @@
 #!/bin/sh
 #
-# Claude Code configuration
+# Claude Code — install binary + symlink configuration
 #
-# Symlinks CLAUDE.md, settings.json, and asset directories into ~/.claude/
 # Backs up existing files/directories to $BACKUP_DIR or ~/.claude/*.backup
+
+# Install claude binary if not present
+if ! command -v claude > /dev/null 2>&1; then
+    echo "  Installing Claude Code CLI..."
+    curl -fsSL https://cli.claude.ai/install.sh | sh
+fi
 
 CLAUDE_DIR="$HOME/.claude"
 DOTFILES_CLAUDE="$HOME/.dotfiles/claude"

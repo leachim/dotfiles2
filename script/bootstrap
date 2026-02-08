@@ -164,5 +164,9 @@ then
   setup_conda
 fi
 
+# Optional tool installation (rust, starship, claude, oh-my-zsh, etc.)
+info 'checking optional tools'
+bash "$DOTFILES_ROOT/script/install"
+
 echo ''
 echo '  All installed!'

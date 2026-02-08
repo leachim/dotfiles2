@@ -1,20 +1,41 @@
 #!/bin/bash
-# Load host/role-specific configuration
+# Load host/role-specific and per-hostname configuration
 #
-# To configure a machine, create ~/.dotfiles/host_role containing one of:
-#   mac, workstation, hpc
+# Role-based (shared across machine class):
+#   Create ~/.dotfiles/host_role containing: mac, linux-desktop, hpc
+#   Config lives in ~/.dotfiles/hosts/ROLENAME.sh
+#   The host_role file is .gitignored — set it per machine during bootstrap.
 #
-# Or create a custom file in ~/.dotfiles/hosts/ROLENAME.sh
-#
-# The host_role file is .gitignored — set it per machine during bootstrap.
+# Hostname-based (per individual machine or group):
+#   Create files in ~/.dotfiles/hosts/hostnames/
+#   Filename (minus .sh) is matched as a prefix against the hostname.
+#   e.g., euler.sh matches euler, euler-001, euler-login
+#         bs-mbpas-0085.sh matches only that exact host
 
 DOTFILES_DIR="${HOME}/.dotfiles"
 HOST_ROLE_FILE="${DOTFILES_DIR}/host_role"
+HOSTNAMES_DIR="${DOTFILES_DIR}/hosts/hostnames"
 
+# 1. Role-based config
 if [ -f "$HOST_ROLE_FILE" ]; then
     _role=$(cat "$HOST_ROLE_FILE")
     if [ -f "${DOTFILES_DIR}/hosts/${_role}.sh" ]; then
         source "${DOTFILES_DIR}/hosts/${_role}.sh"
     fi
     unset _role
+fi
+
+# 2. Per-hostname config (prefix match: filename minus .sh is matched against hostname)
+if [ -d "$HOSTNAMES_DIR" ]; then
+    _hostname=$(hostname -s 2>/dev/null || hostname)
+
+    for _hfile in "${HOSTNAMES_DIR}"/*.sh; do
+        [ -f "$_hfile" ] || continue
+        _prefix=$(basename "$_hfile" .sh)
+        case "$_hostname" in
+            ${_prefix}*) source "$_hfile" ;;
+        esac
+    done
+
+    unset _hostname _hfile _prefix
 fi
