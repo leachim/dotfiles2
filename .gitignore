@@ -2,3 +2,4 @@ private/*
 host_role
 *.bak
 localrc.symlink
+!localrc.symlink.example

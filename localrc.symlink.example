@@ -1,0 +1,3 @@
+# Machine-specific environment variables.
+# Sourced by both bash and zsh. Keep secrets and per-machine config here.
+# This file is symlinked to ~/.localrc — do not commit secrets.

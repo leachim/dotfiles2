@@ -132,7 +132,17 @@ setup_host_role () {
   fi
 }
 
+setup_localrc () {
+  if ! [ -f localrc.symlink ]
+  then
+    info 'creating localrc from template'
+    cp localrc.symlink.example localrc.symlink
+    success 'localrc created — add machine-specific env vars to ~/.localrc'
+  fi
+}
+
 setup_gitconfig
+setup_localrc
 setup_host_role
 install_dotfiles
 
