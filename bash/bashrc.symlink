@@ -10,7 +10,13 @@ esac
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.tmux_bin/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-export TERMINFO=$HOME/.terminfo
+# Use local terminfo if available; fall back to xterm-256color if current TERM is unknown
+if [ -d "$HOME/.terminfo" ]; then
+    export TERMINFO=$HOME/.terminfo
+fi
+if ! tput colors &>/dev/null 2>&1; then
+    export TERM=xterm-256color
+fi
 
 # BASH OPTIONS {{{
 shopt -s cdspell                 # Correct cd typos
