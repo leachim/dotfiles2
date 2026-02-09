@@ -2,6 +2,35 @@
 ###              ALIASES              ###
 #########################################
 
+## HISTORY MANAGEMENT FUNCTIONS
+# Function to use shared history across all terminals (bash/zsh)
+use_shared_history() {
+  if [ -n "$ZSH_VERSION" ]; then
+    # Zsh-specific shared history
+    setopt share_history
+    setopt inc_append_history
+  elif [ -n "$BASH_VERSION" ]; then
+    # Bash-specific shared history
+    export HISTFILE=~/.bash_history
+    shopt -s histappend
+    PROMPT_COMMAND="history -a; history -c; history -r"
+  fi
+}
+
+# Function to use separate history per terminal session
+use_separate_history() {
+  if [ -n "$ZSH_VERSION" ]; then
+    # Zsh-specific separate history
+    unsetopt share_history
+    unsetopt inc_append_history
+  elif [ -n "$BASH_VERSION" ]; then
+    # Bash-specific separate history
+    export HISTFILE="$HOME/.bash_history_$$"
+    shopt -u histappend
+    PROMPT_COMMAND=""
+  fi
+}
+
 if [ -x "$(command -v br)" ]; then
     alias l="br"
 fi

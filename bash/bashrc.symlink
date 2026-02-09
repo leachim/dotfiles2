@@ -182,8 +182,19 @@ if [ -f ~/.skim/shell/key-bindings.bash ]; then
     source ~/.skim/shell/key-bindings.bash
 fi
 
+# Load profile first (includes profile_hosts for host-specific config, plus aliases/gitaliases)
+# This ensures host configs load in interactive shells, not just login shells
+if [ -f ~/.profile ]; then
+    source ~/.profile
+fi
+
+# Source aliases again in case profile didn't load them (belt and suspenders)
 if [ -f ~/.aliases ]; then
     source ~/.aliases
+fi
+
+if [ -f ~/.gitaliases ]; then
+    source ~/.gitaliases
 fi
 
 
