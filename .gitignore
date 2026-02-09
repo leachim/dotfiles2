@@ -2,7 +2,7 @@ private/*
 host_role
 *.bak
 localrc.symlink
+.claude/settings.local.json
 !localrc.symlink.example
 gitconfig.local.symlink
 !gitconfig.local.symlink.example
-.claude/settings.local.json
