@@ -170,7 +170,7 @@ PROMPT_COMMAND='history -n; history -w; history -c; history -r'
 #########################################
 
 if [ -n "$SINGULARITY_CONTAINER" ]; then
-    PS1=$SINGULARITY_CONTAINER":"$PS1
+    PS1="${SINGULARITY_CONTAINER}:${PS1}"
 fi
 
 
@@ -222,7 +222,7 @@ if [ "$STARSHIP_DISABLE" != "true" ] && command -v starship &> /dev/null; then
 fi
 
 command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
-command -v uv &> /dev/null && eval "$(uv generate-shell-completion bash)"
+command -v uv &> /dev/null && eval "$(uv generate-shell-completion bash 2>/dev/null)" 2>/dev/null || true
 
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc

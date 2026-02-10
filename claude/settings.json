@@ -63,6 +63,7 @@
       "Bash(rmdir:*)"
     ]
   },
+  "model": "sonnet",
   "hooks": {
     "Stop": [
       {
@@ -93,14 +94,11 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "github@claude-plugins-official": false,
-    "context7@claude-plugins-official": true,
-    "commit-commands@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "pr-review-toolkit@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true
+    "commit-commands": true,
+    "code-review": true,
+    "pr-review-toolkit": true,
+    "ralph-wiggum": true,
+    "feature-dev": true
   },
   "alwaysThinkingEnabled": true,
   "pluginConfigs": {
