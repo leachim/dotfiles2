@@ -27,4 +27,4 @@ export HTTPS_PROXY=$https_proxy
 # squeue aliases (different from qqsqu in hpc.sh - note 'squ' vs 'qqsqu')
 alias squ="squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
 alias sqw="watch -n 10 'squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\"'"
-alias sqwa='watch -n 10 '\''squeue -o "%.18i %.12P %.20j %.8u %.3T %.12M %.10l %.6D %.4C %.16b %R" | sed "1!s/gres\/gpu:[^:]*://g; 1!s/N\/A/0/g"'\'''
+alias sqwa="watch -n 10 'squeue -o \"%.18i %.12P %.20j %.8u %.3T %.12M %.10l %.6D %.4C %.16b %R\" | sed \"1!s/gres\/gpu:[^:]*://g; 1!s/N\/A/0/g\"'"
