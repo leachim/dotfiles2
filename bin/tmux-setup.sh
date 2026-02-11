@@ -2,13 +2,15 @@
 
 # Relies on TMUX_TMPDIR being set in ~/.profile
 
+SESSION="${1:-$(hostname -s 2>/dev/null || echo main)}"
+
 # setup session and first window
-tmux new-session -d -s "$1" -n "$1"
+tmux new-session -d -s "$SESSION" -n "$SESSION"
 tmux split-window -h
 tmux split-window -v
 
 # second window
-if ! [ "$1" = "darwin" ]; then
+if ! [ "$SESSION" = "darwin" ]; then
 	tmux new-window -n claude
 	tmux split-window -h
 	tmux split-window -v
