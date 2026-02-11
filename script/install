@@ -43,6 +43,7 @@ run_optional () {
 # Optional components
 run_optional "Oh My Zsh"      ./zsh/install.sh
 run_optional "Vim plugins"    ./vim/install.sh
+run_optional "Tmux plugins (TPM)" ./tmux/install.sh
 run_optional "Starship prompt" ./starship/install.sh
 run_optional "Rust (rustup)"  ./rust/install.sh
 run_optional "Claude Code config" ./claude/install.sh

@@ -63,7 +63,6 @@
       "Bash(rmdir:*)"
     ]
   },
-  "model": "sonnet",
   "hooks": {
     "Stop": [
       {

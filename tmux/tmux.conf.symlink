@@ -268,16 +268,17 @@ bind-key -T copy-mode-vi 'C-\' select-pane -l
 # show all open panes and windows in a tree
 bind -n C-y choose-tree
 
-#set -g @plugin 'tmux-plugins/tpm'
-#set -g @plugin 'tmux-plugins/tmux-resurrect'
-# tmux-plugins/tmux-sensible   \
-#set -g @plugin 'tmux-plugins/tmux-copycat'
-#set -g @plugin 'tmux-plugins/tmux-yank'
+# Plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
 
-# Other examples:
-# set -g @plugin 'github_username/plugin_name'
-# set -g @plugin 'git@github.com/user/plugin'
-# set -g @plugin 'git@bitbucket.com/user/plugin'
+# Resurrect settings
+set -g @resurrect-capture-pane-contents 'on'
+
+# Continuum settings
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '10'
 
 # copy on select (platform-aware)
 if-shell 'test "$(uname)" = "Darwin"' \
@@ -287,15 +288,8 @@ if-shell 'test "$(uname)" = "Darwin"' \
   'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "pbcopy"' \
   'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"'
 
-# # List of plugins
-# set -g @tpm_plugins '        \
-# tmux-plugins/tpm             \
-# tmux-plugins/tmux-yank       \
-# '
-
-# # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-# set-environment -g PATH "~/.local/bin:/usr/bin"
-# run '~/.tmux/plugins/tpm/tpm'
+# Initialize TPM (must be last line of plugin config)
+run '~/.tmux/plugins/tpm/tpm'
 
 #set-option -g allow-passthrough on
 
