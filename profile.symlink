@@ -8,12 +8,9 @@ export VISUAL='vim'
 export PAGER='less'
 export STARSHIP_CONFIG=~/.starship.toml
 
-# create fixed tmux session directory, to restore tmux sessions remotely
-export USER=`whoami`
-if [ -e ~/.tmux_conf ]; then
-    # mkdir -p $HOME/.tmux_socket;
-    export TMUX_TMPDIR=$HOME/.tmux_socket
-fi
+# Use persistent socket directory instead of /tmp (survives cleanup on shared nodes)
+export TMUX_TMPDIR="$HOME/.tmux_server"
+mkdir -p "$TMUX_TMPDIR"
 
 # load arbitrary API environment variables
 if [ -f ~/.dotfiles/private/env ]; then
