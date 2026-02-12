@@ -21,8 +21,9 @@ Bootstrap will prompt you for:
    - Vim/Neovim plugins (vim-plug)
    - Starship prompt
    - Rust (via rustup)
-   - Node packages
+   - Node.js (via nvm, includes gemini-cli)
    - Claude Code config
+   - GitHub CLI (gh)
 6. **pixi** -- optional, cross-platform
 
 ## Updating
@@ -44,7 +45,7 @@ Run `dot` to update an existing installation. On macOS this applies system defau
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
 ├── macos/             macOS defaults and software updates
-├── node/              Node.js packages
+├── node/              Node.js via nvm, gemini-cli
 ├── ruby/              Ruby/RVM config
 ├── rust/              Rust install via rustup
 ├── script/            Bootstrap, install, pixi-setup

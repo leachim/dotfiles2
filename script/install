@@ -33,7 +33,7 @@ run_optional () {
   echo ''
   if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
     info "installing ${name}"
-    sh -c "$script"
+    sh "$script"
     success "${name} installed"
   else
     success "skipped ${name}"
@@ -46,5 +46,6 @@ run_optional "Vim plugins"    ./vim/install.sh
 run_optional "Tmux plugins (TPM)" ./tmux/install.sh
 run_optional "Starship prompt" ./starship/install.sh
 run_optional "Rust (rustup)"  ./rust/install.sh
+run_optional "Node.js (nvm)"  ./node/install.sh
 run_optional "Claude Code config" ./claude/install.sh
 run_optional "GitHub CLI (gh)" ./gh/install.sh
