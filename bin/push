@@ -9,7 +9,7 @@ fi
 
 DEFAULT_MESSAGE="Ring"
 DEFAULT_TITLE="Notification"
-DEFAULT_DEVICES=""
+DEFAULT_DEVICES="${PUSHOVER_DEVICE:-}"
 
 usage() {
     echo "Usage: push [message] [title] [options]"

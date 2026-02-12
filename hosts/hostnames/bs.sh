@@ -5,8 +5,12 @@
 
 # CUDA 12.8 specific (overrides hpc.sh generic cuda)
 export CUDA_HOME=$HOME/cuda-12.8
-export PATH=$CUDA_HOME/bin:$PATH
+export CUDNN_PATH=$HOME/cuda-12.8
+export CPLUS_INCLUDE_PATH=$CUDA_HOME/include:$CPLUS_INCLUDE_PATH
+export CPATH=/home/michaes/cuda-12.8/include:$CPATH
+export LIBRARY_PATH=/home/michaes/cuda-12.8/lib64:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+export PATH=$CUDA_HOME/bin:$PATH
 
 # MMSEQ
 export PATH=/home/michaes/mmseqs/bin:$PATH

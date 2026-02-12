@@ -170,6 +170,18 @@ pd() {
     notify-push "$STATUS"
 }
 
+pdd() {
+    local EXIT_CODE=$?
+    local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "done" || echo "FAILED ($EXIT_CODE)" )
+    push "$(_notify-context): $STATUS" "$(hostname)" -d "macbook-pro"
+}
+
+pdp() {
+    local EXIT_CODE=$?
+    local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "done" || echo "FAILED ($EXIT_CODE)" )
+    push "$(_notify-context): $STATUS" "$(hostname)" -d "iphone"
+}
+
 # Rust CLI tools
 alias tre='eza --tree'
 
