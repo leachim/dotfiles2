@@ -6,12 +6,19 @@
 if command -v node >/dev/null 2>&1; then
   echo "  node: already installed ($(node --version))"
 
-  # Still install gemini-cli if node exists
+  # Still install CLIs if node exists
   if ! command -v gemini >/dev/null 2>&1; then
     echo "  gemini-cli: installing globally"
     npm install -g @google/gemini-cli
   else
     echo "  gemini-cli: already installed"
+  fi
+
+  if ! command -v codex >/dev/null 2>&1; then
+    echo "  codex: installing globally"
+    npm install -g @openai/codex
+  else
+    echo "  codex: already installed"
   fi
   exit 0
 fi
@@ -33,8 +40,10 @@ echo "  node: installing LTS version"
 nvm install --lts
 nvm use --lts
 
-# Install gemini-cli
+# Install CLIs
 echo "  gemini-cli: installing globally"
 npm install -g @google/gemini-cli
+echo "  codex: installing globally"
+npm install -g @openai/codex
 
 exit 0
