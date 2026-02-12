@@ -8,3 +8,8 @@ then
   alias ll="gls -l --color"
   alias la='gls -A --color'
 fi
+
+# Use python3 as python if python is not available
+if ! command -v python &>/dev/null && command -v python3 &>/dev/null; then
+  alias python="python3"
+fi
