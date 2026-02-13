@@ -31,7 +31,7 @@ shopt -s cmdhist
 function use_shared_history() {
   export HISTFILE=~/.bash_history
   shopt -s histappend
-  PROMPT_COMMAND="history -a; history -c; history -r"
+  PROMPT_COMMAND="history -a; history -n"
 }
 
 function use_separate_history() {
@@ -118,14 +118,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-fi
-
-if ! shopt -oq posix; then
+if [ -z "${DOTFILES_DISABLE_BASH_COMPLETION:-}" ] && ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
@@ -163,8 +156,8 @@ set -o vi
 # BEGIN PROMPT DEFINITION (simplified for Starship compatibility)
 
 # Only keep history management, let Starship handle prompt rendering
-# Set PROMPT_COMMAND before Starship init so it can preserve it
-PROMPT_COMMAND='history -n; history -w; history -c; history -r'
+# Keep history synced without rewriting/reloading the full history file each prompt.
+PROMPT_COMMAND='history -a; history -n'
 
 # END PROMPT DEFINITION
 #########################################
@@ -182,9 +175,8 @@ if [ -f ~/.skim/shell/key-bindings.bash ]; then
     source ~/.skim/shell/key-bindings.bash
 fi
 
-# Load profile first (includes profile_hosts for host-specific config, plus aliases/gitaliases)
-# This ensures host configs load in interactive shells, not just login shells
-if [ -f ~/.profile ]; then
+# Load profile only once per session tree.
+if [ -z "${DOTFILES_PROFILE_LOADED:-}" ] && [ -f ~/.profile ]; then
     source ~/.profile
 fi
 
@@ -208,8 +200,17 @@ fi
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    __load_nvm() {
+        unset -f __load_nvm nvm node npm npx
+        \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    }
+    nvm() { __load_nvm; nvm "$@"; }
+    node() { __load_nvm; node "$@"; }
+    npm() { __load_nvm; npm "$@"; }
+    npx() { __load_nvm; npx "$@"; }
+fi
 
 # Disable starship in vscode terminal
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
@@ -222,7 +223,9 @@ if [ "$STARSHIP_DISABLE" != "true" ] && command -v starship &> /dev/null; then
 fi
 
 command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
-command -v uv &> /dev/null && eval "$(uv generate-shell-completion bash 2>/dev/null)" 2>/dev/null || true
+if [ -n "${DOTFILES_ENABLE_UV_COMPLETION:-}" ] && command -v uv &> /dev/null; then
+    eval "$(uv generate-shell-completion bash 2>/dev/null)" 2>/dev/null || true
+fi
 
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc

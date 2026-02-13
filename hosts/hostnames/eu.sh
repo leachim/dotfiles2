@@ -13,6 +13,24 @@ export LD_LIBRARY_PATH=$HOME/cuda/lib64:$LD_LIBRARY_PATH
 export TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# Fast Bash defaults on Euler hosts (eu-*). Opt out with:
+#   export DOTFILES_CLUSTER_FAST_MODE=0
+if [ -n "$BASH_VERSION" ]; then
+    : "${DOTFILES_CLUSTER_FAST_MODE:=1}"
+    if [ "$DOTFILES_CLUSTER_FAST_MODE" = "1" ]; then
+        export DOTFILES_DISABLE_BASH_COMPLETION="${DOTFILES_DISABLE_BASH_COMPLETION:-1}"
+        export STARSHIP_DISABLE="${STARSHIP_DISABLE:-true}"
+
+        # Keep frequently-written caches off high-latency network metadata paths.
+        export XDG_CACHE_HOME="${XDG_CACHE_HOME:-/tmp/$USER/.cache}"
+        export NPM_CONFIG_CACHE="${NPM_CONFIG_CACHE:-$XDG_CACHE_HOME/npm}"
+        export PIP_CACHE_DIR="${PIP_CACHE_DIR:-$XDG_CACHE_HOME/pip}"
+        export UV_CACHE_DIR="${UV_CACHE_DIR:-$XDG_CACHE_HOME/uv}"
+
+        mkdir -p "$XDG_CACHE_HOME" "$NPM_CONFIG_CACHE" "$PIP_CACHE_DIR" "$UV_CACHE_DIR" 2>/dev/null || true
+    fi
+fi
+
 # Cluster aliases
 alias qqsqu="squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
 alias qqsqw="watch -n 10 'squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\"'"
@@ -30,10 +48,20 @@ alias m-squeuew="squeue-watch"
 
 alias gemini-api="GEMINI_API_KEY=\$GEMINI_API_KEY gemini"
 
-module load eth_proxy 2>/dev/null
-module load stack/2024-06 2>/dev/null
-module load gcc/12.2.0 2>/dev/null
-module load cuda/12.8.0 2>/dev/null
+_dotfiles_is_login_shell=false
+if [ -n "$BASH_VERSION" ]; then
+    shopt -q login_shell && _dotfiles_is_login_shell=true
+elif [ -n "$ZSH_VERSION" ]; then
+    [[ -o login ]] && _dotfiles_is_login_shell=true
+fi
+
+if [[ $- == *i* ]] && [ "$_dotfiles_is_login_shell" = true ]; then
+    module load eth_proxy 2>/dev/null
+    module load stack/2024-06 2>/dev/null
+    module load gcc/12.2.0 2>/dev/null
+    module load cuda/12.8.0 2>/dev/null
+fi
+unset _dotfiles_is_login_shell
 
 # Skip heavy cluster initialization for AI agents
 # Module loads can hang if cluster services are slow/unresponsive
@@ -52,7 +80,7 @@ if [ "$AI_AGENT" != "1" ]; then
     }
     if [ -n "$ZSH_VERSION" ]; then
         precmd_functions+=(set_starship_config)
-    elif [ -n "$BASH_VERSION" ]; then
+    elif [ -n "$BASH_VERSION" ] && [ "${STARSHIP_DISABLE:-}" != "true" ]; then
         PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}set_starship_config"
     fi
 

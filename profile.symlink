@@ -7,6 +7,7 @@ export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
 export STARSHIP_CONFIG=~/.starship.toml
+export DOTFILES_PROFILE_LOADED=1
 
 # Use persistent socket directory instead of /tmp (survives cleanup on shared nodes)
 export TMUX_TMPDIR="$HOME/.tmux_server"

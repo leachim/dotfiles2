@@ -72,6 +72,7 @@ set_prompt () {
 }
 
 precmd() {
-  title "zsh" "%m" "%55<...<%~"
+  # Avoid title escape sequences inside tmux; they can cause visual redraw jitter.
+  [[ -z "$TMUX" ]] && title "zsh" "%m" "%55<...<%~"
   set_prompt
 }
