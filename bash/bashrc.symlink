@@ -202,7 +202,7 @@ fi
 export NVM_DIR="$HOME/.config/nvm"
 if [ -s "$NVM_DIR/nvm.sh" ]; then
     __load_nvm() {
-        unset -f __load_nvm nvm node npm npx
+        unset -f __load_nvm nvm node npm npx codex
         \. "$NVM_DIR/nvm.sh"
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     }
@@ -210,6 +210,7 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
     node() { __load_nvm; node "$@"; }
     npm() { __load_nvm; npm "$@"; }
     npx() { __load_nvm; npx "$@"; }
+    codex() { __load_nvm; codex "$@"; }
 fi
 
 # Disable starship in vscode terminal
@@ -229,3 +230,27 @@ fi
 
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc
+
+# Re-hook after all startup files (notably /etc/bashrc), which may define
+# their own command_not_found_handle implementation.
+if [ -s "$NVM_DIR/nvm.sh" ] && declare -F __load_nvm >/dev/null 2>&1; then
+    if declare -F command_not_found_handle >/dev/null 2>&1 && ! declare -F __dotfiles_prev_command_not_found_handle >/dev/null 2>&1; then
+        eval "$(declare -f command_not_found_handle | sed '1s/command_not_found_handle/__dotfiles_prev_command_not_found_handle/')"
+    fi
+    command_not_found_handle() {
+        local cmd="$1"
+        if declare -F __load_nvm >/dev/null 2>&1; then
+            __load_nvm
+            if command -v "$cmd" >/dev/null 2>&1; then
+                "$cmd" "${@:2}"
+                return $?
+            fi
+        fi
+        if declare -F __dotfiles_prev_command_not_found_handle >/dev/null 2>&1; then
+            __dotfiles_prev_command_not_found_handle "$@"
+            return $?
+        fi
+        printf '%s: command not found\n' "$cmd" >&2
+        return 127
+    }
+fi
