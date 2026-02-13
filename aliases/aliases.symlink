@@ -92,6 +92,14 @@ alias .....="cd ../../../.."
 ###              CODING               ###
 #########################################
 
+codex() {
+    if [ "$PWD" = "/cluster/home" ]; then
+        command codex -C "$HOME" "$@"
+    else
+        command codex "$@"
+    fi
+}
+
 ## python
 function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 

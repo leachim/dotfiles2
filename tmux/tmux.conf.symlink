@@ -119,7 +119,7 @@ bind ! setw monitor-silence 300
 
 # rotate through panes and maximize panes
 bind-key -n M-w select-pane -l 
-bind-key -n M-s select-pane -t :.+
+bind-key -n M-d select-pane -t :.+
 bind-key -n M-a select-pane -t :.-
 bind-key -n C-q resize-pane -Z
 
