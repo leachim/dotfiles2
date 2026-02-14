@@ -76,6 +76,9 @@ bindkey "^[0B" down-line-or-local-history
 bindkey "^[[1;5A" up-line-or-beginning-search # [CTRL] + Cursor up
 bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
 
+# Enable vi mode
+bindkey -v
+
 
 
 export ZSH=$HOME/.oh-my-zsh
