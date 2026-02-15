@@ -1,0 +1,19 @@
+#!/bin/bash
+# Wrapper script to copy to clipboard via OSC 52 inside tmux
+# Uses DCS (Device Control String) to pass through the escape sequence
+#
+# This script is called by tmux copy bindings to send copied text to the
+# local system clipboard over SSH using OSC 52 escape sequences.
+
+# Read input from stdin (piped from tmux save-buffer)
+input=$(cat)
+
+# Base64 encode the input (required by OSC 52 spec)
+encoded=$(printf "%s" "$input" | base64 | tr -d '\n')
+
+# Get the active pane's TTY from tmux
+pane_tty=$(tmux display-message -p '#{pane_tty}')
+
+# Send OSC 52 wrapped in DCS for tmux passthrough
+# Format: ESC P tmux; ESC ESC ] 52 ; c ; <base64> BEL ESC \
+printf "\033Ptmux;\033\033]52;c;%s\007\033\\\\" "$encoded" > "$pane_tty"

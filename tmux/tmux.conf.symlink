@@ -17,12 +17,12 @@ setw -g mode-keys vi
 set -g status-keys vi
 
 # True color support
-set -g default-terminal "tmux-256color"
+set -g default-terminal "screen-256color"
 set -ga terminal-overrides ",*256col*:Tc"
 set -ga terminal-overrides ",xterm-256color:Tc"
 
 # Enable RGB color if running in xterm(1)
-set -sa terminal-overrides ",xterm*:Tc"
+set -s terminal-overrides ",xterm*:Tc"
 
 # Default shell according to system in use
 set-option -g default-shell "$SHELL"
@@ -46,27 +46,28 @@ set-environment -g 'IGNOREEOF' 100
 # local system clipboard. No X11 forwarding or special SSH configuration needed.
 
 # Enable clipboard integration (OSC 52)
+# 'on' allows tmux to set clipboard AND allows apps inside tmux to use it
 set -g set-clipboard on
 
-# Allow terminal features for OSC 52 and other modern capabilities
-set -ag terminal-features ",*:clipboard:ccolour:cstyle:title:usstyle"
+# Enable clipboard feature specifically for xterm-style terminals (iTerm2)
+set -g terminal-features 'xterm*:clipboard'
 
 # Mouse support
 set -g mouse on
 
-# Copy mode
-bind -n M-Space copy-mode
-bind-key -n 'C-M-c' copy-mode
-bind-key -n 'C-M-v' paste-buffer
+# Copy mode entry bindings
+bind-key -n 'C-M-c' copy-mode                # Ctrl-Alt-c: enter copy mode
+bind-key [ copy-mode                         # Prefix-[: enter copy mode (most reliable)
+bind-key -n 'C-M-v' paste-buffer             # Ctrl-Alt-v: paste from tmux buffer
 unbind p
-bind p paste-buffer
+bind p paste-buffer                          # Prefix-p: paste from tmux buffer
 
-# Vi-style copy mode bindings
-bind-key -T copy-mode-vi v send-keys -X begin-selection
-bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
-bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
-bind-key -T copy-mode-vi Escape send-keys -X cancel
+# Vi-style copy mode bindings (use after entering copy mode)
+bind-key -T copy-mode-vi v send-keys -X begin-selection              # v: start visual selection
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle           # Ctrl-v: toggle rectangular selection
+bind-key -T copy-mode-vi r send-keys -X rectangle-toggle             # r: toggle rectangular selection
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel \; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52"    # y: copy to buffer then send via OSC 52 script
+bind-key -T copy-mode-vi Escape send-keys -X cancel                  # Esc: exit copy mode without copying
 
 # pane movement
 # https://unix.stackexchange.com/questions/145857/how-do-you-hide-a-pane?noredirect=1&lq=1
@@ -280,19 +281,16 @@ set -g @resurrect-capture-pane-contents 'on'
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '10'
 
-# Mouse drag and double-click copy (uses OSC 52 when available)
-# copy-pipe-no-clear keeps selection active, copy-pipe-and-cancel clears it
-if-shell 'test "$(uname)" = "Darwin"' \
-  'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "pbcopy"' \
-  'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "xclip -i -sel clipboard 2>/dev/null || xsel -ib 2>/dev/null || true"'
-if-shell 'test "$(uname)" = "Darwin"' \
-  'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "pbcopy"' \
-  'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xclip -i -sel clipboard 2>/dev/null || xsel -ib 2>/dev/null || true"'
+# Mouse copy bindings (uses OSC 52 script via run-shell)
 
-# Triple-click to select and copy line
-if-shell 'test "$(uname)" = "Darwin"' \
-  'bind-key -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "pbcopy"' \
-  'bind-key -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "xclip -i -sel clipboard 2>/dev/null || xsel -ib 2>/dev/null || true"'
+# Drag: Option+drag to copy (Mac trackpad workaround)
+bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear \; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52"
+
+# Double-click: select word and copy
+bind-key -T root DoubleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-word ; send-keys -X copy-selection-and-cancel ; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52" }
+
+# Triple-click: select line and copy
+bind-key -T root TripleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-line ; send-keys -X copy-selection-and-cancel ; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52" }
 
 # Initialize TPM (must be last line of plugin config)
 run '~/.tmux/plugins/tpm/tpm'
