@@ -12,61 +12,61 @@ set -g display-time 5000
 # focus events enabled for terminals that support them
 set -g focus-events on
 
-
 # Use vim bindings
 setw -g mode-keys vi
 set -g status-keys vi
 
-#bind-key -t vi-edit Up   history-up
-#bind-key -t vi-edit Down history-down
+# True color support
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ",*256col*:Tc"
+set -ga terminal-overrides ",xterm-256color:Tc"
 
-# Sane scrolling
-set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+# Enable RGB color if running in xterm(1)
+set -sa terminal-overrides ",xterm*:Tc"
 
 # Default shell according to system in use
 set-option -g default-shell "$SHELL"
-
-# Avoid issue with xterm unknown
-# set -g default-terminal "tmux-256color"
 
 # avoid accidental exit
 set-environment -g 'IGNOREEOF' 100
 
 # ----------------------
-# Copy paste
+# Copy paste - Modern OSC 52 support
 # -----------------------
+# OSC 52 is a terminal escape sequence that allows tmux to set the system clipboard
+# even when connected to a remote server via SSH. This works with modern terminals:
+# - iTerm2 (Mac) - Enable "Applications in terminal may access clipboard"
+# - Terminal.app (Mac) - Works by default
+# - Alacritty - Works by default
+# - WezTerm - Works by default
+# - Windows Terminal - Works by default
+#
+# When you copy text in tmux on a remote server, OSC 52 sends the clipboard data
+# through the SSH connection to your local terminal emulator, which then sets your
+# local system clipboard. No X11 forwarding or special SSH configuration needed.
 
-# Copy & Paste from/to System Clipboard (platform-aware)
-if-shell 'test "$(uname)" = "Darwin"' \
-  'bind C-c run "tmux save-buffer - | pbcopy"' \
-  'bind C-c run "tmux save-buffer - | xclip -i -sel clipboard"'
-if-shell 'test "$(uname)" = "Darwin"' \
-  'bind C-v run "tmux set-buffer \"$(pbpaste)\"; tmux paste-buffer"' \
-  'bind C-v run "tmux set-buffer \"$(xclip -o -sel clipboard)\"; tmux paste-buffer"'
+# Enable clipboard integration (OSC 52)
+set -g set-clipboard on
 
-# clever copy paste in tmux
+# Allow terminal features for OSC 52 and other modern capabilities
+set -ag terminal-features ",*:clipboard:ccolour:cstyle:title:usstyle"
+
+# Mouse support
 set -g mouse on
 
 # Copy mode
-# https://unix.stackexchange.com/questions/58763/copy-text-from-one-tmux-pane-to-another-using-vim
-# unbind [
 bind -n M-Space copy-mode
-bind-key -T copy-mode-vi v send-keys -X begin-selection
-#bind-key -T copy-mode-vi y send-keys -X copy-selection-no-clear
-bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-# Also copy to system clipboard
-#bind-key -T copy-mode-vi y send-keys -X copy-pipe-no-clear ' xclip -sel clip -i'
-# map copy mode to ctrl+alt+c
 bind-key -n 'C-M-c' copy-mode
-# map paste buffer to ctrl+alt+v
 bind-key -n 'C-M-v' paste-buffer
-
-# bind Escape copy-mode
 unbind p
 bind p paste-buffer
-#bind -t vi-copy 'v' begin-selection
-#bind -t vi-copy 'y' copy-selection
-#bind -t vi-copy b copy-pipe 'xclip -in -selection clipboard'
+
+# Vi-style copy mode bindings
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+bind-key -T copy-mode-vi Escape send-keys -X cancel
 
 # pane movement
 # https://unix.stackexchange.com/questions/145857/how-do-you-hide-a-pane?noredirect=1&lq=1
@@ -87,14 +87,14 @@ bind-key > command-prompt -p "send pane to:"  "join-pane -t '%%'"
 # In copy-mode you can jump around with almost all the commands that work in vim. / and ? work to search. There are no motions, so you can’t y5w or yap.
 
 # Change command delay
-set -s escape-time 0
+set -s escape-time 10
 #Upon starting to use tmux, I noticed that I had to add a noticeable delay between two characters in a command sequence for it to recognize the command, for example between the C-a and n in C-a n. This is because tmux is waiting for an escape sequence.
 
 # Set repeat timeout
 set -g repeat-time 600
 
 # Set the history limit
-set-option -g history-limit 50000
+set-option -g history-limit 200000
 
 # Set reload key to r
 bind r source-file ~/.tmux.conf\; display "Reloaded!"
@@ -280,18 +280,28 @@ set -g @resurrect-capture-pane-contents 'on'
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '10'
 
-# copy on select (platform-aware)
+# Mouse drag and double-click copy (uses OSC 52 when available)
+# copy-pipe-no-clear keeps selection active, copy-pipe-and-cancel clears it
 if-shell 'test "$(uname)" = "Darwin"' \
   'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "pbcopy"' \
-  'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "xsel -i"'
+  'bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-pipe-no-clear "xclip -i -sel clipboard 2>/dev/null || xsel -ib 2>/dev/null || true"'
 if-shell 'test "$(uname)" = "Darwin"' \
   'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "pbcopy"' \
-  'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xsel -i"'
+  'bind-key -T copy-mode-vi DoubleClick1Pane select-pane \; send -X select-word \; send -X copy-pipe-no-clear "xclip -i -sel clipboard 2>/dev/null || xsel -ib 2>/dev/null || true"'
+
+# Triple-click to select and copy line
+if-shell 'test "$(uname)" = "Darwin"' \
+  'bind-key -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "pbcopy"' \
+  'bind-key -T copy-mode-vi TripleClick1Pane select-pane \; send -X select-line \; send -X copy-pipe-no-clear "xclip -i -sel clipboard 2>/dev/null || xsel -ib 2>/dev/null || true"'
 
 # Initialize TPM (must be last line of plugin config)
 run '~/.tmux/plugins/tpm/tpm'
 
-#set-option -g allow-passthrough on
+# Allow passthrough for terminal escape sequences (enables OSC 52, etc.)
+# Required for modern clipboard integration on tmux 3.3+
+set-option -g allow-passthrough on
 
-# super useful when using "grouped sessions" and multi-monitor setup -> not compatible with iterm2
+# Aggressive resize behavior
+# off = compatible with iTerm2 and grouped sessions
+# on = better for multi-monitor setups when each client shows different windows
 setw -g aggressive-resize off
