@@ -62,12 +62,12 @@ bind-key -n 'C-M-v' paste-buffer             # Ctrl-Alt-v: paste from tmux buffe
 unbind p
 bind p paste-buffer                          # Prefix-p: paste from tmux buffer
 
-# Vi-style copy mode bindings (use after entering copy mode)
-bind-key -T copy-mode-vi v send-keys -X begin-selection              # v: start visual selection
-bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle           # Ctrl-v: toggle rectangular selection
-bind-key -T copy-mode-vi r send-keys -X rectangle-toggle             # r: toggle rectangular selection
-bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel \; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52"    # y: copy to buffer then send via OSC 52 script
-bind-key -T copy-mode-vi Escape send-keys -X cancel                  # Esc: exit copy mode without copying
+# Vi-style copy mode bindings
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+# y binding configured after TPM initialization to prevent plugin override
+bind-key -T copy-mode-vi Escape send-keys -X cancel
 
 # pane movement
 # https://unix.stackexchange.com/questions/145857/how-do-you-hide-a-pane?noredirect=1&lq=1
@@ -294,6 +294,12 @@ bind-key -T root TripleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_i
 
 # Initialize TPM (must be last line of plugin config)
 run '~/.tmux/plugins/tpm/tpm'
+
+# Conditional y binding: pbcopy on macOS, OSC 52 script on Linux/remote
+# Defined after TPM to prevent plugin overrides
+if-shell "uname | grep -q Darwin" \
+    "bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'" \
+    "bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel \\; run-shell 'tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52'"
 
 # Allow passthrough for terminal escape sequences (enables OSC 52, etc.)
 # Required for modern clipboard integration on tmux 3.3+
