@@ -119,6 +119,27 @@ function daily-quote () {
   rand=$(($RANDOM%$n_quotes))
   echo ${quotearray[$rand]} ; }
 alias clock="date | cut -d ' ' -f 4"
+
+# sleep with human-readable durations: sleep 8hr, sleep 1hr 30min 10s
+sleepx() {
+  local total=0 arg
+  for arg in "$@"; do
+    local num="${arg%%[a-zA-Z]*}"
+    local unit="${arg##*[0-9]}"
+    if ! [[ "$num" =~ ^[0-9]+$ ]]; then
+      echo "Bad arg: $arg (examples: 8hr 30min 10s)" >&2
+      return 2
+    fi
+    case "$unit" in
+      h|hr|hrs|hour|hours) total=$(( total + num * 3600 )) ;;
+      m|min|mins|minute|minutes) total=$(( total + num * 60 )) ;;
+      s|sec|secs|second|seconds|"") total=$(( total + num )) ;;
+      *) echo "Bad unit: $arg (use h/hr/hrs/m/min/mins/s/sec/secs)" >&2; return 2 ;;
+    esac
+  done
+  command sleep "$total"
+}
+alias sleep='sleepx'
 alias daily-cal="ncal -A 1 -M -b -w"
 
 #if ! type "doremi" > /dev/null 2>&1; then
