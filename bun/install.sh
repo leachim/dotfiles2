@@ -14,6 +14,8 @@ fi
 
 # Global packages from packages.txt
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Run global installs from $HOME to prevent bun's upward package.json
+# traversal from walking into non-standard parent directories (e.g. /cluster/home/)
 while IFS= read -r pkg || [ -n "$pkg" ]; do
   [ -z "$pkg" ] && continue
   name=$(echo "$pkg" | sed 's|.*/||')
@@ -21,7 +23,7 @@ while IFS= read -r pkg || [ -n "$pkg" ]; do
     echo "  $name: already installed"
   else
     echo "  $name: installing globally"
-    bun install -g "$pkg"
+    (cd "$HOME" && bun install -g "$pkg")
   fi
 done < "$SCRIPT_DIR/packages.txt"
 
