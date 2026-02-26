@@ -1,0 +1,9 @@
+model = "gpt-5.3-codex"
+[projects."/cluster/home/michaes/.dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/michaes/hyperion"]
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.2-codex" = "gpt-5.3-codex"

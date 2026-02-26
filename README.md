@@ -23,6 +23,7 @@ Bootstrap will prompt you for:
    - Rust (via rustup)
    - Bun (includes gemini-cli, codex, ccusage)
    - Claude Code config
+   - Codex CLI config
    - GitHub CLI (gh)
 6. **pixi** -- optional, cross-platform
 
@@ -39,6 +40,7 @@ Run `dot` to update an existing installation. On macOS this applies system defau
 ├── bash/              Bash config (bash_profile, bashrc)
 ├── bin/               Executables added to $PATH (dot, utilities)
 ├── claude/            Claude Code config (CLAUDE.md, settings.json)
+├── codex/             Codex CLI config (config.toml)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
 ├── functions/         Zsh functions (fasd, navigation)
 ├── git/               Git config, aliases, completion
@@ -133,6 +135,7 @@ API keys and secrets go in `~/.dotfiles/private/env` (gitignored). Sourced by `p
 | Homebrew + Brewfile | Yes | -- |
 | macOS defaults | Yes | -- |
 | Claude Code | Yes | Yes |
+| Codex CLI | Yes | Yes |
 
 ## Prerequisites
 
