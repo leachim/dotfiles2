@@ -162,8 +162,17 @@ _notify-context() {
     echo "$(date '+%H:%M:%S %Z') $(hostname)"
 }
 
+_notify-title() {
+    local h=$(hostname)
+    case "$h" in
+        eu-*) echo "Euler" ;;
+        bs-*) echo "BSSE" ;;
+        *)    echo "$h" ;;
+    esac
+}
+
 notify-push() {
-    push "$(_notify-context): ${1:-done}" "${2:-$(hostname)}"
+    push "$(_notify-context): ${1:-done}" "${2:-$(_notify-title)}"
 }
 
 tnotify-push() {
@@ -172,7 +181,7 @@ tnotify-push() {
     local EXIT_CODE=$?
     local ELAPSED=$((SECONDS - START))
     local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "ok" || echo "FAILED ($EXIT_CODE)" )
-    push "$(_notify-context): $STATUS (${ELAPSED}s)" "$(hostname)"
+    push "$(_notify-context): $STATUS (${ELAPSED}s)" "$(_notify-title)"
     return $EXIT_CODE
 }
 
@@ -202,13 +211,13 @@ pd() {
 pdd() {
     local EXIT_CODE=$?
     local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "done" || echo "FAILED ($EXIT_CODE)" )
-    push "$(_notify-context): $STATUS" "$(hostname)" -d "macbook-pro"
+    push "$(_notify-context): $STATUS" "$(_notify-title)" -d "macbook-pro"
 }
 
 pdp() {
     local EXIT_CODE=$?
     local STATUS=$( [ "$EXIT_CODE" -eq 0 ] && echo "done" || echo "FAILED ($EXIT_CODE)" )
-    push "$(_notify-context): $STATUS" "$(hostname)" -d "iphone"
+    push "$(_notify-context): $STATUS" "$(_notify-title)" -d "iphone"
 }
 
 # Rust CLI tools

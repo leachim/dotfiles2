@@ -12,6 +12,12 @@ else
   export PATH="$BUN_INSTALL/bin:$PATH"
 fi
 
+# Symlink bun as node so packages with #!/usr/bin/env node shebangs work
+if [ ! -e "$HOME/.bun/bin/node" ]; then
+  echo "  node: symlinking to bun"
+  ln -s "$HOME/.bun/bin/bun" "$HOME/.bun/bin/node"
+fi
+
 # Global packages from packages.txt
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Run global installs from $HOME to prevent bun's upward package.json

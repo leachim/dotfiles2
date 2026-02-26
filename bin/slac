@@ -37,7 +37,13 @@ else
     CUSTOM_MESSAGE="${3:-""}"
 fi
 
-LOCATION="[$(hostname):$(pwd)]"
+_HOST=$(hostname)
+case "$_HOST" in
+    eu-*) _GROUP="Euler" ;;
+    bs-*) _GROUP="BSSE" ;;
+    *)    _GROUP="" ;;
+esac
+LOCATION="${_GROUP:+[$_GROUP] }[$_HOST:$(pwd)]"
 
 if [ -n "$EXIT_STATUS" ]; then
     STATUS_TEXT=$( [ "$EXIT_STATUS" -eq 0 ] && echo "ok" || echo "FAILED (exit $EXIT_STATUS)" )
