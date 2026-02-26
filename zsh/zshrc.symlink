@@ -100,14 +100,3 @@ plugins=(git history-substring-search shrink-path)
 command -v starship &> /dev/null && eval "$(starship init zsh)"
 command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
 command -v uv &> /dev/null && eval "$(uv generate-shell-completion zsh)"
-
-# Bun
-export BUN_INSTALL="$HOME/.bun"
-[ -d "$BUN_INSTALL" ] && export PATH="$BUN_INSTALL/bin:$PATH"
-
-# bun completions
-[ -s "/Users/michaes/.bun/_bun" ] && source "/Users/michaes/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
