@@ -23,6 +23,8 @@ shopt -s cdspell                 # Correct cd typos
 shopt -s checkwinsize            # Update windows size on command
 #shopt -s extglob                 # Extended pattern
 shopt -s no_empty_cmd_completion  # No empty completion
+shopt -s autocd                  # cd by typing directory name (bash 4+)
+alias '~'='cd ~'                 # ~ alone goes home
 
 # Combine multiline commands into one in history
 shopt -s cmdhist
