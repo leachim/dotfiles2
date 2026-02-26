@@ -1,0 +1,20 @@
+#!/bin/bash
+
+CLICLICK="/opt/homebrew/bin/cliclick"
+
+# Save current mouse position
+read X Y <<<"$($CLICLICK p | tr ',' ' ')"
+
+# Open Notification Center
+$CLICLICK c:1512,0
+
+# Wait for panel animation (important)
+sleep 0.6
+
+# Click the close cross
+$CLICLICK c:1158,57
+
+sleep 0.1
+
+# Restore mouse position
+$CLICLICK m:$X,$Y
