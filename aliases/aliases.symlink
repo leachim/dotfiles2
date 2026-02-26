@@ -223,6 +223,12 @@ pdp() {
 # Rust CLI tools
 alias tre='eza --tree'
 
+# zoxide interactive directory jump (uses skim instead of fzf)
+j() {
+  local dir
+  dir=$(zoxide query -ls "$@" | sk --no-sort --tac | awk '{print $2}') && cd "$dir"
+}
+
 ###########################
 ###       SERVICES      ###
 ###########################
