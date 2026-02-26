@@ -26,7 +26,11 @@ brew 'tmux'
 brew 'tree'
 brew 'wget'
 
+# Taps (third-party)
+tap 'steipete/tap'
+
 # Apps (macOS only)
+cask 'codexbar' if OS.mac?
 cask 'fuse-t' if OS.mac?
-cask 'posturr' if OS.mac?
+cask 'dorso' if OS.mac?
 cask 'qview' if OS.mac?

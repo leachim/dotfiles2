@@ -101,6 +101,13 @@ command -v starship &> /dev/null && eval "$(starship init zsh)"
 command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
 command -v uv &> /dev/null && eval "$(uv generate-shell-completion zsh)"
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# Bun
+export BUN_INSTALL="$HOME/.bun"
+[ -d "$BUN_INSTALL" ] && export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun completions
+[ -s "/Users/michaes/.bun/_bun" ] && source "/Users/michaes/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
