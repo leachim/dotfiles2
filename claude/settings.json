@@ -89,7 +89,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline.sh",
+    "command": "~/.dotfiles/bin/statusline.sh",
     "padding": 0
   },
   "enabledPlugins": {
