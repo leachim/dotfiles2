@@ -1,6 +1,11 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# If not running interactively, don't do anything
+# Load profile for PATH setup even in non-interactive shells
+if [ -z "${DOTFILES_PROFILE_LOADED:-}" ] && [ -f ~/.profile ]; then
+    source ~/.profile
+fi
+
+# If not running interactively, don't do anything else
 case $- in
     *i*) ;;
       *) return;;
@@ -177,10 +182,7 @@ if [ -f ~/.skim/shell/key-bindings.bash ]; then
     source ~/.skim/shell/key-bindings.bash
 fi
 
-# Load profile only once per session tree.
-if [ -z "${DOTFILES_PROFILE_LOADED:-}" ] && [ -f ~/.profile ]; then
-    source ~/.profile
-fi
+# Profile already loaded above (before interactive guard)
 
 # Source aliases again in case profile didn't load them (belt and suspenders)
 if [ -f ~/.aliases ]; then
@@ -223,3 +225,9 @@ fi
 # machine-specific env (tokens, etc.) — shared with zshrc
 [ -f ~/.localrc ] && source ~/.localrc
 
+
+export PATH="/users/mschneider/.pixi/bin:$PATH"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
