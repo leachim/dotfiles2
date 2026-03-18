@@ -5,6 +5,7 @@ export PATH="/opt/bin:$HOME/.local/bin:$HOME/.linuxbrew/bin:$HOME/.dotfiles/bin:
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
+export LESS="-i -M -R -w -z-4"
 export STARSHIP_CONFIG=~/.starship.toml
 export DOTFILES_PROFILE_LOADED=1
 
