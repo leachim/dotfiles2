@@ -46,7 +46,22 @@ alias n-ssh="ssh -x -C"
 alias lst="ls -lt"
 alias gs="git status"
 alias vac=". .venv/bin/activate"
-alias vacfast='rsync -ah --copy-links --info=progress2 .venv/ /tmp/venv_$(basename $PWD)/ && . /tmp/venv_$(basename $PWD)/bin/activate && export PYTHONPYCACHEPREFIX=/tmp/pycache && echo "Activated local venv at /tmp/venv_$(basename $PWD)"'
+vacfast() {
+    local dest="/tmp/venv_$(basename $PWD)"
+    local src_mtime=$(stat -c %Y uv.lock 2>/dev/null || echo 0)
+    local dst_mtime=$(cat "$dest/.mtime_marker" 2>/dev/null || echo -1)
+    if [ "$src_mtime" = "$dst_mtime" ]; then
+        echo "Reusing existing venv at $dest"
+    else
+        rm -rf "$dest"
+        mkdir -p "$dest"
+        tar czf - -C .venv --checkpoint=1000 --checkpoint-action=dot . | tar xzf - -C "$dest"/
+        echo "$src_mtime" > "$dest/.mtime_marker"
+    fi
+    . "$dest/bin/activate"
+    export PYTHONPYCACHEPREFIX="/tmp/pycache_$(basename $PWD)_$$"
+    echo "Activated local venv at $dest"
+}
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
 alias vi="nvim"
