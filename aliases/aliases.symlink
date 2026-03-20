@@ -46,6 +46,7 @@ alias n-ssh="ssh -x -C"
 alias lst="ls -lt"
 alias gs="git status"
 alias vac=". .venv/bin/activate"
+alias vacfast='rsync -ah --copy-links --info=progress2 .venv/ /tmp/venv_$(basename $PWD)/ && . /tmp/venv_$(basename $PWD)/bin/activate && export PYTHONPYCACHEPREFIX=/tmp/pycache && echo "Activated local venv at /tmp/venv_$(basename $PWD)"'
 alias logoff="pkill -KILL -u $USER"
 alias takeover="tmux detach -a"
 alias vi="nvim"
