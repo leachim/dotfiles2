@@ -18,3 +18,10 @@ if [ "$AI_AGENT" != "1" ]; then
         fi
     }
 fi
+
+# Podman-based container runtime (no Docker daemon on Clariden)
+function aws-login () { aws ecr get-login-password | podman login --username AWS --password-stdin "$AWS_ACCOUNT" ; }
+alias d="podman"
+alias dima="podman images"
+alias dim="podman images -f dangling=false"
+alias dps="podman ps"

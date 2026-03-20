@@ -15,4 +15,9 @@ fi
 cargo install cargo-update zoxide bat fd-find eza git-delta
 cargo install skim --no-default-features --features cli
 
+# Install skim shell integration (key-bindings for Ctrl-R, etc.)
+mkdir -p "$HOME/.skim/shell"
+curl -fLo "$HOME/.skim/shell/key-bindings.bash" \
+  https://raw.githubusercontent.com/skim-rs/skim/master/shell/key-bindings.bash
+
 exit 0
