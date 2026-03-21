@@ -1,0 +1,30 @@
+################################################################################
+## ~/.inputrc
+##
+## Control the behaviour of the readline library used e.g.
+## by the bash in the interactive mode for line editing.
+##
+################################################################################
+
+# No bell on error or tab completion
+set bell-style none
+
+# Tab cycles through completions (zsh-style)
+TAB: menu-complete
+"\e[Z": menu-complete-backward
+
+# Show all matches and start cycling on first Tab
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+# Highlight the common prefix in completions
+set colored-completion-prefix on
+
+# Color completions by file type (like ls)
+set colored-stats on
+
+# Case-insensitive completion
+set completion-ignore-case on
+
+# Treat hyphens and underscores as equivalent in completion
+set completion-map-case on
