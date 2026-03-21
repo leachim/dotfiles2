@@ -53,7 +53,7 @@ vacfast() {
         return 1
     fi
     export UV_LINK_MODE=copy
-    uv venv --allow-existing "$dest" && UV_PROJECT_ENVIRONMENT="$dest" uv sync || return 1
+    uv venv --allow-existing "$dest" && UV_PROJECT_ENVIRONMENT="$dest" uv sync --extra dev || return 1
     . "$dest/bin/activate"
     export PYTHONPYCACHEPREFIX="/tmp/pycache_$(basename $PWD)_$$"
 }
