@@ -9,13 +9,17 @@
 # No bell on error or tab completion
 set bell-style none
 
-# Tab cycles through completions (zsh-style)
-TAB: menu-complete
-"\e[Z": menu-complete-backward
-
 # Show all matches and start cycling on first Tab
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
+
+# Tab cycles through completions (zsh-style)
+# Scoped to vi-insert keymap for vi mode compatibility
+$if mode=vi
+set keymap vi-insert
+TAB: menu-complete
+"\e[Z": menu-complete-backward
+$endif
 
 # Highlight the common prefix in completions
 set colored-completion-prefix on
