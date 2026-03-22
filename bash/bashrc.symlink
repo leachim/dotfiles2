@@ -109,6 +109,9 @@ if [ "${BASH_VERSINFO[0]}" -ge 4 ] 2>/dev/null; then
   shopt -s globstar
 fi
 
+# Less: interpret ANSI color escapes (belt-and-suspenders — also set in .profile)
+export LESS="-i -M -R -w -z-4"
+
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
