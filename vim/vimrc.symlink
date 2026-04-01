@@ -265,7 +265,9 @@ Plug 'mileszs/ack.vim'
 
 " git integration
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+if $USER !=# 'root'
+  Plug 'airblade/vim-gitgutter'
+endif
 
 " multiple cursors
 Plug 'terryma/vim-multiple-cursors'
@@ -719,10 +721,12 @@ let g:ackprg = 'ag --vimgrep'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GitGutter
 " " GitGutter styling to use · instead of +/-
-let g:gitgutter_sign_added = '∙'
-let g:gitgutter_sign_modified = '∙'
-let g:gitgutter_sign_removed = '∙'
-let g:gitgutter_sign_modified_removed = '∙'
+if $USER !=# 'root'
+  let g:gitgutter_sign_added = '∙'
+  let g:gitgutter_sign_modified = '∙'
+  let g:gitgutter_sign_removed = '∙'
+  let g:gitgutter_sign_modified_removed = '∙'
+endif
 
 " " Highlight YAML frontmatter in Markdown files
 " let g:vim_markdown_frontmatter = 1
