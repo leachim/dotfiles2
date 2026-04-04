@@ -1,7 +1,11 @@
 #!/bin/bash
-# Config for bs-* cluster nodes (ETH Zurich)
+# Config for bs-* cluster nodes (ETH Zurich, Linux)
 # Only contains settings unique to bs-* that differ from hpc.sh base config
 # Note: History management functions (use_shared_history/use_separate_history) are in aliases.symlink
+#
+# macOS bs-* machines (e.g. bs-mbpas-0085) are handled by bs-mbpas.sh instead.
+
+[[ "$(uname)" == "Darwin" ]] && return 0
 
 # CUDA 12.8 specific (overrides hpc.sh generic cuda)
 export CUDA_HOME=$HOME/cuda-12.8
@@ -14,7 +18,8 @@ export PATH=$CUDA_HOME/bin:$PATH
 
 # MMSEQ
 export PATH=/home/michaes/mmseqs/bin:$PATH
-# GCC 12 environment (specific to bs-* nodes)
+
+# GCC 12 environment (specific to bs-* Linux nodes)
 export PATH=$HOME/gcc-12/bin:$PATH
 export CC=$HOME/gcc-12/bin/gcc
 export CXX=$HOME/gcc-12/bin/g++
