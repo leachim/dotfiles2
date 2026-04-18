@@ -1,5 +1,6 @@
 #!/bin/bash
-# Config for Clariden cluster nodes (aarch64, matches clariden-*)
+# Config for Clariden/Daint cluster nodes (aarch64, matches clariden-*, daint-*)
+# Daint.sh is a symlink to this file — both clusters share the same architecture
 # GPU nodes available but only used via containers (enroot/docker/podman)
 # No module loads needed
 
