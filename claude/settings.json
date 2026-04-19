@@ -60,7 +60,9 @@
       "Bash(git restore:*)",
       "Bash(mv:*)",
       "Bash(rm:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "Bash(sbatch:*)",
+      "Bash(srun:*)"
     ]
   },
   "hooks": {
@@ -100,6 +102,7 @@
     "feature-dev": true
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "pluginConfigs": {
     "context7@claude-plugins-official": {
       "mcpServers": {
@@ -113,5 +116,6 @@
       }
     }
   },
-  "autoUpdatesChannel": "latest"
+  "autoUpdatesChannel": "latest",
+  "skipAutoPermissionPrompt": true
 }

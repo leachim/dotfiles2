@@ -286,8 +286,8 @@ set -g @continuum-save-interval '10'
 
 # Mouse copy bindings (uses OSC 52 script via run-shell)
 
-# Drag: Option+drag to copy (Mac trackpad workaround)
-bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear \; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52"
+# Drag: select only (keep selection visible); press y or Enter to copy
+bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-no-clear
 
 # Double-click: select word and copy
 bind-key -T root DoubleClick1Pane select-pane -t = \; if-shell -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-word ; send-keys -X copy-selection-and-cancel ; run-shell "tmux save-buffer - | bash ~/.dotfiles/bin/tmux-osc52" }

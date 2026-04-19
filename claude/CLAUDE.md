@@ -47,6 +47,7 @@ Don't run these commands unless the user explicitly requests them in writing:
 - `gh pr close`
 - `gh pr merge`
 - `gh repo delete`
+- `srun` or `sbatch` (any SLURM job submission — even short debug / one-shot commands). Ask for explicit consent every time.
 
 # General Guidelines
 
