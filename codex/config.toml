@@ -1,9 +1,13 @@
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 [projects."/cluster/home/michaes/.dotfiles"]
 trust_level = "trusted"
 
 [projects."/home/michaes/hyperion"]
 trust_level = "trusted"
 
+[projects."/users/mschneider/CoRA"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
+"gpt-5.3-codex" = "gpt-5.4"
