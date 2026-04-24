@@ -102,7 +102,7 @@
     "feature-dev": true
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "pluginConfigs": {
     "context7@claude-plugins-official": {
       "mcpServers": {
@@ -117,5 +117,5 @@
     }
   },
   "autoUpdatesChannel": "latest",
-  "skipAutoPermissionPrompt": true
+  "model": "opus"
 }

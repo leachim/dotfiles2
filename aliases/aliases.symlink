@@ -114,6 +114,71 @@ codex() {
     fi
 }
 
+# Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.
+# Requires CF_TOKEN, CF_ACCOUNT_ID, CF_GATEWAY_NAME, OR_API_KEY in env (see ~/.localrc).
+# Usage:
+#   claude-op                        # default: deepseek/deepseek-v4-pro
+#   claude-op kimi                   # shortcut (see --list)
+#   claude-op moonshotai/kimi-k2.6   # any OpenRouter slug (contains '/')
+#   claude-op --list                 # show shortcuts
+#   claude-op [model] [claude_args]  # remaining args forwarded to claude
+claude-op() {
+    local missing=""
+    [ -z "$CF_TOKEN" ]        && missing="$missing CF_TOKEN"
+    [ -z "$CF_ACCOUNT_ID" ]   && missing="$missing CF_ACCOUNT_ID"
+    [ -z "$CF_GATEWAY_NAME" ] && missing="$missing CF_GATEWAY_NAME"
+    [ -z "$OR_API_KEY" ]      && missing="$missing OR_API_KEY"
+    if [ -n "$missing" ]; then
+        echo "claude-op: missing in env:$missing (set in ~/.localrc)" >&2
+        return 1
+    fi
+
+    local model=""
+    if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then
+        case "$1" in
+            deepseek|ds)          model="deepseek/deepseek-v4-pro" ;;
+            deepseek-flash|flash) model="deepseek/deepseek-v4-flash" ;;
+            kimi|kimi-k2)         model="moonshotai/kimi-k2.6" ;;
+            kimi-thinking)        model="moonshotai/kimi-k2-thinking" ;;
+            qwen|qwen-coder)      model="qwen/qwen3-coder-plus" ;;
+            qwen-max)             model="qwen/qwen3-max-thinking" ;;
+            claude-sonnet)        model="anthropic/claude-sonnet-4.5" ;;
+            */*)                  model="$1" ;;
+            *)
+                echo "claude-op: unknown shortcut '$1' (try --list)" >&2
+                return 2
+                ;;
+        esac
+        shift
+    elif [ "$1" = "--list" ] || [ "$1" = "-l" ]; then
+        cat <<'EOF'
+Model shortcuts (→ OpenRouter slug):
+  deepseek, ds         deepseek/deepseek-v4-pro      (default, 1M ctx)
+  deepseek-flash       deepseek/deepseek-v4-flash
+  kimi, kimi-k2        moonshotai/kimi-k2.6          (256k ctx)
+  kimi-thinking        moonshotai/kimi-k2-thinking
+  qwen, qwen-coder     qwen/qwen3-coder-plus         (1M ctx, code)
+  qwen-max             qwen/qwen3-max-thinking
+  claude-sonnet        anthropic/claude-sonnet-4.5
+Any slug containing '/' is passed through directly.
+EOF
+        return 0
+    fi
+    model="${model:-${ANTHROPIC_MODEL:-deepseek/deepseek-v4-pro}}"
+
+    echo "→ claude-code | OpenRouter via Cloudflare AI Gateway | $model" >&2
+
+    ANTHROPIC_BASE_URL="https://gateway.ai.cloudflare.com/v1/$CF_ACCOUNT_ID/$CF_GATEWAY_NAME/openrouter" \
+    ANTHROPIC_AUTH_TOKEN="$OR_API_KEY" \
+    ANTHROPIC_CUSTOM_HEADERS="cf-aig-authorization: Bearer $CF_TOKEN" \
+    ANTHROPIC_MODEL="$model" \
+    ANTHROPIC_DEFAULT_OPUS_MODEL="$model" \
+    ANTHROPIC_DEFAULT_SONNET_MODEL="$model" \
+    ANTHROPIC_DEFAULT_HAIKU_MODEL="${ANTHROPIC_DEFAULT_HAIKU_MODEL:-deepseek/deepseek-v4-flash}" \
+    CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
+    command claude "$@"
+}
+
 ## python
 function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 
