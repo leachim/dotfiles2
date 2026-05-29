@@ -1,9 +1,9 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# Load profile for PATH setup even in non-interactive shells
-if [ -z "${DOTFILES_PROFILE_LOADED:-}" ] && [ -f ~/.profile ]; then
-    source ~/.profile
-fi
+# Always source ~/.profile so aliases and host-specific config (hosts/*.sh)
+# get re-populated in every bash — aliases are not inherited across shells,
+# only env vars are, so a guard on DOTFILES_PROFILE_LOADED would skip them.
+[ -f ~/.profile ] && source ~/.profile
 
 # If not running interactively, don't do anything else
 case $- in
