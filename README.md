@@ -24,6 +24,7 @@ Bootstrap will prompt you for:
    - Bun (includes gemini-cli, codex, ccusage)
    - Claude Code config
    - Codex CLI config
+   - opencode config
    - GitHub CLI (gh)
 6. **pixi** -- optional, cross-platform
 
@@ -41,6 +42,7 @@ Run `dot` to update an existing installation. On macOS this applies system defau
 ├── bin/               Executables added to $PATH (dot, utilities)
 ├── claude/            Claude Code config (CLAUDE.md, settings.json)
 ├── codex/             Codex CLI config (config.toml)
+├── opencode/          opencode config (opencode.jsonc)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
 ├── functions/         Zsh functions (fasd, navigation)
 ├── git/               Git config, aliases, completion

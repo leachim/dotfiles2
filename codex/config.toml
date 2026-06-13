@@ -1,4 +1,5 @@
-model = "gpt-5.4"
+model = "gpt-5.5"
+model_reasoning_effort = "high"
 [projects."/cluster/home/michaes/.dotfiles"]
 trust_level = "trusted"
 
@@ -8,6 +9,15 @@ trust_level = "trusted"
 [projects."/users/mschneider/CoRA"]
 trust_level = "trusted"
 
+[projects."/cluster/home/michaes/CoRA"]
+trust_level = "trusted"
+
+[projects."/cluster/home/michaes/hyperion"]
+trust_level = "trusted"
+
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 "gpt-5.3-codex" = "gpt-5.4"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 3

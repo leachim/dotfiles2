@@ -83,7 +83,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.dotfiles/bin/push 'Awaiting your input' 'Claude Code'"
+            "command": "~/.dotfiles/bin/push \"Awaiting your input on $(hostname -s)\" 'Claude Code'"
           }
         ]
       }

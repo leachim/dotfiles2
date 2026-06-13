@@ -1,0 +1,6 @@
+{
+  // opencode global configuration
+  // Docs: https://opencode.ai/docs/config
+  // Secrets (auth tokens) live in ~/.local/share/opencode/auth.json and are NOT tracked here.
+  "$schema": "https://opencode.ai/config.json"
+}
