@@ -65,6 +65,7 @@
       "Bash(srun:*)"
     ]
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "Stop": [
       {
@@ -72,7 +73,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pd 'Claude Code - Task completed ' || true"
+            "command": "~/.dotfiles/bin/push 'Task completed' 'Claude Code'"
           }
         ]
       }
@@ -83,7 +84,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pd 'Claude Code - Awaiting your input' || true"
+            "command": "~/.dotfiles/bin/push 'Awaiting your input' 'Claude Code'"
           }
         ]
       }
@@ -117,5 +118,6 @@
     }
   },
   "autoUpdatesChannel": "latest",
+  "theme": "dark",
   "skipAutoPermissionPrompt": true
 }

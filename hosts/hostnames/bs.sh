@@ -7,12 +7,12 @@
 
 [[ "$(uname)" == "Darwin" ]] && return 0
 
-# CUDA 12.8 specific (overrides hpc.sh generic cuda)
-export CUDA_HOME=$HOME/cuda-12.8
-export CUDNN_PATH=$HOME/cuda-12.8
+# CUDA toolkit (overrides hpc.sh generic cuda). Bump this one line to switch versions.
+export CUDA_HOME=$HOME/cuda-13.3
+export CUDNN_PATH=$CUDA_HOME
 export CPLUS_INCLUDE_PATH=$CUDA_HOME/include:$CPLUS_INCLUDE_PATH
-export CPATH=/home/michaes/cuda-12.8/include:$CPATH
-export LIBRARY_PATH=/home/michaes/cuda-12.8/lib64:$LIBRARY_PATH
+export CPATH=$CUDA_HOME/include:$CPATH
+export LIBRARY_PATH=$CUDA_HOME/lib64:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 export PATH=$CUDA_HOME/bin:$PATH
 
