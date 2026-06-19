@@ -44,6 +44,18 @@ alias hc="history -c"
 alias n-rsync-bam="rsync -aP --include=\"*/\" --include=\"*.bam\" --exclude=\"*\""
 alias n-ssh="ssh -x -C"
 alias lst="ls -lt"
+# Long listing sorted by the trailing numeric suffix only (prefix ignored), by value:
+# largest number at the bottom (so 9 < 72 < 101). Entries without a trailing number sort first.
+lr() {
+  local dir="${1:-.}" name digits key
+  ( cd "$dir" || return
+    command ls -1 | while IFS= read -r name; do
+      digits="${name##*[!0-9]}"
+      if [ -n "$digits" ]; then key="$digits"; else key="-1"; fi
+      printf '%s\t%s\n' "$key" "$name"
+    done | sort -s -n -k1,1 | cut -f2- | tr '\n' '\0' | xargs -0 -r ls -ldhU --color=auto
+  )
+}
 alias gs="git status"
 alias vac=". .venv/bin/activate"
 vacfast() {
