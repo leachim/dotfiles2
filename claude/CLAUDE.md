@@ -43,14 +43,16 @@ Don't run these commands unless the user explicitly requests them in writing:
 - `git reset --hard`
 - `git checkout <older-commit>`
 - `git restore` to revert files you didn't author
+- `git commit` / `git push` — the user does ALL commits/pushes themselves; never commit or push unless explicitly instructed to in the current message (a prior "you can commit" does not carry over)
 - `rm` on tracked files
 - `gh pr close`
 - `gh pr merge`
 - `gh repo delete`
 - `srun` or `sbatch` (any SLURM job submission — even short debug / one-shot commands)
 
-**NEVER execute `sbatch` or `srun` yourself** (any SLURM job submission — even short debug / one-shot
-commands, and even with prior approval). Always print the exact command for the user to run manually.
+**Run `sbatch` or `srun` only with the user's prior approval** (any SLURM job submission, including short
+debug / one-shot commands). With explicit approval you may submit directly; without it, print the exact
+command for the user to run manually and let the user submit it.
 
 # General Guidelines
 

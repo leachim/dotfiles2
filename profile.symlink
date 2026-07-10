@@ -9,8 +9,15 @@ export LESS="-i -M -R -w -z-4"
 export STARSHIP_CONFIG=~/.starship.toml
 export DOTFILES_PROFILE_LOADED=1
 
-# Use persistent socket directory instead of /tmp (survives cleanup on shared nodes)
-export TMUX_TMPDIR="$HOME/.tmux_server"
+# Persistent socket directory instead of /tmp (survives cleanup on shared nodes),
+# keyed on the cluster. clariden and daint share this NFS $HOME, so without the
+# per-cluster subdir both head nodes would bind the same socket path and stomp on
+# each other. CLUSTER_NAME is set by /etc/profile.d/cscs.sh; derive a fallback from
+# the hostname (strip -lnNNN / -loginNNN) for hosts that don't set it.
+: "${CLUSTER_NAME:=$(hostname -s 2>/dev/null | sed -E 's/-?[lL][nN]?[0-9]+$//; s/-login[0-9]*$//')}"
+: "${CLUSTER_NAME:=default}"
+export CLUSTER_NAME
+export TMUX_TMPDIR="$HOME/.tmux_server/$CLUSTER_NAME"
 mkdir -p "$TMUX_TMPDIR"
 
 # load arbitrary API environment variables

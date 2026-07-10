@@ -65,6 +65,7 @@
       "Bash(srun:*)"
     ]
   },
+  "model": "opus[1m]",
   "hooks": {
     "Stop": [
       {
@@ -117,6 +118,8 @@
     }
   },
   "autoUpdatesChannel": "latest",
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }

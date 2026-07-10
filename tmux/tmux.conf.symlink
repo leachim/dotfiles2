@@ -279,6 +279,12 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 
 # Resurrect settings
 set -g @resurrect-capture-pane-contents 'on'
+# Per-cluster save dir so clariden/daint (shared $HOME) don't clobber each other's
+# saved layout. Base matches tmux-resurrect's default XDG location; only the
+# $CLUSTER_NAME leaf is added. tmux expands $HOME/$CLUSTER_NAME here at parse time
+# (CLUSTER_NAME is guaranteed set by ~/.profile). Must precede the TPM init line
+# below so @continuum-restore auto-restores from the correct cluster's dir on start.
+set -g @resurrect-dir "$HOME/.local/share/tmux/resurrect/$CLUSTER_NAME"
 
 # Continuum settings
 set -g @continuum-restore 'on'
