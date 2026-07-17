@@ -41,3 +41,8 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
     \. "$NVM_DIR/nvm.sh" --no-use  # Load nvm but don't auto-use version
     nvm use default >/dev/null 2>&1 || true  # Use default version if set
 fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/michaes/.lmstudio/bin"
+# End of LM Studio CLI section
+
