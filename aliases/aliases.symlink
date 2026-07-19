@@ -131,7 +131,7 @@ codex() {
 # Usage:
 #   claude-op                        # default: deepseek/deepseek-v4-pro
 #   claude-op kimi                   # shortcut (see --list)
-#   claude-op moonshotai/kimi-k2.6   # any OpenRouter slug (contains '/')
+#   claude-op moonshotai/kimi-k3     # any OpenRouter slug (contains '/')
 #   claude-op --list                 # show shortcuts
 #   claude-op [model] [claude_args]  # remaining args forwarded to claude
 claude-op() {
@@ -148,13 +148,15 @@ claude-op() {
     local model=""
     if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then
         case "$1" in
+            # top open-weight models (mid-2026) + Mistral
             deepseek|ds)          model="deepseek/deepseek-v4-pro" ;;
             deepseek-flash|flash) model="deepseek/deepseek-v4-flash" ;;
-            kimi|kimi-k2)         model="moonshotai/kimi-k2.6" ;;
-            kimi-thinking)        model="moonshotai/kimi-k2-thinking" ;;
+            glm)                  model="z-ai/glm-5.2" ;;
+            kimi|kimi-k3)         model="moonshotai/kimi-k3" ;;
             qwen|qwen-coder)      model="qwen/qwen3-coder-plus" ;;
             qwen-max)             model="qwen/qwen3-max-thinking" ;;
-            claude-sonnet)        model="anthropic/claude-sonnet-4.5" ;;
+            minimax)              model="minimax/minimax-m3" ;;
+            mistral)              model="mistralai/mistral-large-2512" ;;
             */*)                  model="$1" ;;
             *)
                 echo "claude-op: unknown shortcut '$1' (try --list)" >&2
@@ -166,12 +168,13 @@ claude-op() {
         cat <<'EOF'
 Model shortcuts (→ OpenRouter slug):
   deepseek, ds         deepseek/deepseek-v4-pro      (default, 1M ctx)
-  deepseek-flash       deepseek/deepseek-v4-flash
-  kimi, kimi-k2        moonshotai/kimi-k2.6          (256k ctx)
-  kimi-thinking        moonshotai/kimi-k2-thinking
+  deepseek-flash       deepseek/deepseek-v4-flash    (cheap/fast)
+  glm                  z-ai/glm-5.2                  (#1 open, 1M ctx)
+  kimi, kimi-k3        moonshotai/kimi-k3
   qwen, qwen-coder     qwen/qwen3-coder-plus         (1M ctx, code)
   qwen-max             qwen/qwen3-max-thinking
-  claude-sonnet        anthropic/claude-sonnet-4.5
+  minimax              minimax/minimax-m3            (multimodal, 1M ctx)
+  mistral              mistralai/mistral-large-2512  (Apache-2.0)
 Any slug containing '/' is passed through directly.
 EOF
         return 0
