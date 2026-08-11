@@ -38,7 +38,6 @@
       "Bash(wget:*)",
       "Bash(whereis:*)",
       "Bash(which:*)",
-      "MCP(context7:*)",
       "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [
@@ -63,9 +62,10 @@
       "Bash(rmdir:*)",
       "Bash(sbatch:*)",
       "Bash(srun:*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "Stop": [
       {
@@ -96,27 +96,12 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "commit-commands": true,
     "code-review": true,
-    "pr-review-toolkit": true,
-    "ralph-wiggum": true,
-    "feature-dev": true
+    "codex@openai-codex": true
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
-  "pluginConfigs": {
-    "context7@claude-plugins-official": {
-      "mcpServers": {
-        "context7": {
-          "command": "npx",
-          "args": [
-            "-y",
-            "@context7/mcp-server"
-          ]
-        }
-      }
-    }
-  },
+  "pluginConfigs": {},
   "autoUpdatesChannel": "latest",
   "skipWorkflowUsageWarning": true,
   "theme": "dark",

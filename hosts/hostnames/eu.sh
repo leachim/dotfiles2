@@ -40,13 +40,20 @@ elif [ -n "$ZSH_VERSION" ]; then
     [[ -o login ]] && _dotfiles_is_login_shell=true
 fi
 
-if [[ $- == *i* ]] && [ "$_dotfiles_is_login_shell" = true ]; then
+# Each `module load` costs 10-80s over NFS on busy login nodes, so keep login
+# lean: only eth_proxy (proxy env vars for outbound network), and only once —
+# the exported sentinel skips the second pass when bashrc re-sources .profile.
+if [[ $- == *i* ]] && [ "$_dotfiles_is_login_shell" = true ] \
+    && [ -z "${DOTFILES_EU_MODULES_LOADED:-}" ]; then
     module load eth_proxy 2>/dev/null
-    module load stack/2024-06 2>/dev/null
-    module load gcc/12.2.0 2>/dev/null
-    module load cuda/12.8.0 2>/dev/null
+    export DOTFILES_EU_MODULES_LOADED=1
 fi
 unset _dotfiles_is_login_shell
+
+# Compiler/CUDA modules on demand — not at login, they cost minutes
+devmods() {
+    module load stack/2024-06 gcc/12.2.0 cuda/12.8.0
+}
 
 # Skip heavy cluster initialization for AI agents
 # Module loads can hang if cluster services are slow/unresponsive

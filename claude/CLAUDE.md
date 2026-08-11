@@ -56,7 +56,6 @@ command for the user to run manually and let the user submit it.
 
 # General Guidelines
 
-- Use context7 plugin for up-to-date documentation on third party code
 - Use `gh` command to access GitHub commits, pull requests, and issues
 - Never remove untracked files in the repo without permission unless you created the files in the same session
 - Do not change git branches without confirmation or run git stash
