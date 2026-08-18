@@ -54,6 +54,23 @@ Don't run these commands unless the user explicitly requests them in writing:
 debug / one-shot commands). With explicit approval you may submit directly; without it, print the exact
 command for the user to run manually and let the user submit it.
 
+# Python environment
+
+On this cluster the Python environment is at `~/.venv` — use `~/.venv/bin/python`, NOT the system
+`python3` (which has almost nothing installed) and NOT bare `python` (which does not exist on the
+login node at all). It has pytest plus the scientific stack: VERIFIED 2026-08-07 with pytest 9.1.1,
+torch 2.9.1+cu130, numpy 2.5.1, pyyaml 6.0.3 and foldcomp.
+
+Project packages are NOT installed into it, so run from the repo root with the source dir on the path:
+
+    PYTHONPATH=src ~/.venv/bin/python -m pytest tests/ -q
+
+Do NOT conclude that a missing module means the work needs a container or a SLURM job — check
+`~/.venv` first. `ModuleNotFoundError: No module named 'pytest'` from `python3` means the wrong
+interpreter; `No module named '<project>'` from the venv means the missing `PYTHONPATH=src`. This
+also means most diagnostics (test suites, memory probes, data-loading checks) run directly on the
+login node — reach for `srun` only when the work genuinely needs a GPU or compute-node hardware.
+
 # General Guidelines
 
 - Use `gh` command to access GitHub commits, pull requests, and issues

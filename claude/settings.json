@@ -60,7 +60,6 @@
       "Bash(mv:*)",
       "Bash(rm:*)",
       "Bash(rmdir:*)",
-      "Bash(sbatch:*)",
       "Bash(srun:*)"
     ],
     "defaultMode": "auto"

@@ -6,6 +6,15 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH=$HOME/cuda/bin:$HOME/.claude/local:$PATH
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# uv cache off $HOME. On CSCS/Alps $HOME is /vast (50 GB quota) and the uv cache
+# alone reached 5.6 GB / 11% of it. Scratch has no practical size limit; the cache
+# is fully regenerable, so a scratch purge costs a re-download, nothing more.
+# Guarded on the directory: this file is shared with other clusters (Euler etc.)
+# where /iopsstor does not exist, and there uv keeps its default ~/.cache/uv.
+if [ -d /iopsstor/scratch/cscs/"$USER" ]; then
+    export UV_CACHE_DIR="/iopsstor/scratch/cscs/$USER/CACHE/uv"
+fi
+
 # Slurm shortcuts (qsq* = squeue, qw* = watch, sqg = GPU detail)
 alias qsq="squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
 alias qsqa='squeue -o "%.18i %.12P %.20j %.8u %.3T %.12M %.10l %.6D %.4C %.16b %R" | sed "1!s/gres\/gpu:[^:]*://g; 1!s/N\/A/0/g"'

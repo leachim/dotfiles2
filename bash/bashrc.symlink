@@ -250,3 +250,6 @@ export PATH=/cluster/home/michaes/.opencode/bin:$PATH
 export PATH="$PATH:/Users/michaes/.lmstudio/bin"
 # End of LM Studio CLI section
 
+# >>> Codex installer >>>
+export PATH="/users/mschneider/.local/bin:$PATH"
+# <<< Codex installer <<<
