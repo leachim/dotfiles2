@@ -73,7 +73,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.dotfiles/bin/push \"Task completed on $(hostname -s)\" 'Claude Code'"
+            "command": "~/.dotfiles/bin/claude-notify \"Task completed\""
           }
         ]
       }
@@ -84,7 +84,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.dotfiles/bin/push \"Awaiting your input on $(hostname -s)\" 'Claude Code'"
+            "command": "~/.dotfiles/bin/claude-notify \"Awaiting your input\""
           }
         ]
       }
@@ -96,7 +96,7 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "code-review": true,
+    "code-review": false,
     "codex@openai-codex": true
   },
   "alwaysThinkingEnabled": true,
@@ -106,6 +106,5 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "model": "opus[1m]"
+  "skipAutoPermissionPrompt": true
 }

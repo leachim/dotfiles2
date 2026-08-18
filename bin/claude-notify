@@ -1,0 +1,46 @@
+#!/bin/bash
+# Push notification wrapper for Claude Code hooks.
+# Adds origin context: hostname, tmux session:window, project dir.
+#
+# Usage: claude-notify "Task completed"        (hook JSON on stdin, optional)
+# The hook's own `message` field wins over the argument when present.
+
+FALLBACK="${1:-Claude Code}"
+
+# Hooks feed JSON on stdin; guard against a terminal so manual runs don't hang.
+INPUT=""
+[ -t 0 ] || INPUT=$(cat)
+
+# jq is not on every host (CSCS login nodes), so fall back to sed on flat JSON.
+json_str() {
+    [ -n "$INPUT" ] || return 0
+    if command -v jq >/dev/null 2>&1; then
+        printf '%s' "$INPUT" | jq -r --arg k "$1" '.[$k] // empty' 2>/dev/null
+    else
+        printf '%s' "$INPUT" | tr -d '\n' |
+            sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1
+    fi
+}
+
+MESSAGE=$(json_str message)
+MESSAGE="${MESSAGE:-$FALLBACK}"
+
+# Where: host, then tmux session:window if this session lives in one.
+HOST=$(hostname -s 2>/dev/null || hostname)
+WHERE="$HOST"
+if [ -n "$TMUX" ] && command -v tmux >/dev/null 2>&1; then
+    if [ -n "$TMUX_PANE" ]; then
+        WIN=$(tmux display-message -p -t "$TMUX_PANE" '#S:#W' 2>/dev/null)
+    else
+        WIN=$(tmux display-message -p '#S:#W' 2>/dev/null)
+    fi
+    [ -n "$WIN" ] && WHERE="$WHERE · $WIN"
+fi
+
+# Which project.
+CWD=$(json_str cwd)
+CWD="${CWD:-$PWD}"
+PROJECT=$(basename "$CWD")
+[ -n "$PROJECT" ] && MESSAGE="$MESSAGE — $PROJECT"
+
+exec ~/.dotfiles/bin/push "$MESSAGE" "Claude Code · $WHERE"
