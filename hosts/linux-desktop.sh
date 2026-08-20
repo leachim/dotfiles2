@@ -1,11 +1,21 @@
 #!/bin/bash
 # Configuration for Linux workstation with Wayland/Sway desktop
 
-export BEEP=$HOME/.dotfiles/files/soft_beep.wav
 export TERM="xterm-256color"
 
 alias zotero="/opt/Zotero_linux-x86_64/zotero"
 alias matlab-desktop="$HOME/.matlab/bin/matlab &"
+
+# GPU
+alias nsmi="nvidia-smi"
+
+# PDF / LaTeX viewing (moved from aliases/aliases.symlink -- evince is GNOME-only
+# and was a dead alias on macOS)
+alias ve="evince"
+alias arw="arara *.tex && evince *(.om[1])"
+
+# Cloud storage (moved from aliases/aliases.symlink -- Linux-only FUSE client)
+alias m-drivemount="google-drive-ocamlfuse ~/Drive"
 
 # Linux shell defaults
 alias ls="ls --color=auto"
@@ -29,7 +39,7 @@ alias m-timezone-update="sudo dpkg-reconfigure tzdata"
 alias scrotclip="scrot -s ~/.temp.png && xclip -selection clipboard -t image/png -i ~/.temp.png && rm -f ~/.temp.png"
 
 # Browser aliases
-alias firefox="Exec=env MOZ_X11_EGL=1 /usr/bin/firefox"
+alias firefox="env MOZ_X11_EGL=1 /usr/bin/firefox"
 alias pfirefox="/usr/bin/firefox -private-window"
 alias pchrome="/usr/bin/chromium -incognito"
 tchrome() { /usr/bin/chromium --user-data-dir="$(mktemp -d)"; }

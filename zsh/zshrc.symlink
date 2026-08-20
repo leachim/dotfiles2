@@ -9,8 +9,11 @@ fi
 # shortcut to this dotfiles path is $DOTFILES
 export DOTFILES=$HOME/.dotfiles
 
-# your project folder that we can `c [tab]` to
-export PROJECTS=~/Code
+# Keep PATH unique. ~/.profile and the hosts/*.sh files are re-sourced by every
+# interactive shell (aliases are not inherited, so they have to be), and without
+# this each nesting level re-prepended its entries -- PATH reached 39 entries,
+# 22 of them duplicates.
+typeset -U path PATH fpath manpath MANPATH
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
@@ -71,14 +74,6 @@ autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 
-bindkey "^[0A" up-line-or-local-history
-bindkey "^[0B" down-line-or-local-history
-bindkey "^[[1;5A" up-line-or-beginning-search # [CTRL] + Cursor up
-bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
-
-# Enable vi mode
-bindkey -v
-
 
 
 export ZSH=$HOME/.oh-my-zsh
@@ -87,6 +82,41 @@ HIST_STAMPS="dd/mm/yyyy"
 plugins=(git history-substring-search shrink-path)
 
 [ -f $ZSH/oh-my-zsh.sh ] && source $ZSH/oh-my-zsh.sh
+
+# Key bindings must come AFTER oh-my-zsh: it and the history-substring-search
+# plugin rebind the arrow keys and reset the main keymap on load, which is why
+# this whole block used to be dead (every widget below was reachable from zero
+# keys, and `bindkey -v` never took effect).
+#
+# Vi mode. Must stay above the bindkey calls: it switches the main keymap to
+# viins, and bindkey binds into whichever keymap is current.
+bindkey -v
+
+#
+# Plain arrows are left to history-substring-search -- that plugin is enabled
+# deliberately above and owns them. The local-history widgets get Alt+arrow and
+# beginning-search gets Ctrl+arrow, both confirmed unclaimed.
+bindkey "^[[1;3A" up-line-or-local-history      # [ALT] + Cursor up
+bindkey "^[[1;3B" down-line-or-local-history    # [ALT] + Cursor down
+bindkey "^[[1;5A" up-line-or-beginning-search   # [CTRL] + Cursor up
+bindkey "^[[1;5B" down-line-or-beginning-search # [CTRL] + Cursor down
+
+# Vi mode turns ^A/^E/^K into self-insert. Keep the line-editing keys that are
+# muscle memory regardless of mode; they only touch the insert keymap, so vicmd
+# and the vi text objects are untouched. Delete this block for pure vi bindings.
+bindkey -M viins "^A" beginning-of-line
+bindkey -M viins "^E" end-of-line
+bindkey -M viins "^K" kill-line
+
+# oh-my-zsh does `bindkey -e` then binds these WITHOUT -M, so they land in the
+# emacs keymap only and `bindkey -v` above makes them unreachable. Ctrl+R is the
+# costly one: skim rebinds it below, but zsh/skim-key-bindings.zsh returns early
+# on any host without `sk` (the clusters), leaving no reverse history search.
+bindkey -M viins "^R" history-incremental-search-backward
+bindkey -M viins " " magic-space
+bindkey -M viins "^X^E" edit-command-line
+bindkey -M viins "\ew" kill-region
+bindkey -M viins "^[m" copy-prev-shell-word
 
 # Skim keybindings (Ctrl+R, Ctrl+T, Alt+C) — must load after oh-my-zsh
 [ -f $DOTFILES/zsh/skim-key-bindings.zsh ] && source $DOTFILES/zsh/skim-key-bindings.zsh
@@ -109,8 +139,4 @@ command -v uv &> /dev/null && eval "$(uv generate-shell-completion zsh)"
 __reset_mouse_reporting() { [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l'; }
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd __reset_mouse_reporting
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/michaes/.lmstudio/bin"
-# End of LM Studio CLI section
 

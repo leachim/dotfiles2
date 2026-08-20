@@ -37,7 +37,6 @@ fi
 
 alias ma-tmux="tmux -CC new -A -s mac"
 alias dns-flush="sudo killall -HUP mDNSResponder"
-alias nsmi="nvidia-smi"
 alias hc="history -c"
 
 ## Shortcuts
@@ -75,7 +74,6 @@ alias vi="nvim"
 alias vim="nvim"
 alias vimdiff="nvim -d"
 alias le="less"
-alias fe="feh --conversion-timeout 1"
 alias c="clear"
 alias cdp="cd -P"
 alias pp="pwd -P"
@@ -193,9 +191,6 @@ EOF
     CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
     command claude "$@"
 }
-
-## python
-function retab () { python ~/.dotfiles/scripts/reindent.py $1 ; }
 
 
 #########################################
@@ -336,20 +331,12 @@ alias lat="latexmk"
 alias late="latexmk -halt-on-error"
 alias lac="latexmk -c"
 alias lacc="latexmk -C"
-alias vw="zathura"
-alias ve="evince"
-alias vd="zathura *.pdf"
-alias arw="arara *.tex && evince *(.om[1])"
 alias ara="arara *.tex"
 function vm () { pandoc -s -f markdown -t man $1 | man -l - ;}
 function vmd () { pandoc $1 | lynx -stdin ;}
 
 ## Latex stuff
 alias latex-duplicate-labels="zsh -c \"perl -nE 'say $1 if /(\\label[^}]*})/' **/*.tex | sort | uniq -c | sort -n\""
-
-## APM (atom package manager)
-alias apm-export="apm list --installed --bare"
-alias apm-import="apm install --packages-file"
 
 ## AWS
 function aws-login () { $(aws ecr get-login-password | docker login --username AWS --password-stdin "$AWS_ACCOUNT" ) ; }
@@ -388,7 +375,6 @@ function gtrack () { git ls-files $1 --error-unmatch; echo $? ; }
 alias jup="jupyter lab"
 
 ## Python
-alias i2="ipython2 -i --colors=Linux"
 alias i="ipython3 -i -c \"import numpy as np;import pandas as pd;from math import *;\" --colors=Linux"
 # program to format python files
 mformat-python () { PYTHONPATH=~/Software/yapf python ~/Software/yapf/yapf --style google $1 ; }
@@ -444,10 +430,6 @@ function wc-dir () {
     done
 }
 
-function screenshot_to_text () {
-    bash ~/.dotfiles/scripts/screenshot_to_text.sh;
-}
-
 # compression
 alias targz="tar czvf"
 alias tarbz="tar cjvf"
@@ -485,8 +467,6 @@ fi
 }
 
 untar () { tar -zxvf $1 ; }
-
-function mlat () { for var in "$@"; do /bin/bash ~/.dotfiles/scripts/latexeqs.sh "$var"; done ; }
 
 # convert svg to pdf or png with rsvg-convert (in librsvg package)
 function msvg-topdf () { for var in "$@"; do rsvg-convert -f pdf -o ${var%.svg}.pdf $var; done ; }
@@ -531,7 +511,11 @@ function mpdf-convertToPNG(){
 function mpdf-view () {
     fh=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
     pdftk "$@" cat output "/tmp/${fh}.pdf"
-    zathura "/tmp/${fh}.pdf"
+    if command -v xdg-open >/dev/null 2>&1; then
+        xdg-open "/tmp/${fh}.pdf"
+    else
+        open "/tmp/${fh}.pdf"
+    fi
     unset fh;
 }
 
@@ -667,17 +651,12 @@ alias web-ip="curl ifconfig.me/ip"
 web-quHOST () { host $1 | rev | cut -d " " -f1 | rev; }
 web-quCountrybyIP () { curl ipinfo.io/$1 2&>/dev/null | grep -Po '"country":.*?[^\\]",' | perl -pe 's/"country"://; s/^"//; s/",$//; s/"//; s/^\s+//' ; }
 
-alias m-drivemount="google-drive-ocamlfuse ~/Drive"
-
 
 ###########################
 ###        SYSTEM       ###
 ###########################
 
 function hl () { grep -A1 "Host $1" $HOME/.ssh/config | awk '/HostName/{getline; print}' | awk '{print $2}';}
-
-## Remote file system
-alias mount-library="sshfs -o allow_other -o ro storagebox:/library ~/mount"
 
 ###########################
 ###       SERVICES      ###

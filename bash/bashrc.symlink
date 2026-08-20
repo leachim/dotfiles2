@@ -243,13 +243,18 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# opencode
-export PATH=/cluster/home/michaes/.opencode/bin:$PATH
+# opencode (installed per-machine; path added by hosts/*.sh where present)
+[ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/michaes/.lmstudio/bin"
-# End of LM Studio CLI section
+# Codex installer (was hardcoded to /users/mschneider/.local/bin -- another host)
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
-# >>> Codex installer >>>
-export PATH="/users/mschneider/.local/bin:$PATH"
-# <<< Codex installer <<<
+# Deduplicate PATH, keeping the first (highest-priority) occurrence of each entry.
+# zsh gets this from `typeset -U path PATH`; bash has no equivalent, and this file
+# plus ~/.profile and the hosts/*.sh files all prepend on every interactive shell,
+# so without this PATH grows by a few entries per nesting level (bash -> tmux ->
+# bash -> srun on the clusters).
+if [ -n "$PATH" ]; then
+    PATH=$(printf '%s' "$PATH" | awk -v RS=: -v ORS=: '!seen[$0]++' | sed 's/:$//')
+    export PATH
+fi

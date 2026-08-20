@@ -30,7 +30,14 @@ Bootstrap will prompt you for:
 
 ## Updating
 
-Run `dot` to update an existing installation. On macOS this applies system defaults, updates Homebrew, and re-runs installers.
+Run `script/update` to update an existing installation. It refreshes symlinks, then
+updates whatever it finds installed: Homebrew, rustup and cargo binaries, vim/nvim
+plugins, Oh My Zsh, starship (Linux) and pixi. Anything absent is skipped, so it is
+safe on every host.
+
+`dot` is narrower and macOS-only: it applies the macOS defaults from
+`macos/set-defaults.sh` and runs `brew update` plus the Brewfile. It does not
+re-run the optional installers -- use `script/install` for those.
 
 ## Repository Structure
 
@@ -44,7 +51,8 @@ Run `dot` to update an existing installation. On macOS this applies system defau
 ├── codex/             Codex CLI config (config.toml)
 ├── opencode/          opencode config (opencode.jsonc)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
-├── functions/         Zsh functions (fasd, navigation)
+├── functions/         Autoloaded zsh functions and completions
+├── gh/                GitHub CLI installer (Linux; macOS uses Brewfile)
 ├── git/               Git config, aliases, completion
 ├── homebrew/          Brewfile and install script
 ├── hosts/             Role-specific config (mac.sh, linux-desktop.sh, hpc.sh)
@@ -89,11 +97,17 @@ Any file named `*.symlink` gets symlinked to `$HOME/.FILENAME` during bootstrap.
 
 ### Auto-sourced files
 
-The zsh config (`zshrc.symlink`) automatically sources all `*.zsh` files under `$ZSH` (`~/.dotfiles`):
+The zsh config (`zshrc.symlink`) automatically sources all `*.zsh` files under
+`$DOTFILES` (`~/.dotfiles`). Note `$ZSH` is a different variable -- zshrc points it
+at `~/.oh-my-zsh`.
 
 - `path.zsh` -- loaded first (PATH setup)
 - `completion.zsh` -- loaded last (after compinit)
 - Everything else -- loaded in between
+
+The match is on the exact name `path.zsh`, so a file named `_path.zsh` lands in the
+"everything else" pass instead. `system/path.zsh` is the single place that orders
+the system prefixes, including Homebrew's.
 
 This means adding a new `*.zsh` file to any topic directory picks it up automatically.
 

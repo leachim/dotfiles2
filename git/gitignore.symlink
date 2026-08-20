@@ -1,5 +1,33 @@
+# Global gitignore -- referenced by core.excludesfile in git/gitconfig.symlink,
+# so every pattern here applies to EVERY repository on this machine.
+#
+# Scope is deliberately limited to OS/editor cruft that is never legitimately
+# tracked anywhere. Build-artifact and archive patterns (*.o, *.so, *.jar, *.zip,
+# *.tar.gz, *.sql, ...) are intentionally NOT here: they belong in a per-repo
+# .gitignore, because plenty of projects do track a gradle-wrapper.jar, a
+# vendored .so, a SQL migration or a test fixture archive -- and a global ignore
+# makes `git add` refuse them with no obvious cause.
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# Editor / IDE cruft
 *~
 *.swp
+*.swo
+.idea/
+.vscode/
+.vagrant/
 
+# Python bytecode (never tracked)
+*.pyc
+__pycache__/
+
+# Agent-local state
 **/.claude/settings.local.json

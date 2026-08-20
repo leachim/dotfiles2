@@ -1,13 +1,25 @@
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login exists.
 
+# Deliberately unconditional, NOT guarded on DOTFILES_PROFILE_LOADED.
+#
+# macOS /etc/zprofile runs `path_helper`, which rebuilds PATH with /usr/bin and
+# friends in front and everything else appended -- it demotes $HOME/.local/bin
+# and /opt/bin behind the system paths. That happens in every login shell (zsh -l,
+# a new terminal, tmux), so this prepend has to run each time to put them back.
+# A guard would make the promotion happen exactly once per login chain and let a
+# system binary shadow a uv/pipx tool in ~/.local/bin thereafter.
+#
+# Re-running it is safe: zsh dedupes via `typeset -U path PATH` (zshrc), and bash
+# runs a dedupe pass at the end of ~/.bashrc.
 export PATH="/opt/bin:$HOME/.local/bin:$HOME/.linuxbrew/bin:$HOME/.dotfiles/bin:$PATH"
+
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
 export LESS="-i -M -R -w -z-4"
 export STARSHIP_CONFIG=~/.starship.toml
-export DOTFILES_PROFILE_LOADED=1
+export DOTFILES_PROFILE_LOADED=1  # marker only; see the PATH note above
 
 # Persistent socket directory instead of /tmp (survives cleanup on shared nodes),
 # keyed on the cluster. clariden and daint share this NFS $HOME, so without the
@@ -41,8 +53,4 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
     \. "$NVM_DIR/nvm.sh" --no-use  # Load nvm but don't auto-use version
     nvm use default >/dev/null 2>&1 || true  # Use default version if set
 fi
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/michaes/.lmstudio/bin"
-# End of LM Studio CLI section
 

@@ -12,6 +12,7 @@ brew 'ffmpeg'
 brew 'gawk'
 brew 'gh'
 brew 'git'
+brew 'git-delta'
 brew 'glow'
 brew 'gmailctl'
 brew 'grep'
@@ -27,11 +28,9 @@ brew 'tmux'
 brew 'tree'
 brew 'wget'
 
-# Taps (third-party)
-tap 'steipete/tap'
-
 # Apps (macOS only)
 cask 'codexbar' if OS.mac?
 cask 'fuse-t' if OS.mac?
 cask 'dorso' if OS.mac?
 cask 'qview' if OS.mac?
+cask 'openlogi' if OS.mac?

@@ -33,7 +33,10 @@ run_optional () {
   echo ''
   if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
     info "installing ${name}"
-    sh "$script"
+    # Execute directly so each installer's own shebang is honoured; several are
+    # bash and use bashisms that dash mis-parses. Fall back to bash (never sh)
+    # if the exec bit did not survive the clone.
+    if [ -x "$script" ]; then "$script"; else bash "$script"; fi
     success "${name} installed"
   else
     success "skipped ${name}"

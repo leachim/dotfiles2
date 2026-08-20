@@ -119,7 +119,9 @@ fi
 # Starship (Linux only — macOS handled by brew upgrade)
 if [ "$(uname -s)" = "Linux" ] && command -v starship >/dev/null 2>&1; then
   info "starship update"
-  curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.dotfiles/bin"
+  # starship's installer exits 1 if --bin-dir does not already exist
+  mkdir -p "$HOME/.local/bin"
+  curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin"
   success "starship"
 fi
 

@@ -17,6 +17,8 @@ then
 elif test "$(uname -s | cut -c1-5)" = "Linux"
 then
   echo "  starship: installing via official installer"
+  # starship's installer exits 1 if --bin-dir does not already exist
+  mkdir -p "$HOME/.local/bin"
   curl -sS https://starship.rs/install.sh | sh -s -- -y --bin-dir "$HOME/.local/bin"
 fi
 

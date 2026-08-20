@@ -15,6 +15,9 @@ if [ -d /iopsstor/scratch/cscs/"$USER" ]; then
     export UV_CACHE_DIR="/iopsstor/scratch/cscs/$USER/CACHE/uv"
 fi
 
+# GPU
+alias nsmi="nvidia-smi"
+
 # Slurm shortcuts (qsq* = squeue, qw* = watch, sqg = GPU detail)
 alias qsq="squeue -u \$(whoami) -o \"%.18i %.12P %.20j %.3T %.12M %.10l %.6D %.4C %R\""
 alias qsqa='squeue -o "%.18i %.12P %.20j %.8u %.3T %.12M %.10l %.6D %.4C %.16b %R" | sed "1!s/gres\/gpu:[^:]*://g; 1!s/N\/A/0/g"'
