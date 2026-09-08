@@ -116,12 +116,21 @@ alias .....="cd ../../../.."
 ###              CODING               ###
 #########################################
 
+# AI_AGENT names the tool driving this shell. ~/.localrc and hosts/*.sh treat any
+# non-empty value as an agent: they withhold restricted secrets and skip slow
+# cluster init. Claude Code sets its own identifier; codex and opencode do not,
+# so these wrappers name them.
 codex() {
     if [ "$PWD" = "/cluster/home" ]; then
-        command codex -C "$HOME" "$@"
+        AI_AGENT=codex command codex -C "$HOME" "$@"
     else
-        command codex "$@"
+        AI_AGENT=codex command codex "$@"
     fi
+}
+
+# opencode has no env setting in opencode.jsonc, so set it here.
+opencode() {
+    AI_AGENT=opencode command opencode "$@"
 }
 
 # Run Claude Code against OpenRouter via Cloudflare AI Gateway. Default model: DeepSeek V4 Pro.

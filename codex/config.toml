@@ -1,12 +1,41 @@
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+# Codex CLI configuration.
+#
+# Symlinked to ~/.codex/config.toml by codex/install.sh. Codex edits this file
+# in place and preserves comments, so its own additions (project trust levels,
+# model migration notices, TUI counters) land here and show up as repo diffs.
+# Only config.toml is tracked -- the rest of ~/.codex is auth, session history
+# and ~850MB of installed packages, none of which belong in git.
+
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
+
+# Mark shells codex spawns as agent-driven, so ~/.localrc and hosts/*.sh skip
+# exporting restricted secrets and skip slow cluster init. The codex() wrapper
+# in aliases/aliases.symlink sets this too; this covers codex started elsewhere.
+[shell_environment_policy]
+set = { AI_AGENT = "codex" }
+
+# Trusted projects. Entries are per-machine; ones whose path does not exist on
+# the current host are simply inert, so the union across machines is harmless.
+[projects."/Users/michaes"]
+trust_level = "trusted"
+
+[projects."/Users/michaes/.dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/michaes/Github/VoiceInk"]
+trust_level = "trusted"
+
+[projects."/Users/michaes/Github/homeassistant"]
+trust_level = "trusted"
+
+[projects."/Users/michaes/Downloads/Reviews"]
+trust_level = "trusted"
+
+[projects."/Users/michaes/Downloads/original_performance_takehome_2"]
+trust_level = "trusted"
+
 [projects."/cluster/home/michaes/.dotfiles"]
-trust_level = "trusted"
-
-[projects."/home/michaes/hyperion"]
-trust_level = "trusted"
-
-[projects."/users/mschneider/CoRA"]
 trust_level = "trusted"
 
 [projects."/cluster/home/michaes/CoRA"]
@@ -15,12 +44,20 @@ trust_level = "trusted"
 [projects."/cluster/home/michaes/hyperion"]
 trust_level = "trusted"
 
+[projects."/home/michaes/hyperion"]
+trust_level = "trusted"
+
+[projects."/users/mschneider/CoRA"]
+trust_level = "trusted"
+
 [projects."/users/mschneider/niobe"]
 trust_level = "trusted"
 
+# Codex-managed bookkeeping below; it rewrites these itself.
 [notice.model_migrations]
 "gpt-5.2-codex" = "gpt-5.3-codex"
 "gpt-5.3-codex" = "gpt-5.4"
+"gpt-5.4" = "gpt-5.6-terra"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4

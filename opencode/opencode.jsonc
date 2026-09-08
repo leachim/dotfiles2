@@ -1,6 +1,70 @@
 {
   // opencode global configuration
   // Docs: https://opencode.ai/docs/config
+  //
+  // Layout under $XDG_CONFIG_HOME/opencode (default ~/.config/opencode):
+  //   opencode.jsonc  this file
+  //   AGENTS.md       global instructions -> symlinked to ../claude/CLAUDE.md
+  //   agent/*.md      custom agents
+  //   command/*.md    custom slash commands
+  //
   // Secrets (auth tokens) live in ~/.local/share/opencode/auth.json and are NOT tracked here.
-  "$schema": "https://opencode.ai/config.json"
+  "$schema": "https://opencode.ai/config.json",
+
+  // OpenRouter. The key itself is never stored here — it is read at startup
+  // from $OR_OPENCODE_API_KEY, which belongs in the agent-safe section of
+  // ~/.localrc. Resolves to "" if unset, so opencode still starts.
+  "provider": {
+    "openrouter": {
+      "options": { "apiKey": "{env:OR_OPENCODE_API_KEY}" }
+    }
+  },
+  "autoupdate": true,
+
+  // Do not create shareable cloud links for sessions unless asked explicitly.
+  "share": "disabled",
+
+  // Mirrors the safety rules in claude/CLAUDE.md, which AGENTS.md points at.
+  // Enforced by the tool rather than only asked for in the prompt.
+  "permission": {
+    "edit": "allow",
+    "webfetch": "allow",
+    "bash": {
+      "*": "allow",
+
+      // The user does all commits and pushes themselves.
+      "git commit *": "ask",
+      "git push *": "ask",
+
+      // Destructive git operations.
+      "git reset --hard*": "ask",
+      "git checkout *": "ask",
+      "git restore *": "ask",
+      "git stash*": "ask",
+
+      // Destructive filesystem operations.
+      "rm *": "ask",
+      "rmdir *": "ask",
+      "mv *": "ask",
+      "chmod *": "ask",
+
+      // Irreversible GitHub operations.
+      "gh pr close*": "ask",
+      "gh pr merge*": "ask",
+      "gh repo delete*": "deny",
+
+      // SLURM job submission always needs explicit per-invocation approval.
+      "srun *": "ask",
+      "sbatch *": "ask",
+
+      // Privilege escalation and host control.
+      "sudo *": "deny",
+      "su *": "deny",
+      "chown *": "deny",
+      "shutdown *": "deny",
+      "reboot *": "deny",
+      "systemctl *": "deny",
+      "service *": "deny"
+    }
+  }
 }

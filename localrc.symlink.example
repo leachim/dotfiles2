@@ -5,7 +5,10 @@
 
 # =============================================
 # Agent-safe variables (exposed to AI agents)
-# AI_AGENT=1 is set by Claude Code, Cursor, etc.
+# Every agent sets AI_AGENT to its own name: Claude Code its own identifier,
+# "codex" and "opencode" from the wrappers in aliases/aliases.symlink.
+# Anything in this section stays visible to them -- put credentials the agent
+# tools themselves need to run here, not below.
 # =============================================
 
 # --- GitHub ---
@@ -16,15 +19,31 @@
 # export GH_USER=""           # org/repo for default operations
 
 # --- Context7 (Claude Code plugin) ---
-# API key for context7 MCP server
-# export CONTEXT7_API=""
+# The context7 MCP server reads CONTEXT7_API_KEY straight from the environment;
+# it must be exported before launching Claude Code. Do NOT set it in
+# claude/settings.json -- values in its "env" block are literal strings, so a
+# "${VAR}" there is passed through unexpanded.
+# Optional: without a key the plugin connects anonymously on shared rate limits.
+# Get one at: https://context7.com/dashboard
+# export CONTEXT7_API_KEY=""
+
+
+# --- OpenRouter (opencode) ---
+# Read by opencode/opencode.jsonc as {env:OR_OPENCODE_API_KEY}.
+# Must stay agent-safe: opencode runs with AI_AGENT set and cannot authenticate
+# without it. Separate from OR_API_KEY, which claude-op uses.
+# Get one at: https://openrouter.ai/keys
+# export OR_OPENCODE_API_KEY=""
 
 # =============================================
 # Restricted variables (hidden from AI agents)
-# Set AI_AGENT=1 in your agent's env config
-# to skip these exports.
+# Skipped whenever AI_AGENT is set to anything non-empty.
 # =============================================
-if [ "$AI_AGENT" != "1" ]; then
+# Any non-empty AI_AGENT means an agent is driving this shell. Each tool sets its
+# own name -- Claude Code its own identifier, "codex" and "opencode" from the
+# wrappers in aliases/aliases.symlink -- so test for "set at all", never for one
+# specific value. Set AI_AGENT=0 to force the human path.
+if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
 
     # --- Pushover (push notifications) ---
     # Create app + get keys at: https://pushover.net/apps/build

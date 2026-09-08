@@ -49,7 +49,7 @@ re-run the optional installers -- use `script/install` for those.
 ├── bin/               Executables added to $PATH (dot, utilities)
 ├── claude/            Claude Code config (CLAUDE.md, settings.json)
 ├── codex/             Codex CLI config (config.toml)
-├── opencode/          opencode config (opencode.jsonc)
+├── opencode/          opencode config (opencode.jsonc, agents, commands)
 ├── docker/            Docker aliases (*.zsh, auto-sourced)
 ├── functions/         Autoloaded zsh functions and completions
 ├── gh/                GitHub CLI installer (Linux; macOS uses Brewfile)
@@ -114,6 +114,64 @@ This means adding a new `*.zsh` file to any topic directory picks it up automati
 ### Install scripts
 
 Each `*/install.sh` is run by `script/install` with an interactive prompt. They handle their own platform detection.
+
+### AI coding tools
+
+Three CLIs are configured here: Claude Code (`claude/`), Codex (`codex/`) and
+opencode (`opencode/`). Each has its own `install.sh` that installs the CLI if
+missing and symlinks config out of this repo.
+
+Claude Code and opencode share one set of instructions. `claude/CLAUDE.md` is the
+single source, linked to both `~/.claude/CLAUDE.md` and
+`~/.config/opencode/AGENTS.md`, so the personality and safety rules cannot drift
+apart. Edit that one file to change both.
+
+Only config files are linked, never whole tool directories. `~/.codex` is ~945MB
+of installed packages, auth tokens and session history, so just `config.toml` is
+symlinked out of it. Codex edits that file in place and preserves comments, so
+the symlink survives its writes -- but its own bookkeeping (project trust levels,
+model migration notices, TUI counters) is written back into the repo and shows up
+as diffs. Project trust entries are per-machine; ones whose path is absent on the
+current host are inert, so the union across machines is harmless.
+
+opencode's config lives under `$XDG_CONFIG_HOME/opencode` (default
+`~/.config/opencode`), not in `$HOME`, so it is linked by `opencode/install.sh`
+rather than by the `*.symlink` mechanism. `opencode/opencode.jsonc` restates the
+safety rules as tool-enforced permissions (`ask` on commits, pushes and `rm`;
+`deny` on `sudo` and host control), so they hold even when the prompt is ignored.
+`opencode/agent/` and `opencode/command/` are linked in and ready for custom
+agents and slash commands -- see `opencode/README.md`.
+
+No credentials are tracked. Each machine authenticates on its own:
+`~/.local/share/opencode/auth.json` for opencode, and the respective login flow
+for the others. To use OpenRouter with opencode, set `OR_OPENCODE_API_KEY` in the
+agent-safe section of `~/.localrc`; `opencode.jsonc` reads it as
+`{env:OR_OPENCODE_API_KEY}` and never stores the key itself.
+
+#### AI_AGENT
+
+`AI_AGENT` marks a shell as agent-driven and names the tool. `~/.localrc` and
+`hosts/*.sh` check it to skip exporting restricted secrets (Pushover, Slack) and
+to skip slow cluster module loads.
+
+| Tool | Value | Set by |
+|------|-------|--------|
+| Claude Code | `claude-code_<version>_agent` | Claude Code itself (overrides `claude/settings.json`) |
+| Codex | `codex` | `codex()` wrapper, plus `shell_environment_policy` in `codex/config.toml` |
+| opencode | `opencode` | `opencode()` wrapper in `aliases/aliases.symlink` |
+
+The checks test whether `AI_AGENT` is set at all, not for one specific value,
+because the tools name themselves differently. This matters: the checks used to
+compare against exactly `1`, which Claude Code's own identifier never matches, so
+they failed open and exported the restricted secrets into every Claude Code
+session. Set `AI_AGENT=0` to force the human path.
+
+Verify from inside an agent session:
+
+```sh
+echo "$AI_AGENT"                       # names the tool
+echo "${PUSHOVER_API_TOKEN:-hidden}"   # should print: hidden
+```
 
 ### Machine roles
 

@@ -10,7 +10,11 @@ export LD_LIBRARY_PATH="$HOME/.local/aarch64/lib:${LD_LIBRARY_PATH:-}"
 export CPATH="$HOME/.local/aarch64/include:${CPATH:-}"
 
 # Override Starship cluster filesystem detection (/capstor instead of /cluster)
-if [ "$AI_AGENT" != "1" ]; then
+# Any non-empty AI_AGENT means an agent is driving this shell. Each tool sets its
+# own name -- Claude Code its own identifier, "codex" and "opencode" from the
+# wrappers in aliases/aliases.symlink -- so test for "set at all", never for one
+# specific value. Set AI_AGENT=0 to force the human path.
+if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
     set_starship_config() {
         if [[ $PWD == /capstor/* ]]; then
             export STARSHIP_CONFIG=~/.starship_nogit.toml

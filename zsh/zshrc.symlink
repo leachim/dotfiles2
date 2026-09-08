@@ -140,3 +140,5 @@ __reset_mouse_reporting() { [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd __reset_mouse_reporting
 
+# opencode (installed per-machine by opencode/install.sh)
+[ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"

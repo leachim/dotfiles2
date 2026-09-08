@@ -125,6 +125,19 @@ if [ "$(uname -s)" = "Linux" ] && command -v starship >/dev/null 2>&1; then
   success "starship"
 fi
 
+# opencode (autoupdate only fires on TUI launch, so upgrade explicitly here)
+if command -v opencode >/dev/null 2>&1; then
+  info "opencode upgrade"
+  opencode upgrade
+  success "opencode"
+elif [ -x "$HOME/.opencode/bin/opencode" ]; then
+  info "opencode upgrade"
+  "$HOME/.opencode/bin/opencode" upgrade
+  success "opencode"
+else
+  skip "opencode (not installed)"
+fi
+
 # Pixi
 if command -v pixi >/dev/null 2>&1; then
   info "pixi self-update"

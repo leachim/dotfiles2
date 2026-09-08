@@ -57,7 +57,11 @@ devmods() {
 
 # Skip heavy cluster initialization for AI agents
 # Module loads can hang if cluster services are slow/unresponsive
-if [ "$AI_AGENT" != "1" ]; then
+# Any non-empty AI_AGENT means an agent is driving this shell. Each tool sets its
+# own name -- Claude Code its own identifier, "codex" and "opencode" from the
+# wrappers in aliases/aliases.symlink -- so test for "set at all", never for one
+# specific value. Set AI_AGENT=0 to force the human path.
+if [ -z "$AI_AGENT" ] || [ "$AI_AGENT" = "0" ]; then
     [ -f /etc/profile.d/lmod.sh ] && source /etc/profile.d/lmod.sh
     [ -f /etc/profile.d/module_path.sh ] && source /etc/profile.d/module_path.sh
 
